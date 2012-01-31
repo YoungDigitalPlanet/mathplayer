@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module rename-to='math_player'>
+  <inherits name='com.google.gwt.user.User'/>
+
+  <inherits name='gwt.g2d.g2d'/>
+  <inherits name="com.google.gwt.xml.XML" />
+  <source path="player"></source>
+</module>

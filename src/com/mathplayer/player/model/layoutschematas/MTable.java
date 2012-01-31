@@ -1,0 +1,129 @@
+package com.mathplayer.player.model.layoutschematas;
+
+import gwt.g2d.client.graphics.Surface;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
+
+import com.mathplayer.player.geom.Area;
+import com.mathplayer.player.geom.Size;
+import com.mathplayer.player.interaction.InteractionSocket;
+import com.mathplayer.player.model.LayoutSchemata;
+import com.mathplayer.player.model.Token;
+
+public class MTable extends LayoutSchemata {
+
+	protected Vector<Vector<Token>> tokensArray;
+	protected Vector<Integer> cellWidths;
+	protected Vector<Integer> cellHeights;
+	protected final double MARGIN_VERTICAL = 0.3d;
+	protected final double MARGIN_HORIZONTAL = 0.5d;
+	
+	public MTable(Vector<Vector<Token>> tokensArray){
+		this.tokensArray = tokensArray;
+		tokens = new Vector<Token>();
+		for (int row = 0 ; row < tokensArray.size() ; row ++){
+			for (int col = 0 ; col < tokensArray.get(row).size() ; col ++){
+				tokens.add(tokensArray.get(row).get(col));
+			}
+		}
+	}
+	
+	@Override
+	public Size measure(InteractionSocket socket) {
+		if (size != null)
+			return size.clone();
+		
+		cellWidths = new Vector<Integer>();
+		cellHeights = new Vector<Integer>();
+		
+		for (int row = 0 ; row < tokensArray.size() ; row ++){
+			for (int col = 0 ; col < tokensArray.get(row).size() ; col ++){
+				
+				Size tokenSize = tokensArray.get(row).get(col).measure(socket);
+				
+				if (col < cellWidths.size()){
+					if (tokenSize.width > cellWidths.get(col) ){
+						cellWidths.set(col, (int) tokenSize.width );
+					}
+				} else {
+					cellWidths.add( (int) tokenSize.width );
+				}
+				
+				if (row < cellHeights.size()){
+					if (tokenSize.height > cellHeights.get(row)){
+						cellHeights.set(row, (int) tokenSize.height);
+					}
+				} else {
+					cellHeights.add((int) tokenSize.height );
+				}
+			}
+		}
+		
+		size = new Size();
+
+		for (int row = 0 ; row < cellHeights.size() ; row ++){
+			size.height += cellHeights.get(row);
+		}
+		size.height += font.size*MARGIN_VERTICAL*(cellHeights.size()-1);
+		
+		for (int col = 0 ; col < cellWidths.size() ; col ++){
+			size.width += cellWidths.get(col);
+		}
+		size.width += font.size*MARGIN_HORIZONTAL*(cellWidths.size()-1);
+		
+		size.middleLine = size.height / 2;
+				
+		return size.clone();
+	}
+
+	@Override
+	public void render(Surface canvas, Area area, InteractionSocket socket) {
+		super.render(canvas, area, socket);
+
+		Area next = exactArea.clone();
+		
+		int offsetTop = 0;
+		for (int row = 0 ; row < tokensArray.size() ; row ++){
+			Area nextRow = next.clone();
+			for (int col = 0 ; col < tokensArray.get(row).size() ; col ++){
+				Token currToken = tokensArray.get(row).get(col);
+				nextRow.setSize(currToken.measure(socket).width, currToken.measure(socket).height, currToken.measure(socket).middleLine);
+				currToken.render(canvas, nextRow, socket);
+				nextRow.x += cellWidths.get(col) + font.size*MARGIN_HORIZONTAL;
+			}
+			next.y += cellHeights.get(row) + font.size*MARGIN_VERTICAL;
+		}
+	}
+	
+
+	@Override
+	public String toString() {
+		String str = "||";
+		for (List<Token> currRow : tokensArray){
+			for (Token currToken : currRow){
+				str += currToken.toMathML() + " ";
+			}
+			str += "|";
+		}
+		str = str.substring(0, str.length()-1);
+		str += "||";
+		return str;
+	}
+
+	@Override
+	public String toMathML() {
+		String mml = "<mtable>";
+		for (List<Token> currRow : tokensArray){
+			mml += "<mtr>";
+			for (Token currToken : currRow){
+				mml += "<mtd>" + currToken.toMathML() + "</mtd>";
+			}
+			mml += "</mtr>";
+		}
+		mml += "</mtable>";
+		return mml;
+	}
+
+}
