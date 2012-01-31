@@ -52,4 +52,10 @@
 			artifactspattern="dist/[artifact].[ext]"
 			overwrite="true"/>		
 	</target>
+		
+	<target name="clean">
+		<delete dir="${dist.dir}" />
+		<delete dir="${build.dir}" />
+		<delete dir="${ivylib.dir}" />
+	</target>
 </project>
