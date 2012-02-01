@@ -75,8 +75,8 @@ public class InteractionManager implements InteractionSocket {
 
 	@Override
 	public void removeTextBox() {
-		gapWidth = testGap.getOffsetWidth();
-		gapHeight = testGap.getOffsetHeight();
+		gapWidth = testGap.getGap().getOffsetWidth();
+		gapHeight = testGap.getGap().getOffsetHeight();
 		RootPanel.get().remove(testGap);
 	}
 	
