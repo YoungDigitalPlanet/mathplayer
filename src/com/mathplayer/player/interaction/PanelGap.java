@@ -33,9 +33,9 @@ public class PanelGap extends FlowPanel {
 		markPanel.setStyleName("math-player-gap-mark");
 		
 		add(markPanel);
-		add(prefixPanel);
-		add(containerPanel);
-		add(sufixPanel);
+		markPanel.add(prefixPanel);
+		markPanel.add(containerPanel);
+		markPanel.add(sufixPanel);
 	}
 	
 	public TextBox getGap(){
