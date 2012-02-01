@@ -12,7 +12,7 @@ import com.mathplayer.player.model.Sign;
 public class VectorSign extends Sign {
 
 	protected final double WING_COEFF = 0.1;
-	protected final double MARGIN_VERTICAL = 0.2;
+	protected final double MARGIN_VERTICAL = 0.4;
 	protected static final int LINE_THICNKENSS_COEFF = 20;
 	protected boolean arrow;
 	

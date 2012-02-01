@@ -12,12 +12,12 @@ import com.mathplayer.player.model.interaction.Gap;
 import com.mathplayer.player.model.layoutschematas.FenceType;
 import com.mathplayer.player.model.layoutschematas.MFenced;
 import com.mathplayer.player.model.layoutschematas.MFraction;
+import com.mathplayer.player.model.layoutschematas.MBar;
 import com.mathplayer.player.model.layoutschematas.MRoot;
 import com.mathplayer.player.model.layoutschematas.MRow;
 import com.mathplayer.player.model.layoutschematas.MSubSup;
 import com.mathplayer.player.model.layoutschematas.MTable;
 import com.mathplayer.player.model.layoutschematas.MUnderOver;
-import com.mathplayer.player.model.layoutschematas.MVector;
 import com.mathplayer.player.model.tokens.MIdentifier;
 import com.mathplayer.player.model.tokens.MNumber;
 import com.mathplayer.player.model.tokens.MOperator;
@@ -99,11 +99,14 @@ public abstract class MathMLParser {
 		} else if (nodeName.equals("mn")){
 			return new MNumber( XmlUtils.getFirstTextNode(element).toString() );
 		} else if (nodeName.equals("mo")){
-			return new MOperator( XmlUtils.getFirstTextNode(element).toString() );
+			String content = XmlUtils.getFirstTextNode(element).toString();
+			if (content != null  &&  "OverBar".equals(content.trim()))
+				return new MBar(false);
+			else if (content != null  &&  "RightArrow".equals(content.trim()))
+				return new MBar(true);
+			return new MOperator( content );
 		} else if (nodeName.equals("ms")){
 			return new MStringLiteral( XmlUtils.getFirstTextNode(element).toString() );
-		} else if (nodeName.equals("mvector")){
-			return new MVector(  parseElement(XmlUtils.getChildElementNodeAtIndex(0, element)) , "arrow".equals(XmlUtils.getAttribute(element, "decoration")));
 		} else if (nodeName.equals("gap")){
 			return new Gap();
 		}
