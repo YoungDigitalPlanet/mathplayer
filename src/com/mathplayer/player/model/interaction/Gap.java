@@ -20,9 +20,9 @@ public class Gap extends InteractionToken {
 			return size;
 		
 		if (socket.isEditorMode())
-			size = new Size(font.size, font.size);
+			size = new Size(font.size, font.size, font.size/2);
 		else
-			size = new Size(socket.getTextBoxWidth(), socket.getTextBoxHeight());
+			size = new Size(socket.getTextBoxWidth(), socket.getTextBoxHeight(), socket.getTextBoxHeight()/2);
 		
 		return size.clone();
 	}
