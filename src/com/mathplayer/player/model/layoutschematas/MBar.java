@@ -13,9 +13,9 @@ public class MBar extends MOperator {
 
 	protected BarSign vectorSign;
 	
-	public MBar(boolean showArrow) {
+	public MBar(BarType barType) {
 		super("_");
-		vectorSign = new BarSign(showArrow);
+		vectorSign = new BarSign(barType);
 	}
 	
 	@Override

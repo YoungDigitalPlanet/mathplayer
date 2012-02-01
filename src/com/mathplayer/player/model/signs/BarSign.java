@@ -8,16 +8,18 @@ import com.mathplayer.player.geom.Area;
 import com.mathplayer.player.geom.Size;
 import com.mathplayer.player.interaction.InteractionSocket;
 import com.mathplayer.player.model.Sign;
+import com.mathplayer.player.model.layoutschematas.BarType;
 
 public class BarSign extends Sign {
 
 	protected final double WING_COEFF = 0.15;
 	protected final double MARGIN_VERTICAL = 0.5;
+	protected final double MARGIN_VERTICAL_MID = 0.3;
 	protected static final int LINE_THICNKENSS_COEFF = 20;
-	protected boolean arrow;
+	protected BarType barType;
 	
-	public BarSign(boolean arrow){
-		this.arrow = arrow;
+	public BarSign(BarType barType){
+		this.barType = barType;
 	}
 	
 	@Override
@@ -27,8 +29,10 @@ public class BarSign extends Sign {
 		
 		int width = (int) (font.size * WING_COEFF * 2);
 		int height = (int) (font.size * MARGIN_VERTICAL * 2);
-		if (arrow)
+		if (barType == BarType.ARROW)
 			height += font.size * WING_COEFF * 2;
+		else if (barType == BarType.DOUBLE) 
+			height += font.size * MARGIN_VERTICAL_MID;
 		
 		size = new Size(width, height);
 		
@@ -43,18 +47,25 @@ public class BarSign extends Sign {
 		
 		ShapeBuilder sb = new ShapeBuilder();
 		canvas.setLineWidth(lineThickness);
-		
-		sb.drawLineSegment(area.x, area.y + area.height/2, area.x + area.width, area.y + area.height/2);
-		if (arrow){
-			sb.drawLineSegment(area.x + area.width - font.size * WING_COEFF * 2, 
-					area.y + area.height/2 - font.size * WING_COEFF * 2, 
-					area.x + area.width, 
-					area.y + area.height/2);
-			sb.drawLineSegment(area.x + area.width - font.size * WING_COEFF * 2, 
-					area.y + area.height/2 + font.size * WING_COEFF * 2, 
-					area.x + area.width, 
-					area.y + area.height/2);
+		 
+		if (barType == BarType.DOUBLE){
+			double midMarginHalf = font.size * MARGIN_VERTICAL_MID/2;
+			sb.drawLineSegment(area.x, area.y + area.height/2 - midMarginHalf, area.x + area.width, area.y + area.height/2 - midMarginHalf);
+			sb.drawLineSegment(area.x, area.y + area.height/2 + midMarginHalf, area.x + area.width, area.y + area.height/2 + midMarginHalf);			
+		} else {
+			sb.drawLineSegment(area.x, area.y + area.height/2, area.x + area.width, area.y + area.height/2);
+			if (barType == BarType.ARROW){
+				sb.drawLineSegment(area.x + area.width - font.size * WING_COEFF * 2, 
+						area.y + area.height/2 - font.size * WING_COEFF * 2, 
+						area.x + area.width, 
+						area.y + area.height/2);
+				sb.drawLineSegment(area.x + area.width - font.size * WING_COEFF * 2, 
+						area.y + area.height/2 + font.size * WING_COEFF * 2, 
+						area.x + area.width, 
+						area.y + area.height/2);
+			}
 		}
+		
 		
 		canvas.strokeShape(sb.build());
 	}

@@ -9,6 +9,7 @@ import com.google.gwt.xml.client.NodeList;
 import com.google.gwt.xml.client.XMLParser;
 import com.mathplayer.player.model.Token;
 import com.mathplayer.player.model.interaction.Gap;
+import com.mathplayer.player.model.layoutschematas.BarType;
 import com.mathplayer.player.model.layoutschematas.FenceType;
 import com.mathplayer.player.model.layoutschematas.MFenced;
 import com.mathplayer.player.model.layoutschematas.MFraction;
@@ -101,9 +102,11 @@ public abstract class MathMLParser {
 		} else if (nodeName.equals("mo")){
 			String content = XmlUtils.getFirstTextNode(element).toString();
 			if (content != null  &&  "OverBar".equals(content.trim()))
-				return new MBar(false);
+				return new MBar(BarType.SINGLE);
+			else if (content != null  &&  "DoubleOverBar".equals(content.trim()))
+				return new MBar(BarType.DOUBLE);
 			else if (content != null  &&  "RightArrow".equals(content.trim()))
-				return new MBar(true);
+				return new MBar(BarType.ARROW);
 			return new MOperator( content );
 		} else if (nodeName.equals("ms")){
 			return new MStringLiteral( XmlUtils.getFirstTextNode(element).toString() );
