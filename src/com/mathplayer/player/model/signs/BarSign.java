@@ -9,14 +9,14 @@ import com.mathplayer.player.geom.Size;
 import com.mathplayer.player.interaction.InteractionSocket;
 import com.mathplayer.player.model.Sign;
 
-public class VectorSign extends Sign {
+public class BarSign extends Sign {
 
-	protected final double WING_COEFF = 0.1;
-	protected final double MARGIN_VERTICAL = 0.4;
+	protected final double WING_COEFF = 0.15;
+	protected final double MARGIN_VERTICAL = 0.5;
 	protected static final int LINE_THICNKENSS_COEFF = 20;
 	protected boolean arrow;
 	
-	public VectorSign(boolean arrow){
+	public BarSign(boolean arrow){
 		this.arrow = arrow;
 	}
 	

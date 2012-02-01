@@ -6,16 +6,16 @@ import com.mathplayer.player.geom.Area;
 import com.mathplayer.player.geom.Font;
 import com.mathplayer.player.geom.Size;
 import com.mathplayer.player.interaction.InteractionSocket;
-import com.mathplayer.player.model.signs.VectorSign;
+import com.mathplayer.player.model.signs.BarSign;
 import com.mathplayer.player.model.tokens.MOperator;
 
 public class MBar extends MOperator {
 
-	protected VectorSign vectorSign;
+	protected BarSign vectorSign;
 	
 	public MBar(boolean showArrow) {
 		super("_");
-		vectorSign = new VectorSign(showArrow);
+		vectorSign = new BarSign(showArrow);
 	}
 	
 	@Override
