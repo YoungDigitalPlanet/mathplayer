@@ -81,9 +81,9 @@ public class MRoot extends LayoutSchemata {
 			}
 			
 			if (rootSign.getOverMargin() > tokens.get(1).measure(socket).height - tokens.get(0).measure(socket).height/2){
-				indexArea.y = rootSign.getOverMargin() + tokens.get(0).measure(socket).height/2 - tokens.get(1).measure(socket).height;
+				indexArea.y += rootSign.getOverMargin() + tokens.get(0).measure(socket).height/2 - tokens.get(1).measure(socket).height;
 			} else {
-				indexArea.y = 0;
+				indexArea.y += 0;
 			}
 			
 			indexArea.setSize(tokens.get(1).measure(socket));
