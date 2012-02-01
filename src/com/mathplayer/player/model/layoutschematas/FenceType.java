@@ -1,7 +1,7 @@
 package com.mathplayer.player.model.layoutschematas;
 
 public enum FenceType {
-	ROUND, SQUARE, CURLY, ANGLE, VERTICAL_BAR;
+	ROUND, SQUARE, CURLY, ANGLE, VERTICAL_BAR, NONE;
 	
 	public static FenceType fromString(String fenceTypeString){
 		if (fenceTypeString.toLowerCase().equals("square"))
@@ -12,6 +12,8 @@ public enum FenceType {
 			return ANGLE;
 		if (fenceTypeString.toLowerCase().equals("vertical-bar"))
 			return VERTICAL_BAR;
+		if (fenceTypeString.toLowerCase().equals("none"))
+			return NONE;
 		
 		return ROUND;
 	}
@@ -27,6 +29,8 @@ public enum FenceType {
 			return String.valueOf((char)9168);
 		if (type == ANGLE)
 			return String.valueOf((char)9001);
+		if (type == NONE)
+			return "";
 		return "(";
 	}
 	
@@ -41,6 +45,8 @@ public enum FenceType {
 			return String.valueOf((char)9168);
 		if (type == ANGLE)
 			return String.valueOf((char)9002);
+		if (type == NONE)
+			return "";
 		return ")";
 	}
 }

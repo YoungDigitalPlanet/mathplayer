@@ -49,7 +49,7 @@ public abstract class MathMLParser {
 				if (trNodes.item(row).getNodeType() == Node.ELEMENT_NODE){
 					NodeList tdNodes = ((Element)trNodes.item(row)).getElementsByTagName("mtd");
 					tokens.add(new Vector<Token>());
-					for (int col = 0 ; col < trNodes.getLength() ; col ++ ){
+					for (int col = 0 ; col < tdNodes.getLength() ; col ++ ){
 						if (tdNodes.item(col).getNodeType() == Node.ELEMENT_NODE){
 							tokens.get(row).add(parseElement( XmlUtils.getChildElementNodeAtIndex(0, (Element) tdNodes.item(col) ) ));
 						}
