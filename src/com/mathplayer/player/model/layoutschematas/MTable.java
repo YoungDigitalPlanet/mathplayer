@@ -88,9 +88,12 @@ public class MTable extends LayoutSchemata {
 		for (int row = 0 ; row < tokensArray.size() ; row ++){
 			Area nextRow = next.clone();
 			for (int col = 0 ; col < tokensArray.get(row).size() ; col ++){
+				Area nextCol = nextRow.clone();
 				Token currToken = tokensArray.get(row).get(col);
-				nextRow.setSize(currToken.measure(socket).width, currToken.measure(socket).height, currToken.measure(socket).middleLine);
-				currToken.render(canvas, nextRow, socket);
+				nextCol.x += (cellWidths.get(col) - currToken.measure(socket).width)/2;
+				nextCol.y += (cellHeights.get(row) - currToken.measure(socket).height)/2;
+				nextCol.setSize(currToken.measure(socket).width, currToken.measure(socket).height, currToken.measure(socket).middleLine);
+				currToken.render(canvas, nextCol, socket);
 				nextRow.x += cellWidths.get(col) + font.size*MARGIN_HORIZONTAL;
 			}
 			next.y += cellHeights.get(row) + font.size*MARGIN_VERTICAL;
