@@ -17,9 +17,11 @@ public class InteractionManager implements InteractionSocket {
 	private AbsolutePanel canvasLayer;
 	private AbsolutePanel uiLayer;
 	private PanelGap testGap;
-	
-	private int gapWidth;
-	private int gapHeight;
+
+	private int actualGapWidth;
+	private int actualGapHeight;
+	private int userGapWidth;
+	private int userGapHeight;
 	
 	public InteractionManager(Panel owner){
 		container = new AbsolutePanel();
@@ -40,6 +42,12 @@ public class InteractionManager implements InteractionSocket {
 
 		positions = new Vector<Point>();
 		gaps = new Vector<PanelGap>();
+
+		userGapWidth = 26;
+		userGapHeight = 14;
+		actualGapWidth = 32;
+		actualGapHeight = 20;
+		
 	}
 
 	@Override
@@ -50,6 +58,8 @@ public class InteractionManager implements InteractionSocket {
 	public void process(){
 		for (Point p : positions){
 			PanelGap pg = new PanelGap();
+			pg.getGap().setWidth(String.valueOf(userGapWidth) + "px");
+			pg.getGap().setHeight(String.valueOf(userGapHeight) + "px");
 			gaps.add(pg);
 			uiLayer.add(pg, p.x, p.y);
 		}
@@ -62,22 +72,35 @@ public class InteractionManager implements InteractionSocket {
 		canvasLayer.add(canvas, 0, 0);
 		
 	}
+	
+	public void removeTextBox() {
+		actualGapWidth = testGap.getGap().getOffsetWidth();
+		actualGapHeight = testGap.getGap().getOffsetHeight();
+		RootPanel.get().remove(testGap);
+	}
+	
+	public void setTextBoxHeight(int h){
+		if (h >= 0){
+			userGapHeight = h;
+			testGap.getGap().setHeight(String.valueOf(userGapHeight)+"px");
+		}
+	}
 
 	@Override
 	public int getTextBoxHeight() {
-		return gapHeight;
+		return actualGapHeight;
+	}
+	
+	public void setTextBoxWidth(int w){
+		if (w >= 0){
+			userGapWidth = w;
+			testGap.getGap().setWidth(String.valueOf(userGapWidth)+"px");
+		}
 	}
 
 	@Override
 	public int getTextBoxWidth() {
-		return gapWidth;
-	}
-
-	@Override
-	public void removeTextBox() {
-		gapWidth = testGap.getGap().getOffsetWidth();
-		gapHeight = testGap.getGap().getOffsetHeight();
-		RootPanel.get().remove(testGap);
+		return actualGapWidth;
 	}
 	
 	public int getGapsCount(){

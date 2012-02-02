@@ -11,7 +11,6 @@ public interface InteractionSocket {
 	void setCanvas(Widget canvas, int width, int height);
 	int getTextBoxWidth();
 	int getTextBoxHeight();
-	void removeTextBox();
 	
 	void setCursorPosition(Area area);
 }

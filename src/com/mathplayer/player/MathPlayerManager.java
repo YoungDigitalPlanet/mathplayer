@@ -11,13 +11,28 @@ import com.mathplayer.player.model.Token;
 public class MathPlayerManager {
 	
 	private Font font;
+	private int gapWidth;
+	private int gapHeight;	
 	
 	public MathPlayerManager(){
 		font = new Font(16, "Verdana", false, false);
+		gapWidth = 26;
+		gapHeight = 14;
 	}
 
 	public void setFont(Font font){
-		this.font = font;
+		if (font != null)
+			this.font = font;
+	}
+
+	public void setGapWidth(int w){
+		if (w >= 0)
+			gapWidth = w;
+	}
+
+	public void setGapHeight(int h){
+		if (h >= 0)
+			gapHeight = h;
 	}
 	
 	public InteractionManager createMath(String source, Panel owner){
@@ -27,6 +42,8 @@ public class MathPlayerManager {
 		Token t = MathMLParser.parse(source);
 		t.setFont(font);
 		
+		manager.setTextBoxWidth(gapWidth);
+		manager.setTextBoxHeight(gapHeight);		
 		manager.removeTextBox();
 		
 		Size size = t.measure(manager);
