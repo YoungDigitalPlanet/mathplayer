@@ -92,7 +92,7 @@ public abstract class MathMLParser {
 			} else if (nodeName.equals("mroot")){
 				return new MRoot( parseElement(XmlUtils.getChildElementNodeAtIndex(0, element)), 
 						parseElement(XmlUtils.getChildElementNodeAtIndex(1, element)));
-			} else if (nodeName.equals("msqtr")){
+			} else if (nodeName.equals("msqrt")){
 				return new MRoot( parseElement(XmlUtils.getChildElementNodeAtIndex(0, element)), null);
 			} else if (nodeName.equals("mfenced")){
 				return new MFenced( parseElement(XmlUtils.getChildElementNodeAtIndex(0, element)), 
