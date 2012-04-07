@@ -103,7 +103,10 @@ public class MRow extends LayoutSchemata {
 			cursor = 0;
 		}
 		for (Token t : ts){
-			tokens.insertElementAt(t, cursor);
+			if (cursor >= 0)
+				tokens.insertElementAt(t, cursor);
+			else
+				tokens.add(t);
 			cursor++;
 		}
 	}

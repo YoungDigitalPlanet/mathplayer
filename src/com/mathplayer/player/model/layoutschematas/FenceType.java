@@ -17,6 +17,20 @@ public enum FenceType {
 		
 		return ROUND;
 	}
+	 
+	public static String toString(FenceType fenceType){
+		if (fenceType == FenceType.SQUARE)
+			return "square";
+		if (fenceType == FenceType.CURLY)
+			return "curly";
+		if (fenceType == FenceType.SQUARE)
+			return "angle";
+		if (fenceType == FenceType.VERTICAL_BAR)
+			return "vertical-bar";
+		if (fenceType == FenceType.NONE)
+			return "none";
+		return "round";
+	}
 	
 	public static String getOpenFence(FenceType type){
 		if (type == ROUND)

@@ -95,7 +95,14 @@ public class MFenced extends LayoutSchemata {
 
 	@Override
 	public String toMathML() {
-		return "<mfenced>" + tokens.get(0).toMathML() + "</mfenced>";
+		StringBuilder mml = new StringBuilder("<mfenced open='");
+		mml.append(FenceType.toString(openFenceType));
+		mml.append("' close='");
+		mml.append(FenceType.toString(closeFenceType));
+		mml.append("'>");
+		mml.append(tokens.get(0).toMathML());
+		mml.append("</mfenced>");
+		return mml.toString();
 	}
 
 	private int getVerticalBarLineThickness(){
