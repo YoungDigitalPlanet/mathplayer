@@ -116,7 +116,7 @@ public class MRoot extends LayoutSchemata {
 	public String toMathML() {
 		if (tokens.get(1) != null)
 			return "<mroot>" + tokens.get(0).toMathML() + tokens.get(1).toMathML() + "</mroot>";
-		return "<msqrt>" + tokens.get(1).toMathML() + "</msqrt>";
+		return "<msqrt>" + tokens.get(0).toMathML() + "</msqrt>";
 	}
 
 }
