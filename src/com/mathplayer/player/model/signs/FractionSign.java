@@ -9,13 +9,13 @@ import com.mathplayer.player.model.Sign;
 
 public class FractionSign extends Sign {
 
-	public final int SPACE_FONT_COEFF = 20; 
+	public final int SPACE_FONT_COEFF = 20;
+	public final int SPACE_FONT_COEFF2 = 2; 
+	public final int LINE_POSITION_COEFF = 3; 
 	
 	@Override
 	public Size measure(InteractionSocket socket) {
-		if (size != null)
-			return size;
-		size = new Size(0,3*(font.size/SPACE_FONT_COEFF + 1));
+		size = new Size(0,getSpaceHeight());
 		return size;
 	}
 
@@ -23,7 +23,15 @@ public class FractionSign extends Sign {
 	public void render(Surface canvas, Area area, InteractionSocket socket) {
 		super.render(canvas, area, socket);
 		canvas.setFillStyle(new Color(0, 0,0));
-		canvas.fillRectangle(area.x, area.y + font.size/SPACE_FONT_COEFF+1, area.width, font.size/SPACE_FONT_COEFF+1);
+		canvas.fillRectangle(area.x, (int)area.y + getSpaceHeight()/LINE_POSITION_COEFF, area.width, getSignHeight());
+	}
+	
+	private int getSignHeight(){
+		return font.size/SPACE_FONT_COEFF + 1;
+	}
+	
+	private int getSpaceHeight(){
+		return font.size/SPACE_FONT_COEFF2 + getSignHeight();
 	}
 
 }
