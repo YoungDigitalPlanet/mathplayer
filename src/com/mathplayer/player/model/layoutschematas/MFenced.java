@@ -96,9 +96,9 @@ public class MFenced extends LayoutSchemata {
 	@Override
 	public String toMathML() {
 		StringBuilder mml = new StringBuilder("<mfenced open='");
-		mml.append(FenceType.toString(openFenceType));
+		mml.append(FenceType.openFenceToString(openFenceType));
 		mml.append("' close='");
-		mml.append(FenceType.toString(closeFenceType));
+		mml.append(FenceType.closeFenceToString(closeFenceType));
 		mml.append("'>");
 		mml.append(tokens.get(0).toMathML());
 		mml.append("</mfenced>");

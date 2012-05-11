@@ -4,32 +4,46 @@ public enum FenceType {
 	ROUND, SQUARE, CURLY, ANGLE, VERTICAL_BAR, NONE;
 	
 	public static FenceType fromString(String fenceTypeString){
-		if (fenceTypeString.toLowerCase().equals("square"))
+		if (fenceTypeString.toLowerCase().equals("square")  ||  fenceTypeString.equals("[")  ||  fenceTypeString.equals("]"))
 			return SQUARE;
-		if (fenceTypeString.toLowerCase().equals("curly"))
+		if (fenceTypeString.toLowerCase().equals("curly")  ||  fenceTypeString.equals("{")  ||  fenceTypeString.equals("}"))
 			return CURLY;
-		if (fenceTypeString.toLowerCase().equals("angle"))
+		if (fenceTypeString.toLowerCase().equals("angle")  ||  fenceTypeString.equals("<")  ||  fenceTypeString.equals(">"))
 			return ANGLE;
-		if (fenceTypeString.toLowerCase().equals("vertical-bar"))
+		if (fenceTypeString.toLowerCase().equals("vertical-bar")  ||  fenceTypeString.equals("|"))
 			return VERTICAL_BAR;
-		if (fenceTypeString.toLowerCase().equals("none"))
+		if (fenceTypeString.toLowerCase().equals("none")  ||  fenceTypeString.equals(""))
 			return NONE;
 		
 		return ROUND;
 	}
 	 
-	public static String toString(FenceType fenceType){
+	public static String openFenceToString(FenceType fenceType){
 		if (fenceType == FenceType.SQUARE)
-			return "square";
+			return "[";
 		if (fenceType == FenceType.CURLY)
-			return "curly";
+			return "{";
 		if (fenceType == FenceType.SQUARE)
-			return "angle";
+			return "<";
 		if (fenceType == FenceType.VERTICAL_BAR)
-			return "vertical-bar";
+			return "|";
 		if (fenceType == FenceType.NONE)
-			return "none";
-		return "round";
+			return "";
+		return "(";
+	}
+	 
+	public static String closeFenceToString(FenceType fenceType){
+		if (fenceType == FenceType.SQUARE)
+			return "]";
+		if (fenceType == FenceType.CURLY)
+			return "}";
+		if (fenceType == FenceType.SQUARE)
+			return ">";
+		if (fenceType == FenceType.VERTICAL_BAR)
+			return "|";
+		if (fenceType == FenceType.NONE)
+			return "";
+		return ")";
 	}
 	
 	public static String getOpenFence(FenceType type){
