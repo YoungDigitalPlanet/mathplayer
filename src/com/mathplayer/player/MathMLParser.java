@@ -24,26 +24,31 @@ import com.mathplayer.player.model.tokens.MIdentifier;
 import com.mathplayer.player.model.tokens.MNumber;
 import com.mathplayer.player.model.tokens.MOperator;
 import com.mathplayer.player.model.tokens.MStringLiteral;
+import com.mathplayer.player.style.StyleContext;
 import com.mathplayer.player.utils.XmlUtils;
 
 public abstract class MathMLParser {
 
 	public static Token parse(String source){
 		Document dom = XMLParser.parse(source);
-		return parseElement(dom.getDocumentElement());
+		StyleContext styleContext = new StyleContext();
+		return parseElement(dom.getDocumentElement(), styleContext);
 	}
 	
-	private static Token parseElement(Element element){
+	private static Token parseElement(Element element, StyleContext styleContext){
 		
 		String nodeName = element.getNodeName().toLowerCase();
 		
 		try {
+			
+			StyleContext currStyleContext = styleContext.clone(); 
+			currStyleContext.parseElement(element);
 		
 			if (nodeName.equals("mrow")){
 				int nodesCount = XmlUtils.getChildElementNodesCount(element);
 				Vector<Token> tokens = new Vector<Token>();
 				for (int n = 0 ; n < nodesCount ;  n ++){
-					tokens.add( parseElement( XmlUtils.getChildElementNodeAtIndex(n, element) ));
+					tokens.add( parseElement( XmlUtils.getChildElementNodeAtIndex(n, element) , currStyleContext ));
 				}
 				return new MRow(tokens);
 			} else if (nodeName.equals("mtable")){
@@ -55,7 +60,7 @@ public abstract class MathMLParser {
 						tokens.add(new Vector<Token>());
 						for (int col = 0 ; col < tdNodes.getLength() ; col ++ ){
 							if (tdNodes.item(col).getNodeType() == Node.ELEMENT_NODE){
-								tokens.get(row).add(parseElement( XmlUtils.getChildElementNodeAtIndex(0, (Element) tdNodes.item(col) ) ));
+								tokens.get(row).add(parseElement( XmlUtils.getChildElementNodeAtIndex(0, (Element) tdNodes.item(col) ) , currStyleContext ));
 							}
 						}
 					}
@@ -64,44 +69,55 @@ public abstract class MathMLParser {
 				return new MTable(tokens);
 				
 			} else if (nodeName.equals("mfrac")){
-				return new MFraction(parseElement(XmlUtils.getChildElementNodeAtIndex(0, element)), parseElement(XmlUtils.getChildElementNodeAtIndex(1, element)));
+				Token t1 = parseElement(XmlUtils.getChildElementNodeAtIndex(0, element) , currStyleContext);
+				Token t2 = parseElement(XmlUtils.getChildElementNodeAtIndex(1, element) , currStyleContext);
+				return new MFraction(t1, t2);
 			} else if (nodeName.equals("msubsup")){
-				return new MSubSup( parseElement(XmlUtils.getChildElementNodeAtIndex(0, element)), 
-						parseElement(XmlUtils.getChildElementNodeAtIndex(1, element)),
-						parseElement(XmlUtils.getChildElementNodeAtIndex(2, element)));
+				Token t1 = parseElement(XmlUtils.getChildElementNodeAtIndex(0, element) , currStyleContext);
+				Token t2 = parseElement(XmlUtils.getChildElementNodeAtIndex(1, element) , currStyleContext);
+				Token t3 = parseElement(XmlUtils.getChildElementNodeAtIndex(2, element) , currStyleContext);
+				return new MSubSup(t1, t2, t3);
 			} else if (nodeName.equals("msub")){
-				return new MSubSup( parseElement(XmlUtils.getChildElementNodeAtIndex(0, element)), 
-						parseElement(XmlUtils.getChildElementNodeAtIndex(1, element)),
-						null);
+				Token t1 = parseElement(XmlUtils.getChildElementNodeAtIndex(0, element) , currStyleContext);
+				Token t2 = parseElement(XmlUtils.getChildElementNodeAtIndex(1, element) , currStyleContext);
+				return new MSubSup( t1, t2, null);
 			} else if (nodeName.equals("msup")){
-				return new MSubSup( parseElement(XmlUtils.getChildElementNodeAtIndex(0, element)), 
-						null,
-						parseElement(XmlUtils.getChildElementNodeAtIndex(1, element)));
+				Token t1 = parseElement(XmlUtils.getChildElementNodeAtIndex(0, element) , currStyleContext);
+				Token t2 = parseElement(XmlUtils.getChildElementNodeAtIndex(1, element) , currStyleContext);
+				return new MSubSup( t1, null ,t2);
 			}  else if (nodeName.equals("munderover")){
-				return new MUnderOver( parseElement(XmlUtils.getChildElementNodeAtIndex(0, element)), 
-						parseElement(XmlUtils.getChildElementNodeAtIndex(1, element)),
-						parseElement(XmlUtils.getChildElementNodeAtIndex(2, element)));
+				Token t1 = parseElement(XmlUtils.getChildElementNodeAtIndex(0, element) , currStyleContext);
+				Token t2 = parseElement(XmlUtils.getChildElementNodeAtIndex(1, element) , currStyleContext);
+				Token t3 = parseElement(XmlUtils.getChildElementNodeAtIndex(2, element) , currStyleContext);
+				return new MUnderOver( t1, t2, t3 );
 			} else if (nodeName.equals("munder")){
-				return new MUnderOver( parseElement(XmlUtils.getChildElementNodeAtIndex(0, element)), 
-						parseElement(XmlUtils.getChildElementNodeAtIndex(1, element)),
-						null);
+				Token t1 = parseElement(XmlUtils.getChildElementNodeAtIndex(0, element) , currStyleContext);
+				Token t2 = parseElement(XmlUtils.getChildElementNodeAtIndex(1, element) , currStyleContext);
+				return new MUnderOver( t1, t2, null);
 			} else if (nodeName.equals("mover")){
-				return new MUnderOver( parseElement(XmlUtils.getChildElementNodeAtIndex(0, element)), 
-						null,
-						parseElement(XmlUtils.getChildElementNodeAtIndex(1, element)));
+				Token t1 = parseElement(XmlUtils.getChildElementNodeAtIndex(0, element) , currStyleContext);
+				Token t2 = parseElement(XmlUtils.getChildElementNodeAtIndex(1, element) , currStyleContext);
+				return new MUnderOver( t1, null, t2);
 			} else if (nodeName.equals("mroot")){
-				return new MRoot( parseElement(XmlUtils.getChildElementNodeAtIndex(0, element)), 
-						parseElement(XmlUtils.getChildElementNodeAtIndex(1, element)));
+				Token t1 = parseElement(XmlUtils.getChildElementNodeAtIndex(0, element) , currStyleContext);
+				Token t2 = parseElement(XmlUtils.getChildElementNodeAtIndex(1, element) , currStyleContext);
+				return new MRoot( t1, t2);
 			} else if (nodeName.equals("msqrt")){
-				return new MRoot( parseElement(XmlUtils.getChildElementNodeAtIndex(0, element)), null);
+				Token t1 = parseElement(XmlUtils.getChildElementNodeAtIndex(0, element) , currStyleContext);
+				return new MRoot( t1, null);
 			} else if (nodeName.equals("mfenced")){
-				return new MFenced( parseElement(XmlUtils.getChildElementNodeAtIndex(0, element)), 
+				Token t1 = parseElement(XmlUtils.getChildElementNodeAtIndex(0, element) , currStyleContext);
+				return new MFenced( t1, 
 						FenceType.fromString(XmlUtils.getAttribute(element, "open")),
 						FenceType.fromString(XmlUtils.getAttribute(element, "close")));
 			} else if (nodeName.equals("mi")){
-				return new MIdentifier( XmlUtils.getFirstTextNode(element).toString() );
+				MIdentifier mi = new MIdentifier( XmlUtils.getFirstTextNode(element).toString() );
+				mi.setStyleContext(currStyleContext);
+				return mi;
 			} else if (nodeName.equals("mn")){
-				return new MNumber( XmlUtils.getFirstTextNode(element).toString() );
+				MNumber mn = new MNumber( XmlUtils.getFirstTextNode(element).toString() );
+				mn.setStyleContext(currStyleContext);
+				return mn;
 			} else if (nodeName.equals("mo")){
 				String content = XmlUtils.getFirstTextNode(element).toString();
 				if (content != null  &&  "OverBar".equals(content.trim()))
@@ -110,9 +126,17 @@ public abstract class MathMLParser {
 					return new MBar(BarType.DOUBLE);
 				else if (content != null  &&  "RightArrow".equals(content.trim()))
 					return new MBar(BarType.ARROW);
-				return new MOperator( content );
+				else if (content != null  &&  "&gt;".equals(content.trim()))
+					return new MOperator(">");
+				else if (content != null  &&  "&lt;".equals(content.trim()))
+					return new MOperator("<");
+				MOperator mo = new MOperator( content );
+				mo.setStyleContext(currStyleContext);
+				return mo;
 			} else if (nodeName.equals("ms")){
-				return new MStringLiteral( XmlUtils.getFirstTextNode(element).toString() );
+				MStringLiteral ms = new MStringLiteral( XmlUtils.getFirstTextNode(element).toString() );
+				ms.setStyleContext(currStyleContext);
+				return ms;
 			} else if (nodeName.equals("gap")){
 				return new Gap();
 			}

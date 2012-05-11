@@ -8,10 +8,12 @@ import com.mathplayer.player.geom.Font;
 import com.mathplayer.player.geom.Size;
 import com.mathplayer.player.interaction.InteractionSocket;
 import com.mathplayer.player.model.ContentToken;
+import com.mathplayer.player.style.StyleContext;
 
 public abstract class ContentTextTokenBase extends ContentToken {
 
 	protected String content;
+	protected StyleContext styleContext;
 	protected double MARGIN;
 	
 	public ContentTextTokenBase(String content){
@@ -19,10 +21,15 @@ public abstract class ContentTextTokenBase extends ContentToken {
 		MARGIN = 0;
 	}
 
+	public void setStyleContext(StyleContext styleContext){
+		this.styleContext = styleContext;
+	}
+	
 	@Override
 	public void setFont(Font font) {
 		this.font = font;
-		
+		if (styleContext != null  &&  font != null)
+			styleContext.applyFontStyles(font);
 	}
 	
 	@Override
