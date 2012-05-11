@@ -12,9 +12,10 @@ import com.mathplayer.player.model.layoutschematas.BarType;
 
 public class BarSign extends Sign {
 
-	protected final double WING_COEFF = 0.15;
-	protected final double MARGIN_VERTICAL = 0.5;
-	protected final double MARGIN_VERTICAL_MID = 0.3;
+	protected static final double WING_COEFF = 0.15d;
+	protected static final double MARGIN_VERTICAL = 0.5d;
+	protected static final double MARGIN_VERTICAL_MID = 0.3d;
+	protected static final double WIDTH_MIN_COEFF = 0.5d;
 	protected static final int LINE_THICNKENSS_COEFF = 20;
 	protected BarType barType;
 	
@@ -27,7 +28,7 @@ public class BarSign extends Sign {
 		if (size != null)
 			return size.clone();
 		
-		int width = (int) (font.size * WING_COEFF * 2);
+		int width = (int) (font.size * (WING_COEFF * 2 + WIDTH_MIN_COEFF));
 		int height = (int) (font.size * MARGIN_VERTICAL * 2);
 		if (barType == BarType.ARROW)
 			height += font.size * WING_COEFF * 2;
