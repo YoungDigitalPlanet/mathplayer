@@ -16,7 +16,7 @@ import com.mathplayer.player.model.signs.FractionSign;
 public class MFraction extends LayoutSchemata {
 
 	protected FractionSign fractionSign;
-	protected final double MARGIN = 0.1d;
+	protected final double MARGIN = 0.0d;
 	
 	public MFraction(Token numerator, Token denominator){
 		tokens = new Vector<Token>();

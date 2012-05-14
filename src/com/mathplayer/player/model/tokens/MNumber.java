@@ -4,6 +4,7 @@ public class MNumber extends ContentTextTokenBase {
 	
 	public MNumber(String content){
 		super(content);
+		MARGIN = 0.2d;
 	}
 
 	@Override
