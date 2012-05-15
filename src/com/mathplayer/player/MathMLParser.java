@@ -137,7 +137,7 @@ public abstract class MathMLParser {
 				mo.setStyleContext(currStyleContext);
 				return mo;
 			} else if (nodeName.equals("ms")){
-				Text node = ((Text) XmlUtils.getFirstTextNode(element));
+				Node node = XmlUtils.getFirstTextNode(element);
 				String value = "";
 				if (node != null) {
 					value = node.getNodeValue();
