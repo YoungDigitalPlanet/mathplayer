@@ -41,7 +41,7 @@ public class MRoot extends LayoutSchemata {
 		
 		size = tokens.get(0).measure(socket);
 		
-		size.width += rootSign.getBetweenMargin() + rootSign.getOverhangRightMargin();
+		size.width += rootSign.getBetweenMargin() + rootSign.getOverhangRightMargin() + rootSign.getContentMargin();
 		
 		if (tokens.get(1) == null  ||  rootSign.getOverhangLeftMargin() > tokens.get(1).measure(socket).width){
 			size.width += rootSign.getOverhangLeftMargin();
@@ -49,12 +49,12 @@ public class MRoot extends LayoutSchemata {
 			size.width += tokens.get(1).measure(socket).width;
 		}
 		
-		if (tokens.get(1) == null  ||  rootSign.getOverMargin() > tokens.get(1).measure(socket).height - tokens.get(0).measure(socket).height/2){
+		if (tokens.get(1) == null  ||  tokens.get(0).measure(socket).height + rootSign.getOverMargin() - rootSign.getOverhangLeftHeight() > tokens.get(1).measure(socket).height){
 			size.height += rootSign.getOverMargin();
 			size.middleLine += rootSign.getOverMargin();
 		} else {
-			size.height += tokens.get(1).measure(socket).height - tokens.get(0).measure(socket).height/2;
-			size.middleLine += tokens.get(1).measure(socket).height - tokens.get(0).measure(socket).height/2;
+			size.height += tokens.get(1).measure(socket).height + rootSign.getOverhangLeftHeight() - tokens.get(0).measure(socket).height;
+			size.middleLine += tokens.get(1).measure(socket).height + rootSign.getOverhangLeftHeight() - tokens.get(0).measure(socket).height;
 		}
 				
 		return size;
@@ -68,10 +68,21 @@ public class MRoot extends LayoutSchemata {
 		if (tokens.get(1) != null  &&  indexWidth < tokens.get(1).measure(socket).width)
 			indexWidth = tokens.get(1).measure(socket).width;
 		
-		Area baseArea = new Area(exactArea.x + indexWidth + rootSign.getBetweenMargin(), exactArea.y + rootSign.getOverMargin(), tokens.get(0).measure(socket));
-		tokens.get(0).render(canvas, baseArea, socket);
+		Area baseArea = null; 
 		
-		if (tokens.get(1) != null){
+		if (tokens.get(1) == null   ||  tokens.get(0).measure(socket).height + rootSign.getOverMargin() - rootSign.getOverhangLeftHeight() > tokens.get(1).measure(socket).height){
+			baseArea = new Area(exactArea.x + indexWidth + rootSign.getBetweenMargin() + rootSign.getContentMargin(), 
+					exactArea.y + rootSign.getOverMargin(), 
+					tokens.get(0).measure(socket));
+			tokens.get(0).render(canvas, baseArea, socket);
+		} else {
+			baseArea = new Area(exactArea.x + indexWidth + rootSign.getBetweenMargin() + rootSign.getContentMargin(), 
+					exactArea.y + tokens.get(1).measure(socket).height + rootSign.getOverhangLeftHeight() - tokens.get(0).measure(socket).height, 
+					tokens.get(0).measure(socket));
+			tokens.get(0).render(canvas, baseArea, socket);
+		}
+		
+		if (tokens.get(1) != null){		
 			Area indexArea = exactArea.clone();
 			
 			if (rootSign.getOverhangLeftMargin() > tokens.get(1).measure(socket).width){
@@ -80,8 +91,8 @@ public class MRoot extends LayoutSchemata {
 				indexArea.x += 0;
 			}
 			
-			if (rootSign.getOverMargin() > tokens.get(1).measure(socket).height - tokens.get(0).measure(socket).height/2){
-				indexArea.y += rootSign.getOverMargin() + tokens.get(0).measure(socket).height/2 - tokens.get(1).measure(socket).height;
+			if (tokens.get(0).measure(socket).height + rootSign.getOverMargin() - rootSign.getOverhangLeftHeight() > tokens.get(1).measure(socket).height){
+				indexArea.y += tokens.get(0).measure(socket).height  + rootSign.getOverMargin() - rootSign.getOverhangLeftHeight() - tokens.get(1).measure(socket).height;
 			} else {
 				indexArea.y += 0;
 			}
