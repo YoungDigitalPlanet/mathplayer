@@ -2,20 +2,18 @@ package com.mathplayer.player;
 
 import java.util.Vector;
 
-import com.google.gwt.http.client.URL;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.Element;
 import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.NodeList;
-import com.google.gwt.xml.client.Text;
 import com.google.gwt.xml.client.XMLParser;
 import com.mathplayer.player.model.Token;
 import com.mathplayer.player.model.interaction.Gap;
 import com.mathplayer.player.model.layoutschematas.BarType;
 import com.mathplayer.player.model.layoutschematas.FenceType;
+import com.mathplayer.player.model.layoutschematas.MBar;
 import com.mathplayer.player.model.layoutschematas.MFenced;
 import com.mathplayer.player.model.layoutschematas.MFraction;
-import com.mathplayer.player.model.layoutschematas.MBar;
 import com.mathplayer.player.model.layoutschematas.MRoot;
 import com.mathplayer.player.model.layoutschematas.MRow;
 import com.mathplayer.player.model.layoutschematas.MSubSup;
@@ -28,7 +26,6 @@ import com.mathplayer.player.model.tokens.MOperator;
 import com.mathplayer.player.model.tokens.MStringLiteral;
 import com.mathplayer.player.style.StyleContext;
 import com.mathplayer.player.utils.XmlUtils;
-import com.sun.org.apache.xml.internal.security.utils.XMLUtils;
 
 public abstract class MathMLParser {
 
