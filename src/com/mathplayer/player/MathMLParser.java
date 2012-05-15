@@ -2,10 +2,12 @@ package com.mathplayer.player;
 
 import java.util.Vector;
 
+import com.google.gwt.http.client.URL;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.Element;
 import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.NodeList;
+import com.google.gwt.xml.client.Text;
 import com.google.gwt.xml.client.XMLParser;
 import com.mathplayer.player.model.Token;
 import com.mathplayer.player.model.interaction.Gap;
@@ -26,6 +28,7 @@ import com.mathplayer.player.model.tokens.MOperator;
 import com.mathplayer.player.model.tokens.MStringLiteral;
 import com.mathplayer.player.style.StyleContext;
 import com.mathplayer.player.utils.XmlUtils;
+import com.sun.org.apache.xml.internal.security.utils.XMLUtils;
 
 public abstract class MathMLParser {
 
@@ -34,16 +37,16 @@ public abstract class MathMLParser {
 		StyleContext styleContext = new StyleContext();
 		return parseElement(dom.getDocumentElement(), styleContext);
 	}
-	
+
 	private static Token parseElement(Element element, StyleContext styleContext){
-		
+
 		String nodeName = element.getNodeName().toLowerCase();
-		
+
 		try {
-			
-			StyleContext currStyleContext = styleContext.clone(); 
+
+			StyleContext currStyleContext = styleContext.clone();
 			currStyleContext.parseElement(element);
-		
+
 			if (nodeName.equals("mrow")){
 				int nodesCount = XmlUtils.getChildElementNodesCount(element);
 				Vector<Token> tokens = new Vector<Token>();
@@ -64,10 +67,10 @@ public abstract class MathMLParser {
 							}
 						}
 					}
-					 
+
 				}
 				return new MTable(tokens);
-				
+
 			} else if (nodeName.equals("mfrac")){
 				Token t1 = parseElement(XmlUtils.getChildElementNodeAtIndex(0, element) , currStyleContext);
 				Token t2 = parseElement(XmlUtils.getChildElementNodeAtIndex(1, element) , currStyleContext);
@@ -107,7 +110,7 @@ public abstract class MathMLParser {
 				return new MRoot( t1, null);
 			} else if (nodeName.equals("mfenced")){
 				Token t1 = parseElement(XmlUtils.getChildElementNodeAtIndex(0, element) , currStyleContext);
-				return new MFenced( t1, 
+				return new MFenced( t1,
 						FenceType.fromString(XmlUtils.getAttribute(element, "open")),
 						FenceType.fromString(XmlUtils.getAttribute(element, "close")));
 			} else if (nodeName.equals("mi")){
@@ -134,7 +137,12 @@ public abstract class MathMLParser {
 				mo.setStyleContext(currStyleContext);
 				return mo;
 			} else if (nodeName.equals("ms")){
-				MStringLiteral ms = new MStringLiteral( XmlUtils.getFirstTextNode(element).toString() );
+				Text node = ((Text) XmlUtils.getFirstTextNode(element));
+				String value = "";
+				if (node != null) {
+					value = node.getNodeValue();
+				}
+				MStringLiteral ms = new MStringLiteral(value);
 				ms.setStyleContext(currStyleContext);
 				return ms;
 			} else if (nodeName.equals("gap")){
