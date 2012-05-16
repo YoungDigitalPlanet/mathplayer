@@ -5,7 +5,6 @@ import gwt.g2d.client.graphics.shapes.ShapeBuilder;
 
 import java.util.Vector;
 
-import com.google.gwt.core.client.GWT;
 import com.mathplayer.player.geom.Area;
 import com.mathplayer.player.geom.Font;
 import com.mathplayer.player.geom.Size;
@@ -69,7 +68,6 @@ public class MFenced extends LayoutSchemata {
 			sb.drawLineSegment((int) (exactArea.x + openBracketSize.width / 2), exactArea.y, (int) (exactArea.x + openBracketSize.width / 2), exactArea.y + exactArea.height);
 			canvas.strokeShape(sb.build());
 		} else {
-			GWT.log(size + "  " + font + "  " + getTextOffset((int) size.height));
 			if (font.size / size.height > .75) {
 				canvas.fillText(FenceType.getOpenFence(openFenceType), exactArea.x, exactArea.y + getTextOffset((int) size.height));
 			} else {
