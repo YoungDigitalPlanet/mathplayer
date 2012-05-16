@@ -17,14 +17,14 @@ public class MFraction extends LayoutSchemata {
 
 	protected FractionSign fractionSign;
 	protected final double MARGIN = 0.0d;
-	
+
 	public MFraction(Token numerator, Token denominator){
 		tokens = new Vector<Token>();
 		tokens.add(numerator);
 		tokens.add(denominator);
 		fractionSign = new FractionSign();
 	}
-	
+
 	@Override
 	public void setFont(Font font){
 		super.setFont(font);
@@ -37,13 +37,13 @@ public class MFraction extends LayoutSchemata {
 
 		if (size != null)
 			return size.clone();
-		
-		size = tokens.get(0).measure(socket);
+
+		size = tokens.get(0).measure(socket).clone();
 		size.addBottom(fractionSign.measure(socket));
 		size.addBottom(tokens.get(1).measure(socket));
 		size.width += 2*font.size*MARGIN;
 		size.middleLine = tokens.get(0).measure(socket).height + fractionSign.measure(socket).height/2;
-		
+
 		return size.clone();
 	}
 
@@ -52,10 +52,10 @@ public class MFraction extends LayoutSchemata {
 		super.render(canvas, area, socket);
 
 		Area next = exactArea.clone();
-		
+
 		next.setSize(size.width, tokens.get(0).measure(socket).height, tokens.get(0).measure(socket).middleLine);
 		tokens.get(0).render(canvas, next, socket);
-		
+
 		next.y += tokens.get(0).measure(socket).height;
 		next.setSize(size.width, fractionSign.measure(socket).height, 0);
 		fractionSign.render(canvas, next, socket);
@@ -78,7 +78,7 @@ public class MFraction extends LayoutSchemata {
 			d = tokens.get(1).toString();
 		else
 			d = "(" + tokens.get(1).toString() + ")";
-			
+
 		return n + "/" + d;
 	}
 
