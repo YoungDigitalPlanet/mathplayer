@@ -23,7 +23,7 @@ public enum FenceType {
 			return "[";
 		if (fenceType == FenceType.CURLY)
 			return "{";
-		if (fenceType == FenceType.SQUARE)
+		if (fenceType == FenceType.ANGLE)
 			return "<";
 		if (fenceType == FenceType.VERTICAL_BAR)
 			return "|";
@@ -37,7 +37,7 @@ public enum FenceType {
 			return "]";
 		if (fenceType == FenceType.CURLY)
 			return "}";
-		if (fenceType == FenceType.SQUARE)
+		if (fenceType == FenceType.ANGLE)
 			return ">";
 		if (fenceType == FenceType.VERTICAL_BAR)
 			return "|";
