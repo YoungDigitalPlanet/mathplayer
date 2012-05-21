@@ -1,5 +1,7 @@
 package com.mathplayer.player.interaction;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 
 import com.google.gwt.dom.client.Style.Overflow;
@@ -14,7 +16,8 @@ import com.mathplayer.player.geom.Point;
 
 public class InteractionManager implements InteractionSocket {
 
-	private Vector<Point> positions;
+	private Vector<Point> gapPositions;
+	private Vector<Point> customFieldPositions;
 	private Vector<PanelGap> gaps;
 	private AbsolutePanel container;
 	private AbsolutePanel canvasLayer;
@@ -26,6 +29,12 @@ public class InteractionManager implements InteractionSocket {
 	private int userGapWidth;
 	private int userGapHeight;
 
+	private Map<String, Integer> userCustomFieldWidth;
+	private Map<String, Integer> userCustomFieldHeight;
+	
+	private final static int DEFAULT_CUSTOM_FIELD_WIDTH = 48;
+	private final static int DEFAULT_CUSTOM_FIELD_HEIGHT = 20;
+	
 	public InteractionManager(Panel owner){
 		container = new AbsolutePanel();
 		container.setStyleName("math-player-container");
@@ -43,8 +52,9 @@ public class InteractionManager implements InteractionSocket {
 		testGap.setStyleName("math-player-gap");
 		RootPanel.get().add(testGap, 0, 0);
 
-		positions = new Vector<Point>();
+		gapPositions = new Vector<Point>();
 		gaps = new Vector<PanelGap>();
+		customFieldPositions = new Vector<Point>();
 
 		userGapWidth = 26;
 		userGapHeight = 14;
@@ -55,11 +65,16 @@ public class InteractionManager implements InteractionSocket {
 
 	@Override
 	public void addGap(int x, int y) {
-		positions.add(new Point(x, y));
+		gapPositions.add(new Point(x, y));		
 	}
 
+	@Override
+	public void addCustomField(int x, int y) {
+		customFieldPositions.add(new Point(x, y));		
+	}
+	
 	public void process(){
-		for (Point p : positions){
+		for (Point p : gapPositions){
 			PanelGap pg = new PanelGap();
 			pg.getGap().setWidth(String.valueOf(userGapWidth) + "px");
 			pg.getGap().setHeight(String.valueOf(userGapHeight) + "px");
@@ -71,8 +86,6 @@ public class InteractionManager implements InteractionSocket {
 	public void setCanvas(Widget canvas, int width, int height) {
 		container.setSize(String.valueOf(width)+"px", String.valueOf(height)+"px");
 		container.getParent().setSize(String.valueOf(width)+"px", String.valueOf(height)+"px");
-		container.getElement().getStyle().setMarginTop(height/2-7, Unit.PX);
-		container.getElement().getStyle().setOverflow(Overflow.VISIBLE);
 		canvasLayer.setSize(String.valueOf(width)+"px", String.valueOf(height)+"px");
 		uiLayer.setSize(String.valueOf(width)+"px", String.valueOf(height)+"px");
 		canvasLayer.add(canvas, 0, 0);
@@ -104,6 +117,29 @@ public class InteractionManager implements InteractionSocket {
 		}
 	}
 
+
+	public void setCustomFieldWidths(Map<String, Integer> customFieldWidths){
+		userCustomFieldWidth = customFieldWidths;
+	}
+	
+	@Override
+	public int getCustomFieldWidth(String type) {
+		if (userCustomFieldWidth.containsKey(type))
+			return userCustomFieldWidth.get(type);
+		return DEFAULT_CUSTOM_FIELD_WIDTH;
+	}
+
+	public void setCustomFieldHeights(Map<String, Integer> customFieldHeights){
+		userCustomFieldHeight = customFieldHeights;
+	}
+
+	@Override
+	public int getCustomFieldHeight(String type) {
+		if (userCustomFieldHeight.containsKey(type))
+			return userCustomFieldHeight.get(type);
+		return DEFAULT_CUSTOM_FIELD_HEIGHT;
+	}
+
 	@Override
 	public int getTextBoxWidth() {
 		return actualGapWidth;
@@ -127,6 +163,10 @@ public class InteractionManager implements InteractionSocket {
 	public void unmarkGap(int index){
 		if (index < gaps.size())
 			gaps.get(index).unmark();
+	}
+	
+	public Vector<Point> getCustomFieldPositions(){
+		return customFieldPositions;
 	}
 
 	@Override

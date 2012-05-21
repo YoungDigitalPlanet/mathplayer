@@ -1,5 +1,8 @@
 package com.mathplayer.player;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import gwt.g2d.client.graphics.Surface;
 import com.google.gwt.user.client.ui.Panel;
 import com.mathplayer.player.geom.Area;
@@ -13,11 +16,16 @@ public class MathPlayerManager {
 	private Font font;
 	private int gapWidth;
 	private int gapHeight;	
+	private Map<String, Integer> customFieldWidths;
+	private Map<String, Integer> customFieldHeights;
 	
 	public MathPlayerManager(){
 		font = new Font(16, "Verdana", false, false);
 		gapWidth = 26;
 		gapHeight = 14;
+		
+		customFieldWidths = new HashMap<String, Integer>();
+		customFieldHeights = new HashMap<String, Integer>();
 	}
 
 	public void setFont(Font font){
@@ -34,6 +42,17 @@ public class MathPlayerManager {
 		if (h >= 0)
 			gapHeight = h;
 	}
+
+	public void setCustomFieldWidth(String type, int w){
+		if (w >= 0)
+			customFieldWidths.put(type, w);
+	}
+
+	public void setCustomFieldHeight(String type, int h){
+		if (h >= 0)
+			customFieldHeights.put(type,  h);
+	}
+	
 	
 	public InteractionManager createMath(String source, Panel owner){
 				
@@ -43,7 +62,9 @@ public class MathPlayerManager {
 		t.setFont(font);
 		
 		manager.setTextBoxWidth(gapWidth);
-		manager.setTextBoxHeight(gapHeight);		
+		manager.setTextBoxHeight(gapHeight);
+		manager.setCustomFieldWidths(customFieldWidths);
+		manager.setCustomFieldHeights(customFieldHeights);
 		manager.removeTextBox();
 		
 		Size size = t.measure(manager);

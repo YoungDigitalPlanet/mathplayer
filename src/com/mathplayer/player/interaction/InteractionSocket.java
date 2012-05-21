@@ -8,9 +8,14 @@ public interface InteractionSocket {
 	boolean isEditorMode();
 	
 	void addGap(int x, int y);
+	void addCustomField(int x, int y);
+	
 	void setCanvas(Widget canvas, int width, int height);
+	
 	int getTextBoxWidth();
 	int getTextBoxHeight();
-	
+	int getCustomFieldWidth(String type);
+	int getCustomFieldHeight(String type);
+		
 	void setCursorPosition(Area area);
 }

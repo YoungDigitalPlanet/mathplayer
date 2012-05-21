@@ -8,6 +8,7 @@ import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.NodeList;
 import com.google.gwt.xml.client.XMLParser;
 import com.mathplayer.player.model.Token;
+import com.mathplayer.player.model.interaction.CustomField;
 import com.mathplayer.player.model.interaction.Gap;
 import com.mathplayer.player.model.layoutschematas.BarType;
 import com.mathplayer.player.model.layoutschematas.FenceType;
@@ -143,6 +144,15 @@ public abstract class MathMLParser {
 				ms.setStyleContext(currStyleContext);
 				return ms;
 			} else if (nodeName.equals("gap")){
+				if (element.hasAttribute("type")){
+					String type;
+					if (!"".equals(element.getAttribute("type") )){
+						type = element.getAttribute("type");
+					} else {
+						type = "default";
+					}
+					return new CustomField(type);
+				}
 				return new Gap();
 			}
 		} catch (Exception e) {
