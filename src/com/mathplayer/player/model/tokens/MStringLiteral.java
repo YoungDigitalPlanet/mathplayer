@@ -17,7 +17,7 @@ public class MStringLiteral extends ContentTextTokenBase {
 
 	@Override
 	public String toMathML() {
-		return "<ms>" + content + "</ms>";
+		return "<ms lquote=\"\" rquote=\"\">" + content + "</ms>";
 	}
 
 }
