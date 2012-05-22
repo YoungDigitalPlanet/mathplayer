@@ -15,8 +15,8 @@ import com.mathplayer.player.model.Token;
 public class MTable extends LayoutSchemata {
 
 	protected Vector<Vector<Token>> tokensArray;
-	protected Vector<Integer> cellWidths;
-	protected Vector<Integer> cellHeights;
+	protected Vector<Double> cellWidths;
+	protected Vector<Double> cellHeights;
 	protected final double MARGIN_VERTICAL = 0.3d;
 	protected final double MARGIN_HORIZONTAL = 0.5d;
 	
@@ -35,8 +35,8 @@ public class MTable extends LayoutSchemata {
 		if (size != null)
 			return size.clone();
 		
-		cellWidths = new Vector<Integer>();
-		cellHeights = new Vector<Integer>();
+		cellWidths = new Vector<Double>();
+		cellHeights = new Vector<Double>();
 		
 		for (int row = 0 ; row < tokensArray.size() ; row ++){
 			for (int col = 0 ; col < tokensArray.get(row).size() ; col ++){
@@ -45,18 +45,18 @@ public class MTable extends LayoutSchemata {
 				
 				if (col < cellWidths.size()){
 					if (tokenSize.width > cellWidths.get(col) ){
-						cellWidths.set(col, (int) tokenSize.width );
+						cellWidths.set(col,  tokenSize.width );
 					}
 				} else {
-					cellWidths.add( (int) tokenSize.width );
+					cellWidths.add(  tokenSize.width );
 				}
 				
 				if (row < cellHeights.size()){
 					if (tokenSize.height > cellHeights.get(row)){
-						cellHeights.set(row, (int) tokenSize.height);
+						cellHeights.set(row,  tokenSize.height);
 					}
 				} else {
-					cellHeights.add((int) tokenSize.height );
+					cellHeights.add( tokenSize.height );
 				}
 			}
 		}
