@@ -54,18 +54,18 @@ public abstract class MathMLParser {
 				return new MRow(tokens);
 			} else if (nodeName.equals("mtable")){
 				Vector<Vector<Token>> tokens = new Vector<Vector<Token>>();
-				NodeList trNodes = element.getElementsByTagName("mtr");
-				for (int row = 0 ; row < trNodes.getLength() ; row ++ ){
-					if (trNodes.item(row).getNodeType() == Node.ELEMENT_NODE){
-						NodeList tdNodes = ((Element)trNodes.item(row)).getElementsByTagName("mtd");
+				NodeList trNodes = element.getChildNodes();
+				
+				for (int row = 0 ; row < trNodes.getLength() ; row ++){
+					if (trNodes.item(row).getNodeType() == Node.ELEMENT_NODE  &&  "mtr".equals(trNodes.item(row).getNodeName())){
+						NodeList tdNodes = element.getChildNodes().item(row).getChildNodes();
 						tokens.add(new Vector<Token>());
 						for (int col = 0 ; col < tdNodes.getLength() ; col ++ ){
-							if (tdNodes.item(col).getNodeType() == Node.ELEMENT_NODE){
-								tokens.get(row).add(parseElement( XmlUtils.getChildElementNodeAtIndex(0, (Element) tdNodes.item(col) ) , currStyleContext ));
+							if (tdNodes.item(col).getNodeType() == Node.ELEMENT_NODE  &&  "mtd".equals(tdNodes.item(col).getNodeName())){
+								tokens.get(tokens.size()-1).add(parseElement( XmlUtils.getChildElementNodeAtIndex(0, (Element) tdNodes.item(col) ) , currStyleContext ));
 							}
 						}
 					}
-
 				}
 				return new MTable(tokens);
 
