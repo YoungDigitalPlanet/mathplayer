@@ -5,7 +5,6 @@ import gwt.g2d.client.graphics.shapes.ShapeBuilder;
 
 import java.util.Vector;
 
-import com.google.gwt.core.client.GWT;
 import com.mathplayer.player.geom.Area;
 import com.mathplayer.player.geom.Font;
 import com.mathplayer.player.geom.Size;
@@ -46,12 +45,16 @@ public class MFenced extends LayoutSchemata {
 		if (openFenceType == FenceType.VERTICAL_BAR){
 			openBracketSize = new Size(getVerticalBarLineThickness() + font.size * LINE_MARGIN, size.height);
 		} else {
-			openBracketSize = new Size(canvas.measureText(FenceType.getOpenFence(openFenceType)), size.height);
+			MFencedBracket mFencedBracket = new MFencedBracket(openFenceType, font.clone((int) size.height));
+			mFencedBracket.render(size, true);
+			openBracketSize = new Size(mFencedBracket.getLetterWidth() + font.size * LINE_MARGIN, size.height);
 		}
 		if (closeFenceType == FenceType.VERTICAL_BAR){
 			closeBracketSize = new Size(getVerticalBarLineThickness() + font.size * LINE_MARGIN, size.height);
 		} else {
-			closeBracketSize = new Size(canvas.measureText(FenceType.getCloseFence(closeFenceType)), size.height);
+			MFencedBracket mFencedBracket = new MFencedBracket(closeFenceType, font.clone((int) size.height));
+			mFencedBracket.render(size, false);
+			closeBracketSize = new Size(mFencedBracket.getLetterWidth() + font.size * LINE_MARGIN, size.height);
 		}
 
 		size.width +=  openBracketSize.width + closeBracketSize.width;
@@ -74,9 +77,9 @@ public class MFenced extends LayoutSchemata {
 			} else {
 				MFencedBracket mFencedBracket = new MFencedBracket(openFenceType, font.clone((int) size.height));
 				mFencedBracket.render(size, true);
-				double textOffset = getTextOffset((int) size.height);
-				canvas.drawImage(mFencedBracket.getBracket(), exactArea.x + openBracketSize.width / 2, canvas.getHeight() - mFencedBracket.getTextSizeOnCanvas(), 53 - (size.height - textOffset),
-						mFencedBracket.getCanvasHeight());
+				double x = exactArea.x;
+				double y = exactArea.y;
+				canvas.drawImage(mFencedBracket.getBracket(), x, y, mFencedBracket.getCanvasWidth(), mFencedBracket.getCanvasHeight());
 			}
 		}
 
@@ -96,9 +99,9 @@ public class MFenced extends LayoutSchemata {
 			} else {
 				MFencedBracket mFencedBracket = new MFencedBracket(closeFenceType, font.clone((int) size.height));
 				mFencedBracket.render(size, false);
-				double textOffset = getTextOffset((int) size.height);
-				canvas.drawImage(mFencedBracket.getBracket(), exactArea.x + exactArea.width - closeBracketSize.width/2, canvas.getHeight() - mFencedBracket.getTextSizeOnCanvas(), 53 - (size.height - textOffset),
-						mFencedBracket.getCanvasHeight());
+				double x = exactArea.x + exactArea.width - mFencedBracket.getLetterWidth()-1;
+				double y = exactArea.y;
+				canvas.drawImage(mFencedBracket.getBracket(), x, y, mFencedBracket.getCanvasWidth(), mFencedBracket.getCanvasHeight());
 			}
 		}
 	}
