@@ -128,7 +128,7 @@ public class MFencedBracket {
 	}
 
 	/**
-	 * rysuje nawias odwrucony okragly )
+	 * rysuje nawias odwrocony okragly )
 	 *
 	 * @param context2d
 	 *            na czym ma rysowac
