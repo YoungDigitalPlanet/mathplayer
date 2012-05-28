@@ -1,6 +1,5 @@
 package com.mathplayer.player.model.tokens;
 
-import gwt.g2d.client.graphics.Color;
 import gwt.g2d.client.graphics.Surface;
 
 import com.mathplayer.player.geom.Area;
@@ -56,7 +55,7 @@ public abstract class ContentTextTokenBase extends ContentToken {
 	public void render(Surface canvas, Area area, InteractionSocket socket) {
 		super.render(canvas, area, socket);
 		canvas.setFont(font.toString());
-		canvas.setFillStyle(new Color(0, 0,0));
+		canvas.setFillStyle(font.color);
 		canvas.fillText(content, exactArea.x + font.size*MARGIN, exactArea.y + getTextOffset() );
 	}
 

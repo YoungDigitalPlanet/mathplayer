@@ -1,7 +1,7 @@
 package com.mathplayer.player.model.signs;
 
-import gwt.g2d.client.graphics.Color;
 import gwt.g2d.client.graphics.Surface;
+
 import com.mathplayer.player.geom.Area;
 import com.mathplayer.player.geom.Size;
 import com.mathplayer.player.interaction.InteractionSocket;
@@ -22,7 +22,7 @@ public class FractionSign extends Sign {
 	@Override
 	public void render(Surface canvas, Area area, InteractionSocket socket) {
 		super.render(canvas, area, socket);
-		canvas.setFillStyle(new Color(0, 0,0));
+		canvas.setFillStyle(font.color);
 		canvas.fillRectangle(area.x, (int)area.y + getSpaceHeight()/LINE_POSITION_COEFF, area.width, getSignHeight());
 	}
 	

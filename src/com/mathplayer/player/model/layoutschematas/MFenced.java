@@ -66,11 +66,13 @@ public class MFenced extends LayoutSchemata {
 	public void render(Surface canvas, Area area, InteractionSocket socket) {
 		super.render(canvas, area, socket);
 		canvas.setFont(font.clone((int) size.height).toString());
+		canvas.setStrokeStyle(font.color);
+		canvas.setFillStyle(font.color);
 		if (openFenceType == FenceType.VERTICAL_BAR) {
 			ShapeBuilder sb = new ShapeBuilder();
 			canvas.setLineWidth(getVerticalBarLineThickness());
 			sb.drawLineSegment((int) (exactArea.x + openBracketSize.width / 2), exactArea.y, (int) (exactArea.x + openBracketSize.width / 2), exactArea.y + exactArea.height);
-			canvas.strokeShape(sb.build());
+			canvas.strokeShape(sb.build());			
 		} else {
 			if (size.height < 25) {
 				canvas.fillText(FenceType.getOpenFence(openFenceType), exactArea.x, exactArea.y + getTextOffset((int) size.height));

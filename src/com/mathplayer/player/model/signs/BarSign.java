@@ -48,6 +48,7 @@ public class BarSign extends Sign {
 		
 		ShapeBuilder sb = new ShapeBuilder();
 		canvas.setLineWidth(lineThickness);
+		canvas.setStrokeStyle(font.color);
 		 
 		if (barType == BarType.DOUBLE){
 			double midMarginHalf = font.size * MARGIN_VERTICAL_MID/2;

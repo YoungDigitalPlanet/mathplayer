@@ -29,6 +29,7 @@ public class MFencedBracket {
 	public void render(Size fontSize, boolean openTag) {
 		this.s = new Surface();
 		Context context2d = this.s.getCanvas().getContext2D();
+		context2d.setStrokeStyle(font.color.getColorCode());
 		this.s.setFont(font.toString());
 		switch (fenceType) {
 		case CURLY:
@@ -88,7 +89,6 @@ public class MFencedBracket {
 		s.save();
 		this.s = s;
 	}
-
 	/**
 	 * rysuje nawias ostry <
 	 *
