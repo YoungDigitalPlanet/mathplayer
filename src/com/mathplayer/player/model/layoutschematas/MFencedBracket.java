@@ -27,22 +27,25 @@ public class MFencedBracket {
 	 * @param openTag
 	 */
 	public void render(Size fontSize, boolean openTag) {
-		this.s = new Surface();
+		this.s = new Surface(100, font.size);
 		Context context2d = this.s.getCanvas().getContext2D();
 		context2d.setStrokeStyle(font.color.getColorCode());
 		this.s.setFont(font.toString());
 		switch (fenceType) {
 		case CURLY:
 			context2d.setLineWidth(1.5);
+			font.size-=2; //korygujemy ze wzgldu na grubosc linii ucina na dole
 			letterWidth = drawCurlyBracket(context2d);
 			break;
 		case ROUND:
+			font.size-=2;//korygujemy ze wzgldu na grubosc linii ucina na dole
 			letterWidth = drawRoundBracket(context2d);
 			if (openTag) {
 				rotate(context2d, font.size, letterWidth);
 			}
 			break;
 		case SQUARE:
+			font.size-=2; //korygujemy ze wzgldu na grubosc linii ucina na dole
 			context2d.setLineWidth(3);
 			letterWidth = drawSquareBracket(context2d);
 			break;
@@ -59,7 +62,7 @@ public class MFencedBracket {
 		ImageData imageData = context2d.getImageData(0, 0, s.getWidth(), s.getHeight());
 		CanvasPixelArray data = imageData.getPixelArray();
 		int linePixelCount = imageData.getWidth() * 4;
-		int width = imageData.getWidth() * linePixelCount;
+		int width = imageData.getHeight() * linePixelCount;
 		double letterWidth = 0;
 		// mierzymy czcionke na canvasie
 		for (int x = 3; x < width; x += 4) {
@@ -80,7 +83,7 @@ public class MFencedBracket {
 	 * @param letterWidth
 	 */
 	private void rotate(Context context2d, int letterSize, double letterWidth) {
-		Surface s = new Surface();
+		Surface s = new Surface(this.s.getWidth(),this.s.getHeight());
 		s.translate(s.getWidth() / 2, s.getHeight() / 2);
 		s.rotate(Math.PI);
 		s.translate(-s.getWidth() / 2, -s.getHeight() / 2);
@@ -180,30 +183,6 @@ public class MFencedBracket {
 		return s.getWidth();
 	}
 
-	/**
-	 * wielkosc tekstu wraz z marginesem gornym
-	 *
-	 * @return
-	 *
-	 */
-	public int getTextHeightOnCanvas() {
-		return font.size;
-	}
-
-	/**
-	 * Wysokosc znaku w px;
-	 *
-	 * @return
-	 */
-	public int getLetterHeight() {
-		return font.size;
-	}
-
-	/**
-	 * Szerokosc znaku w px
-	 *
-	 * @return
-	 */
 	public double getLetterWidth() {
 		return letterWidth;
 	}
