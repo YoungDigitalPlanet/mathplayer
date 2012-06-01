@@ -14,11 +14,14 @@ import com.mathplayer.player.model.Token;
 
 public class MSubSup extends LayoutSchemata {
 	
-	public MSubSup(Token base, Token sub, Token sup){
+	private boolean drawout;
+	
+	public MSubSup(Token base, Token sub, Token sup, boolean drawout){
 		tokens = new Vector<Token>();
 		tokens.add(base);
 		tokens.add(sub);
 		tokens.add(sup);
+		this.drawout = drawout;
 	}
 	
 	@Override
@@ -43,13 +46,13 @@ public class MSubSup extends LayoutSchemata {
 		
 		if (tokens.get(1) != null){
 			Size subSize = tokens.get(1).measure(socket);
-			size.addLeft(new Size(subSize.width, size.height + subSize.height/2, size.middleLine));
+			size.addLeft(new Size(subSize.width, size.height + ((drawout)?subSize.height/2:0), size.middleLine));
 			subsupWidth = subSize.width;
 		}
 		if (tokens.get(2) != null){
 			Size supSize = tokens.get(2).measure(socket);
 			subsupWidth = Math.max(0, supSize.width-subsupWidth); 
-			size.addLeft(new Size(subsupWidth, size.height + supSize.height/2, size.middleLine + supSize.height/2));
+			size.addLeft(new Size(subsupWidth, size.height + ((drawout)?supSize.height/2:0), size.middleLine + ((drawout)?supSize.height/2:0)));
 		}
 		
 		return size.clone();
@@ -64,10 +67,10 @@ public class MSubSup extends LayoutSchemata {
 		//	supOffset = tokens.get(2).measure(socket).height/2;
 		
 		//Area baseArea = exactArea.clone();
-		Area baseArea = new Area(exactArea.x, exactArea.y + supOffset, tokens.get(0).measure(socket));
+		Area baseArea = new Area(exactArea.x, exactArea.y + ((drawout)?supOffset:0), tokens.get(0).measure(socket));
 		tokens.get(0).render(canvas, baseArea, socket);
 		if (tokens.get(1) != null) {
-			Area subArea = new Area(exactArea.x + tokens.get(0).measure(socket).width, exactArea.y + supOffset + tokens.get(0).measure(socket).height - tokens.get(1).measure(socket).height/2, tokens.get(1).measure(socket));
+			Area subArea = new Area(exactArea.x + tokens.get(0).measure(socket).width, exactArea.y + supOffset + tokens.get(0).measure(socket).height - tokens.get(1).measure(socket).height/((drawout)?2:1), tokens.get(1).measure(socket));
 			tokens.get(1).render(canvas, subArea, socket);
 		}
 		if (tokens.get(2) != null) {

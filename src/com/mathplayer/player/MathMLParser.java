@@ -7,6 +7,7 @@ import com.google.gwt.xml.client.Element;
 import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.NodeList;
 import com.google.gwt.xml.client.XMLParser;
+import com.mathplayer.player.model.LayoutSchemata;
 import com.mathplayer.player.model.Token;
 import com.mathplayer.player.model.interaction.CustomField;
 import com.mathplayer.player.model.interaction.Gap;
@@ -25,31 +26,31 @@ import com.mathplayer.player.model.tokens.MIdentifier;
 import com.mathplayer.player.model.tokens.MNumber;
 import com.mathplayer.player.model.tokens.MOperator;
 import com.mathplayer.player.model.tokens.MStringLiteral;
-import com.mathplayer.player.style.StyleContext;
+import com.mathplayer.player.style.Context;
 import com.mathplayer.player.utils.XmlUtils;
 
 public abstract class MathMLParser {
 
 	public static Token parse(String source){
 		Document dom = XMLParser.parse(source);
-		StyleContext styleContext = new StyleContext();
+		Context styleContext = new Context();
 		return parseElement(dom.getDocumentElement(), styleContext);
 	}
 
-	private static Token parseElement(Element element, StyleContext styleContext){
+	private static Token parseElement(Element element, Context context){
 
 		String nodeName = element.getNodeName().toLowerCase();
 
 		try {
 
-			StyleContext currStyleContext = styleContext.clone();
-			currStyleContext.parseElement(element);
+			Context currContext = context.clone();
+			currContext.parseElement(element);
 
 			if (nodeName.equals("mrow")){
 				int nodesCount = XmlUtils.getChildElementNodesCount(element);
 				Vector<Token> tokens = new Vector<Token>();
 				for (int n = 0 ; n < nodesCount ;  n ++){
-					tokens.add( parseElement( XmlUtils.getChildElementNodeAtIndex(n, element) , currStyleContext ));
+					tokens.add( parseElement( XmlUtils.getChildElementNodeAtIndex(n, element) , currContext ));
 				}
 				return new MRow(tokens);
 			} else if (nodeName.equals("mtable")){
@@ -62,7 +63,7 @@ public abstract class MathMLParser {
 						tokens.add(new Vector<Token>());
 						for (int col = 0 ; col < tdNodes.getLength() ; col ++ ){
 							if (tdNodes.item(col).getNodeType() == Node.ELEMENT_NODE  &&  "mtd".equals(tdNodes.item(col).getNodeName())){
-								tokens.get(tokens.size()-1).add(parseElement( XmlUtils.getChildElementNodeAtIndex(0, (Element) tdNodes.item(col) ) , currStyleContext ));
+								tokens.get(tokens.size()-1).add(parseElement( XmlUtils.getChildElementNodeAtIndex(0, (Element) tdNodes.item(col) ) , currContext ));
 							}
 						}
 					}
@@ -70,54 +71,57 @@ public abstract class MathMLParser {
 				return new MTable(tokens);
 
 			} else if (nodeName.equals("mfrac")){
-				Token t1 = parseElement(XmlUtils.getChildElementNodeAtIndex(0, element) , currStyleContext);
-				Token t2 = parseElement(XmlUtils.getChildElementNodeAtIndex(1, element) , currStyleContext);
+				Token t1 = parseElement(XmlUtils.getChildElementNodeAtIndex(0, element) , currContext);
+				Token t2 = parseElement(XmlUtils.getChildElementNodeAtIndex(1, element) , currContext);
 				return new MFraction(t1, t2);
 			} else if (nodeName.equals("msubsup")){
-				Token t1 = parseElement(XmlUtils.getChildElementNodeAtIndex(0, element) , currStyleContext);
-				Token t2 = parseElement(XmlUtils.getChildElementNodeAtIndex(1, element) , currStyleContext);
-				Token t3 = parseElement(XmlUtils.getChildElementNodeAtIndex(2, element) , currStyleContext);
-				return new MSubSup(t1, t2, t3);
+				Token t1 = parseElement(XmlUtils.getChildElementNodeAtIndex(0, element) , currContext);
+				Token t2 = parseElement(XmlUtils.getChildElementNodeAtIndex(1, element) , currContext);
+				Token t3 = parseElement(XmlUtils.getChildElementNodeAtIndex(2, element) , currContext);
+				boolean drawOut = !(t1 instanceof LayoutSchemata  &&  ((LayoutSchemata)t1).containsToken(MSubSup.class, 0) ); 
+				return new MSubSup(t1, t2, t3, drawOut);
 			} else if (nodeName.equals("msub")){
-				Token t1 = parseElement(XmlUtils.getChildElementNodeAtIndex(0, element) , currStyleContext);
-				Token t2 = parseElement(XmlUtils.getChildElementNodeAtIndex(1, element) , currStyleContext);
-				return new MSubSup( t1, t2, null);
+				Token t1 = parseElement(XmlUtils.getChildElementNodeAtIndex(0, element) , currContext);
+				Token t2 = parseElement(XmlUtils.getChildElementNodeAtIndex(1, element) , currContext);
+				boolean drawOut = !(t1 instanceof LayoutSchemata  &&  ((LayoutSchemata)t1).containsToken(MSubSup.class, 0) ); 
+				return new MSubSup( t1, t2, null, drawOut);
 			} else if (nodeName.equals("msup")){
-				Token t1 = parseElement(XmlUtils.getChildElementNodeAtIndex(0, element) , currStyleContext);
-				Token t2 = parseElement(XmlUtils.getChildElementNodeAtIndex(1, element) , currStyleContext);
-				return new MSubSup( t1, null ,t2);
+				Token t1 = parseElement(XmlUtils.getChildElementNodeAtIndex(0, element) , currContext);
+				Token t2 = parseElement(XmlUtils.getChildElementNodeAtIndex(1, element) , currContext);
+				boolean drawOut = !(t1 instanceof LayoutSchemata  &&  ((LayoutSchemata)t1).containsToken(MSubSup.class, 0) ); 
+				return new MSubSup( t1, null ,t2, drawOut);
 			}  else if (nodeName.equals("munderover")){
-				Token t1 = parseElement(XmlUtils.getChildElementNodeAtIndex(0, element) , currStyleContext);
-				Token t2 = parseElement(XmlUtils.getChildElementNodeAtIndex(1, element) , currStyleContext);
-				Token t3 = parseElement(XmlUtils.getChildElementNodeAtIndex(2, element) , currStyleContext);
+				Token t1 = parseElement(XmlUtils.getChildElementNodeAtIndex(0, element) , currContext);
+				Token t2 = parseElement(XmlUtils.getChildElementNodeAtIndex(1, element) , currContext);
+				Token t3 = parseElement(XmlUtils.getChildElementNodeAtIndex(2, element) , currContext);
 				return new MUnderOver( t1, t2, t3 );
 			} else if (nodeName.equals("munder")){
-				Token t1 = parseElement(XmlUtils.getChildElementNodeAtIndex(0, element) , currStyleContext);
-				Token t2 = parseElement(XmlUtils.getChildElementNodeAtIndex(1, element) , currStyleContext);
+				Token t1 = parseElement(XmlUtils.getChildElementNodeAtIndex(0, element) , currContext);
+				Token t2 = parseElement(XmlUtils.getChildElementNodeAtIndex(1, element) , currContext);
 				return new MUnderOver( t1, t2, null);
 			} else if (nodeName.equals("mover")){
-				Token t1 = parseElement(XmlUtils.getChildElementNodeAtIndex(0, element) , currStyleContext);
-				Token t2 = parseElement(XmlUtils.getChildElementNodeAtIndex(1, element) , currStyleContext);
+				Token t1 = parseElement(XmlUtils.getChildElementNodeAtIndex(0, element) , currContext);
+				Token t2 = parseElement(XmlUtils.getChildElementNodeAtIndex(1, element) , currContext);
 				return new MUnderOver( t1, null, t2);
 			} else if (nodeName.equals("mroot")){
-				Token t1 = parseElement(XmlUtils.getChildElementNodeAtIndex(0, element) , currStyleContext);
-				Token t2 = parseElement(XmlUtils.getChildElementNodeAtIndex(1, element) , currStyleContext);
+				Token t1 = parseElement(XmlUtils.getChildElementNodeAtIndex(0, element) , currContext);
+				Token t2 = parseElement(XmlUtils.getChildElementNodeAtIndex(1, element) , currContext);
 				return new MRoot( t1, t2);
 			} else if (nodeName.equals("msqrt")){
-				Token t1 = parseElement(XmlUtils.getChildElementNodeAtIndex(0, element) , currStyleContext);
+				Token t1 = parseElement(XmlUtils.getChildElementNodeAtIndex(0, element) , currContext);
 				return new MRoot( t1, null);
 			} else if (nodeName.equals("mfenced")){
-				Token t1 = parseElement(XmlUtils.getChildElementNodeAtIndex(0, element) , currStyleContext);
+				Token t1 = parseElement(XmlUtils.getChildElementNodeAtIndex(0, element) , currContext);
 				return new MFenced( t1,
 						FenceType.fromString(XmlUtils.getAttribute(element, "open")),
 						FenceType.fromString(XmlUtils.getAttribute(element, "close")));
 			} else if (nodeName.equals("mi")){
 				MIdentifier mi = new MIdentifier( XmlUtils.getFirstTextNode(element).toString() );
-				mi.setStyleContext(currStyleContext);
+				mi.setStyleContext(currContext);
 				return mi;
 			} else if (nodeName.equals("mn")){
 				MNumber mn = new MNumber( XmlUtils.getFirstTextNode(element).toString() );
-				mn.setStyleContext(currStyleContext);
+				mn.setStyleContext(currContext);
 				return mn;
 			} else if (nodeName.equals("mo")){
 				String content = XmlUtils.getFirstTextNode(element).toString();
@@ -132,7 +136,7 @@ public abstract class MathMLParser {
 				else if (content != null  &&  "&lt;".equals(content.trim()))
 					return new MOperator("<");
 				MOperator mo = new MOperator( content );
-				mo.setStyleContext(currStyleContext);
+				mo.setStyleContext(currContext);
 				return mo;
 			} else if (nodeName.equals("ms")){
 				Node node = XmlUtils.getFirstTextNode(element);
@@ -141,7 +145,7 @@ public abstract class MathMLParser {
 					value = node.getNodeValue();
 				}
 				MStringLiteral ms = new MStringLiteral(value);
-				ms.setStyleContext(currStyleContext);
+				ms.setStyleContext(currContext);
 				return ms;
 			} else if (nodeName.equals("gap")){
 				if (element.hasAttribute("type")){

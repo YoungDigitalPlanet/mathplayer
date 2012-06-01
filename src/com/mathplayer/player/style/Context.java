@@ -3,7 +3,7 @@ package com.mathplayer.player.style;
 import com.google.gwt.xml.client.Element;
 import com.mathplayer.player.geom.Font;
 
-public class StyleContext {
+public class Context {
 	
 	private boolean italic = false; 
 
@@ -14,7 +14,7 @@ public class StyleContext {
 	public void setItalic(boolean italic) {
 		this.italic = italic;
 	}
-
+		
 	public void parseElement(Element element){
 		if (element.hasAttribute("mathvariant")){
 			String mathvariant = element.getAttribute("mathvariant");
@@ -30,8 +30,8 @@ public class StyleContext {
 		font.italic = italic;
 	}
 	
-	public StyleContext clone(){
-		StyleContext sc = new StyleContext();
+	public Context clone(){
+		Context sc = new Context();
 		sc.setItalic(italic);
 		return sc;
 	}
