@@ -25,6 +25,7 @@ import com.mathplayer.player.model.tokens.MEmpty;
 import com.mathplayer.player.model.tokens.MIdentifier;
 import com.mathplayer.player.model.tokens.MNumber;
 import com.mathplayer.player.model.tokens.MOperator;
+import com.mathplayer.player.model.tokens.MSpace;
 import com.mathplayer.player.model.tokens.MStringLiteral;
 import com.mathplayer.player.style.Context;
 import com.mathplayer.player.utils.XmlUtils;
@@ -147,6 +148,12 @@ public abstract class MathMLParser {
 				MStringLiteral ms = new MStringLiteral(value);
 				ms.setStyleContext(currContext);
 				return ms;
+			} else if (nodeName.equals("mspace")){
+				double width = 0;
+				if (element.hasAttribute("width")){
+					width = Double.parseDouble(element.getAttribute("width").replace("em", ""));
+				}
+				return new MSpace(width);
 			} else if (nodeName.equals("gap")){
 				if (element.hasAttribute("type")){
 					String type;
