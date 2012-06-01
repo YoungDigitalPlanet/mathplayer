@@ -16,6 +16,10 @@ public class MSubSup extends LayoutSchemata {
 	
 	private boolean drawout;
 	
+	public MSubSup(Token base, Token sub, Token sup){
+		this(base, sub, sup, true);
+	}
+	
 	public MSubSup(Token base, Token sub, Token sup, boolean drawout){
 		tokens = new Vector<Token>();
 		tokens.add(base);
