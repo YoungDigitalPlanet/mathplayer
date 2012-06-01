@@ -43,7 +43,7 @@ public abstract class Token {
 		return exactArea.clone();
 	}
 	
-	private void findExactArea(Area area){
+	protected void findExactArea(Area area){
 		double heightSurplus = area.middleLine - size.middleLine;
 		if (area.y + heightSurplus < 0)
 			heightSurplus = -area.y;

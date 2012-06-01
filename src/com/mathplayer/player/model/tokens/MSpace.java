@@ -27,6 +27,7 @@ public class MSpace extends ContentTextTokenBase {
 
 	@Override
 	public void render(Surface canvas, Area area, InteractionSocket socket) {
+		findExactArea(area);
 	}
 
 
