@@ -38,7 +38,7 @@ public class MSpace extends ContentTextTokenBase {
 
 	@Override
 	public String toMathML() {
-		return "<mspace width=" + width + "em/>";
+		return "<mspace width=\"" + width + "em\" />";
 	}
 
 }
