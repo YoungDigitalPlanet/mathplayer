@@ -119,8 +119,8 @@ public class MFencedBracket {
 	 */
 	private double drawSquareBracket(Context context2d) {
 		double divisor = font.size / 108f; // 108 bazowa wielkosc klamry
-		double width = 20 * divisor;
-		double height = 108 * divisor;
+		double width = Math.round(20 * divisor);
+		double height = Math.round( 108 * divisor);
 		context2d.beginPath();
 		context2d.moveTo(width, 0.00);
 		context2d.lineTo(0, 0);
@@ -142,10 +142,10 @@ public class MFencedBracket {
 		double width = 50 * divisor;
 		double height = 108 * divisor;
 		context2d.moveTo(width * divisor, 0.00);
-		for (int x = 0; x < 1 + 4; x++) {
+		for (int x = 0; x < 2 ; x++) {
 			context2d.beginPath();
 			context2d.moveTo(0, 0.00);
-			context2d.bezierCurveTo(0, 0.00, width - x, 50 * divisor, 0, height);
+			context2d.bezierCurveTo(0, 0.00, width -x, 50 * divisor, 0, height);
 			context2d.stroke();
 		}
 		return getImageWidth(context2d);
