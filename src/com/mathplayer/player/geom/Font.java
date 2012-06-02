@@ -43,6 +43,22 @@ public class Font {
 		this.bold = bold;
 		this.color = color;
 	}
+	
+	/**
+	 * @param size
+	 * @param name
+	 * @param italic
+	 * @param bold
+	 * @param color
+	 */
+	public Font(int size, String name, boolean italic, boolean bold, com.mathplayer.player.geom.Color color) {
+		super();
+		this.size = size;
+		this.name = name;
+		this.italic = italic;
+		this.bold = bold;
+		this.color = color.toG2dColor();
+	}
 
 	public Font clone(){
 		return new Font(size, name, italic, bold, color);
