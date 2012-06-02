@@ -58,23 +58,6 @@ public class MFencedBracket {
 		}
 	}
 
-	private double getImageWidth(Context context2d) {
-		ImageData imageData = context2d.getImageData(0, 0, s.getWidth(), s.getHeight());
-		CanvasPixelArray data = imageData.getPixelArray();
-		int linePixelCount = imageData.getWidth() * 4;
-		int width = imageData.getHeight() * linePixelCount;
-		double letterWidth = 0;
-		// mierzymy czcionke na canvasie
-		for (int x = 3; x < width; x += 4) {
-			if (data.getData(x) > 0) {
-				if (x % linePixelCount / 4 > letterWidth) {
-					letterWidth = Math.floor((x % linePixelCount) / 4);
-				}
-			}
-		}
-		return ++letterWidth;
-	}
-
 	/**
 	 * obraca canvas o 180 stopni aby otrzymac zamykajacy nawias
 	 *
@@ -148,7 +131,19 @@ public class MFencedBracket {
 			context2d.bezierCurveTo(0, 0.00, width -x, 50 * divisor, 0, height);
 			context2d.stroke();
 		}
-		return getImageWidth(context2d);
+		
+		// Algorytm de Casteljau wyznaczania wspolrzednej punktu na krzywej Beziera
+		
+		int p0x = 0;
+		int p1x = (int)width;
+		int p2x = 0;
+
+		int p0x1 = (p0x + p1x)/2;
+		int p1x1 = (p1x + p2x)/2;
+
+		int p0x2 = (p0x1 + p1x1)/2;
+				
+		return p0x2+1;
 	}
 
 	/**
