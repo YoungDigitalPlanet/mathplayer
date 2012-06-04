@@ -79,8 +79,8 @@ public class MFenced extends LayoutSchemata {
 			} else {
 				MFencedBracket mFencedBracket = new MFencedBracket(openFenceType, font.clone((int) size.height));
 				mFencedBracket.render(size, true);
-				double x = exactArea.x;
-				double y = exactArea.y;
+				int x = (int)Math.round(exactArea.x);
+				int y = (int)Math.round(exactArea.y);
 				canvas.drawImage(mFencedBracket.getBracket(), x, y, mFencedBracket.getCanvasWidth(), mFencedBracket.getCanvasHeight());
 			}
 		}
@@ -101,8 +101,8 @@ public class MFenced extends LayoutSchemata {
 			} else {
 				MFencedBracket mFencedBracket = new MFencedBracket(closeFenceType, font.clone((int) size.height));
 				mFencedBracket.render(size, false);
-				double x = exactArea.x + exactArea.width - mFencedBracket.getLetterWidth()-1;
-				double y = exactArea.y;
+				int x = (int)Math.round(exactArea.x + exactArea.width - mFencedBracket.getLetterWidth()-1);
+				int y = (int)Math.round(exactArea.y);
 				canvas.drawImage(mFencedBracket.getBracket(), x, y, mFencedBracket.getCanvasWidth(), mFencedBracket.getCanvasHeight());
 			}
 		}

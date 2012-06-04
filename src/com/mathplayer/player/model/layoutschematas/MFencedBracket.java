@@ -1,5 +1,6 @@
 package com.mathplayer.player.model.layoutschematas;
 
+import gwt.g2d.client.graphics.Color;
 import gwt.g2d.client.graphics.Surface;
 import gwt.g2d.client.graphics.canvas.CanvasElement;
 import gwt.g2d.client.graphics.canvas.CanvasPixelArray;
@@ -46,14 +47,13 @@ public class MFencedBracket {
 			break;
 		case SQUARE:
 			font.size-=2; //korygujemy ze wzgldu na grubosc linii ucina na dole
-			context2d.setLineWidth(3);
-			letterWidth = drawSquareBracket(context2d);
+			letterWidth = drawSquareBracket(context2d, openTag);
 			break;
 		case ANGLE:
 			letterWidth = drawPointyBracket(context2d);
 			break;
 		}
-		if (!openTag && fenceType != FenceType.ROUND) {
+		if (!openTag && fenceType != FenceType.ROUND && fenceType != FenceType.SQUARE) {
 			rotate(context2d, font.size, letterWidth);
 		}
 	}
@@ -100,17 +100,48 @@ public class MFencedBracket {
 	 *            na czym ma rysowac
 	 * @return szerokosc znaku
 	 */
-	private double drawSquareBracket(Context context2d) {
+	private double drawSquareBracket(Context context2d, boolean openTag) {
 		double divisor = font.size / 108f; // 108 bazowa wielkosc klamry
-		double width = Math.round(20 * divisor);
-		double height = Math.round( 108 * divisor);
-		context2d.beginPath();
-		context2d.moveTo(width, 0.00);
-		context2d.lineTo(0, 0);
-		context2d.lineTo(0, height);
-		context2d.lineTo(width, height);
-		context2d.stroke();
+		int width = (int)Math.round(20 * divisor);
+		int height = (int)Math.round( 108 * divisor);
+		try {
+			ImageData imageData = context2d.getImageData(0, 0, width, height);
+			CanvasPixelArray cpa = imageData.getPixelArray();
+			drawHorizontalLine(cpa, width, 0, width-1, 0, font.color);
+			drawHorizontalLine(cpa, width, 0, width-1, height-1, font.color);
+			int sx = ( (openTag) ? 0 : (int)width-2 );
+			drawVerticalLine(cpa, width, 1, height-2, sx, font.color);
+			drawVerticalLine(cpa, width, 1, height-2, sx+1, font.color);
+			context2d.putImageData(imageData, 0, 0, 0, 0, width, height);
+			
+		} catch (Exception e) {
+			// implementation for IE
+			context2d.beginPath();
+			context2d.moveTo( ( (openTag) ? (int)width : 0.0d ) , 0.00);
+			context2d.lineTo( ( (openTag) ? 0.0d : (int)width ) , 0);
+			context2d.lineTo( ( (openTag) ? 0.0d : (int)width ) , (int)height);
+			context2d.lineTo( ( (openTag) ? (int)width : 0.0d ) , (int)height);
+			context2d.stroke();
+		}
 		return width;
+	}
+	
+	private void drawHorizontalLine(CanvasPixelArray cpa, int lineWidth, int fromX, int toX,int y, Color color){
+		for (int x = fromX ; x <= toX ; x ++){
+			cpa.setData(y*lineWidth*4 + x*4, color.getR());
+			cpa.setData(y*lineWidth*4 + x*4+1, color.getG());
+			cpa.setData(y*lineWidth*4 + x*4+2, color.getB());
+			cpa.setData(y*lineWidth*4 + x*4+3, (int)(255*color.getAlpha()));
+		}
+	}
+	
+	private void drawVerticalLine(CanvasPixelArray cpa, int lineWidth, int fromY, int toY,int x, Color color){
+		for (int y = fromY ; y <= toY ; y ++){
+			cpa.setData(y*lineWidth*4 + x*4, color.getR());
+			cpa.setData(y*lineWidth*4 + x*4+1, color.getG());
+			cpa.setData(y*lineWidth*4 + x*4+2, color.getB());
+			cpa.setData(y*lineWidth*4 + x*4+3, (int)(255*color.getAlpha()));
+		}
 	}
 
 	/**
@@ -122,7 +153,7 @@ public class MFencedBracket {
 	 */
 	private double drawRoundBracket(Context context2d) {
 		double divisor = font.size / 108f; // 108 bazowa wielkosc klamry
-		double width = 50 * divisor;
+		double width = 40 * divisor;
 		double height = 108 * divisor;
 		context2d.moveTo(width * divisor, 0.00);
 		for (int x = 0; x < 2 ; x++) {
