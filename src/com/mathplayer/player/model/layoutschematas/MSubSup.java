@@ -50,7 +50,7 @@ public class MSubSup extends LayoutSchemata {
 		
 		if (tokens.get(1) != null){
 			Size subSize = tokens.get(1).measure(socket);
-			size.addLeft(new Size(subSize.width, size.height + ((drawout)?subSize.height/2:0), size.middleLine));
+			size.addLeft(new Size(subSize.width, size.height + ((drawout)?subSize.height*(2.0d/3.0d):0), size.middleLine));
 			subsupWidth = subSize.width;
 		}
 		if (tokens.get(2) != null){
@@ -74,7 +74,7 @@ public class MSubSup extends LayoutSchemata {
 		Area baseArea = new Area(exactArea.x, exactArea.y + ((drawout)?supOffset:0), tokens.get(0).measure(socket));
 		tokens.get(0).render(canvas, baseArea, socket);
 		if (tokens.get(1) != null) {
-			Area subArea = new Area(exactArea.x + tokens.get(0).measure(socket).width, exactArea.y + supOffset + tokens.get(0).measure(socket).height - tokens.get(1).measure(socket).height/((drawout)?2:1), tokens.get(1).measure(socket));
+			Area subArea = new Area(exactArea.x + tokens.get(0).measure(socket).width, exactArea.y + supOffset + tokens.get(0).measure(socket).height - tokens.get(1).measure(socket).height*((drawout)?(2.0d/3.0d):1), tokens.get(1).measure(socket));
 			tokens.get(1).render(canvas, subArea, socket);
 		}
 		if (tokens.get(2) != null) {
