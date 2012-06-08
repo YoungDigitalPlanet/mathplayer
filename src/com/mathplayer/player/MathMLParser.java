@@ -27,6 +27,7 @@ import com.mathplayer.player.model.tokens.MNumber;
 import com.mathplayer.player.model.tokens.MOperator;
 import com.mathplayer.player.model.tokens.MSpace;
 import com.mathplayer.player.model.tokens.MStringLiteral;
+import com.mathplayer.player.model.tokens.MText;
 import com.mathplayer.player.style.Context;
 import com.mathplayer.player.utils.XmlUtils;
 
@@ -122,6 +123,10 @@ public abstract class MathMLParser {
 				return mi;
 			} else if (nodeName.equals("mn")){
 				MNumber mn = new MNumber( XmlUtils.getFirstTextNode(element).toString() );
+				mn.setStyleContext(currContext);
+				return mn;
+			} else if (nodeName.equals("mtext")){
+				MText mn = new MText( XmlUtils.getFirstTextNode(element).toString() );
 				mn.setStyleContext(currContext);
 				return mn;
 			} else if (nodeName.equals("mo")){

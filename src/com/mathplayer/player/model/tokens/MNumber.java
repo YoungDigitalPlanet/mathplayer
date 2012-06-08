@@ -1,14 +1,10 @@
 package com.mathplayer.player.model.tokens;
 
-public class MNumber extends ContentTextTokenBase {
+public class MNumber extends SimpleTextTokenBase {
 	
 	public MNumber(String content){
-		super(content);
+		super(content, "mn");
 		MARGIN = 0.2d;
 	}
 
-	@Override
-	public String toMathML() {
-		return "<mn>" + content + "</mn>";
-	}
 }

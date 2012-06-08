@@ -1,13 +1,8 @@
 package com.mathplayer.player.model.tokens;
 
-public class MIdentifier extends ContentTextTokenBase {
+public class MIdentifier extends SimpleTextTokenBase {
 
 	public MIdentifier(String content) {
-		super(content);
-	}
-
-	@Override
-	public String toMathML() {
-		return "<mi>" + content + "</mi>";
+		super(content, "mi");
 	}
 }
