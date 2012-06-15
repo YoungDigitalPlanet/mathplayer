@@ -3,14 +3,15 @@
 	<configurations>
 		<conf name="default"  description="math-player executables"/>
   </configurations>
-  
+
   <publications>
   	<artifact name="mathplayer" type="jar" conf="default" ext="jar"/>
   </publications>
 
   <dependencies>
-    <dependency org="com.google.gwt" name="gwt-servlet" rev="2.4.0" conf="default->default"/>  
-    <dependency org="com.google.gwt" name="gwt-user" rev="2.4.0" conf="default->default"/>  
-    <dependency org="com.google.gwt" name="gwt-dev" rev="2.4.0" conf="default->default"/> 
+    <dependency org="com.google.gwt" name="gwt-servlet" rev="2.4.0" conf="default->default"/>
+    <dependency org="com.google.gwt" name="gwt-user" rev="2.4.0" conf="default->default"/>
+    <dependency org="com.google.gwt" name="gwt-dev" rev="2.4.0" conf="default->default"/>
+    <dependency org="eu.ydp" name="ydpgwtutils" rev="latest.release"  conf="*->default"/>
   </dependencies>
 </ivy-module>
