@@ -126,7 +126,10 @@ public abstract class MathMLParser {
 				mn.setStyleContext(currContext);
 				return mn;
 			} else if (nodeName.equals("mtext")){
-				MText mn = new MText( XmlUtils.getFirstTextNode(element).toString() );
+				String content = XmlUtils.getFirstTextNode(element).toString();
+				content = content.replaceAll("&apos;", "'");
+				content = content.replaceAll("&quot;", "\"");
+				MText mn = new MText( content );
 				mn.setStyleContext(currContext);
 				return mn;
 			} else if (nodeName.equals("mo")){
