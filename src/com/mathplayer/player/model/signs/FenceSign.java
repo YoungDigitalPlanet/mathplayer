@@ -57,6 +57,7 @@ public class FenceSign extends Sign {
 				break;
 	
 			default:
+				size = new Size(0, 0);
 				break;
 		}
 		return size;
