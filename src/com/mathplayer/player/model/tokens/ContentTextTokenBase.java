@@ -45,12 +45,12 @@ public abstract class ContentTextTokenBase extends ContentToken {
 		
 		size.width = canvas.measureText(content) + font.size*MARGIN*2;
 		size.height = font.size;
-		size.middleLine = font.size/2;
+		size.middleLine = font.size / 2 + MiddleLineCorrection.correction(this.content, font.size);
 		
 		removeCanvas(canvas);
 		return size.clone();
 	}
-
+	
 	@Override
 	public void render(Surface canvas, Area area, InteractionSocket socket) {
 		super.render(canvas, area, socket);
