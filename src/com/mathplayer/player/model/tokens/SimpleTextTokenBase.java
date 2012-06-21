@@ -20,7 +20,11 @@ public abstract class SimpleTextTokenBase extends ContentTextTokenBase {
 
 	@Override
 	public String toMathML() {
-		return "<"+nodeName+">" + content + "</"+nodeName+">";
+		return "<"+nodeName+">" + escape(content) + "</"+nodeName+">";
+	}
+	
+	private String escape(String value){
+		return value.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
 	}
 
 }
