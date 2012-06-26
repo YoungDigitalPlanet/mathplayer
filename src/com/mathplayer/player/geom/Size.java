@@ -10,10 +10,7 @@ public class Size {
 	 * c'tor
 	 */
 	public Size() {
-		super();
-		this.width = 0;
-		this.height = 0;
-		this.middleLine = 0;
+		this(0, 0, 0);
 	}
 	
 	/**
@@ -21,10 +18,7 @@ public class Size {
 	 * @param height
 	 */
 	public Size(double width, double height) {
-		super();
-		this.width = width;
-		this.height = height;
-		this.middleLine = 0;
+		this(width, height, height / 2);
 	}
 	
 	/**
