@@ -129,6 +129,7 @@ public abstract class MathMLParser {
 				String content = XmlUtils.getFirstTextNode(element).toString();
 				content = content.replaceAll("&apos;", "'");
 				content = content.replaceAll("&quot;", "\"");
+				content = content.replaceAll("&semi;", ";");
 				MText mn = new MText( content );
 				mn.setStyleContext(currContext);
 				return mn;
