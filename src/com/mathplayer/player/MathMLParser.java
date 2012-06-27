@@ -76,7 +76,7 @@ public abstract class MathMLParser {
 				Token t1 = parseElement(XmlUtils.getChildElementNodeAtIndex(0, element) , currContext);
 				Token t2 = parseElement(XmlUtils.getChildElementNodeAtIndex(1, element) , currContext);
 				return new MFraction(t1, t2);
-			} else if (nodeName.equals("msubsup")){
+			} else if (nodeName.equals("mlsubsup")){
 				Token t1 = parseElement(XmlUtils.getChildElementNodeAtIndex(0, element) , currContext);
 				Token t2 = parseElement(XmlUtils.getChildElementNodeAtIndex(1, element) , currContext);
 				Token t3 = parseElement(XmlUtils.getChildElementNodeAtIndex(2, element) , currContext);
