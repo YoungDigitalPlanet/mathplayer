@@ -34,6 +34,7 @@ import com.mathplayer.player.utils.XmlUtils;
 public abstract class MathMLParser {
 
 	public static Token parse(String source){
+		source = source.replaceAll("&semi;", ";");
 		Document dom = XMLParser.parse(source);
 		Context styleContext = new Context();
 		return parseElement(dom.getDocumentElement(), styleContext);
@@ -118,18 +119,20 @@ public abstract class MathMLParser {
 						FenceType.fromString(XmlUtils.getAttribute(element, "open")),
 						FenceType.fromString(XmlUtils.getAttribute(element, "close")));
 			} else if (nodeName.equals("mi")){
-				MIdentifier mi = new MIdentifier( XmlUtils.getFirstTextNode(element).toString() );
+				String content = XmlUtils.getFirstTextNode(element).toString();
+				content = XmlUtils.unescape(content);
+				MIdentifier mi = new MIdentifier( content );
 				mi.setStyleContext(currContext);
 				return mi;
 			} else if (nodeName.equals("mn")){
-				MNumber mn = new MNumber( XmlUtils.getFirstTextNode(element).toString() );
+				String content = XmlUtils.getFirstTextNode(element).toString();
+				content = XmlUtils.unescape(content);
+				MNumber mn = new MNumber( content );
 				mn.setStyleContext(currContext);
 				return mn;
 			} else if (nodeName.equals("mtext")){
 				String content = XmlUtils.getFirstTextNode(element).toString();
-				content = content.replaceAll("&apos;", "'");
-				content = content.replaceAll("&quot;", "\"");
-				content = content.replaceAll("&semi;", ";");
+				content = XmlUtils.unescape(content);
 				MText mn = new MText( content );
 				mn.setStyleContext(currContext);
 				return mn;
@@ -181,4 +184,5 @@ public abstract class MathMLParser {
 		}
 		return new MEmpty();
 	}
+	
 }

@@ -1,6 +1,7 @@
 package com.mathplayer.player.model.tokens;
 
 import com.google.gwt.user.client.Window.Navigator;
+import com.mathplayer.player.utils.XmlUtils;
 
 public abstract class SimpleTextTokenBase extends ContentTextTokenBase {
 
@@ -24,7 +25,7 @@ public abstract class SimpleTextTokenBase extends ContentTextTokenBase {
 	}
 	
 	private String escape(String value){
-		return value.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+		return XmlUtils.escape(value);
 	}
 
 }
