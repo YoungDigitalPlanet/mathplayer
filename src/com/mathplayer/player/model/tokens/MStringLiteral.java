@@ -8,7 +8,7 @@ public class MStringLiteral extends SimpleTextTokenBase {
 
 	@Override
 	public String toMathML() {
-		return "<ms lquote=\"\" rquote=\"\">" + content + "</ms>";
+		return "<ms lquote=\"\" rquote=\"\" mathvariant=\"normal\">" + content + "</ms>";
 	}
 
 }
