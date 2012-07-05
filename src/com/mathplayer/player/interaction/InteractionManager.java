@@ -1,11 +1,8 @@
 package com.mathplayer.player.interaction;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
-import com.google.gwt.dom.client.Style.Overflow;
-import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -13,11 +10,12 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.mathplayer.player.geom.Area;
 import com.mathplayer.player.geom.Point;
+import com.mathplayer.player.model.interaction.CustomFieldDescription;
 
 public class InteractionManager implements InteractionSocket {
 
 	private Vector<Point> gapPositions;
-	private Vector<Point> customFieldPositions;
+	private Vector<CustomFieldDescription> customFieldDescriptions;
 	private Vector<PanelGap> gaps;
 	private AbsolutePanel container;
 	private AbsolutePanel canvasLayer;
@@ -54,13 +52,12 @@ public class InteractionManager implements InteractionSocket {
 
 		gapPositions = new Vector<Point>();
 		gaps = new Vector<PanelGap>();
-		customFieldPositions = new Vector<Point>();
+		customFieldDescriptions = new Vector<CustomFieldDescription>();
 
 		userGapWidth = 26;
 		userGapHeight = 14;
 		actualGapWidth = 32;
 		actualGapHeight = 20;
-
 	}
 
 	@Override
@@ -69,8 +66,8 @@ public class InteractionManager implements InteractionSocket {
 	}
 
 	@Override
-	public void addCustomField(int x, int y) {
-		customFieldPositions.add(new Point(x, y));		
+	public void addCustomField(int x, int y, boolean isSubSup) {
+		customFieldDescriptions.add(new CustomFieldDescription(new Point(x, y), isSubSup));		
 	}
 	
 	public void process(){
@@ -165,8 +162,8 @@ public class InteractionManager implements InteractionSocket {
 			gaps.get(index).unmark();
 	}
 	
-	public Vector<Point> getCustomFieldPositions(){
-		return customFieldPositions;
+	public Vector<CustomFieldDescription> getCustomFieldDescriptions(){
+		return customFieldDescriptions;
 	}
 
 	@Override

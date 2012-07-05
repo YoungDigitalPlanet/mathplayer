@@ -1,6 +1,5 @@
 package com.mathplayer.player.model.interaction;
 
-import gwt.g2d.client.graphics.Color;
 import gwt.g2d.client.graphics.Surface;
 
 import com.mathplayer.player.geom.Area;
@@ -18,6 +17,7 @@ public class CustomField extends InteractionToken {
 	
 	@Override
 	public Size measure(InteractionSocket socket) {
+	
 		if (size != null)
 			return size;
 
@@ -30,7 +30,7 @@ public class CustomField extends InteractionToken {
 	public void render(Surface canvas, Area area, InteractionSocket socket) {
 		super.render(canvas, area, socket);
 		
-		socket.addCustomField((int)exactArea.x, (int)exactArea.y);
+		socket.addCustomField((int)exactArea.x, (int)exactArea.y, this.isSubSup);
 	}
 	
 	@Override

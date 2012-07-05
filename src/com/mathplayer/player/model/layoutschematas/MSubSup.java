@@ -26,6 +26,12 @@ public class MSubSup extends LayoutSchemata {
 		tokens.add(sub);
 		tokens.add(sup);
 		this.drawout = drawout;
+		
+		if (sub != null)
+			sub.setSubSup(true);
+		
+		if (sup != null)
+			sup.setSubSup(true);
 	}
 	
 	@Override
@@ -66,7 +72,7 @@ public class MSubSup extends LayoutSchemata {
 	public void render(Surface canvas, Area area, InteractionSocket socket) {
 		super.render(canvas, area, socket);
 		
-		double supOffset = exactArea.middleLine - tokens.get(0).measure(socket).middleLine;;
+		double supOffset = exactArea.middleLine - tokens.get(0).measure(socket).middleLine;
 		//if (tokens.get(2) != null)
 		//	supOffset = tokens.get(2).measure(socket).height/2;
 		
@@ -81,7 +87,6 @@ public class MSubSup extends LayoutSchemata {
 			Area supArea = new Area(exactArea.x + tokens.get(0).measure(socket).width, exactArea.y, tokens.get(2).measure(socket));
 			tokens.get(2).render(canvas, supArea, socket);
 		}
-
 	}
 
 	@Override

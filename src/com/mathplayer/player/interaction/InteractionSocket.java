@@ -8,7 +8,7 @@ public interface InteractionSocket {
 	boolean isEditorMode();
 	
 	void addGap(int x, int y);
-	void addCustomField(int x, int y);
+	void addCustomField(int x, int y, boolean isSubSup);
 	
 	void setCanvas(Widget canvas, int width, int height);
 	
