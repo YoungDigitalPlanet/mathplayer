@@ -4,15 +4,16 @@ import gwt.g2d.client.graphics.Surface;
 
 import com.mathplayer.player.geom.Area;
 import com.mathplayer.player.geom.Size;
+import com.mathplayer.player.interaction.GapIdentifier;
 import com.mathplayer.player.interaction.InteractionSocket;
 import com.mathplayer.player.model.InteractionToken;
 
 public class CustomField extends InteractionToken {
 
-	private String type;
+	private GapIdentifier gid;
 
-	public CustomField(String type){
-		this.type = type;
+	public CustomField(GapIdentifier gid){
+		this.gid = gid;
 	}
 	
 	@Override
@@ -20,8 +21,8 @@ public class CustomField extends InteractionToken {
 	
 		if (size != null)
 			return size;
-
-		size = new Size(socket.getCustomFieldWidth(type), socket.getCustomFieldHeight(type), socket.getCustomFieldHeight(type)/2);
+		
+		size = new Size(socket.getCustomFieldWidth(gid), socket.getCustomFieldHeight(gid), socket.getCustomFieldHeight(gid)/2);
 		
 		return size.clone();
 	}
@@ -30,7 +31,7 @@ public class CustomField extends InteractionToken {
 	public void render(Surface canvas, Area area, InteractionSocket socket) {
 		super.render(canvas, area, socket);
 		
-		socket.addCustomField((int)exactArea.x, (int)exactArea.y, this.isSubSup);
+		socket.addCustomField((int)exactArea.x, (int)exactArea.y);
 	}
 	
 	@Override

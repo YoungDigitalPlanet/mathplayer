@@ -1,13 +1,16 @@
 package com.mathplayer.player;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import eu.ydp.gwtutil.client.util.MatchableMap;
 import gwt.g2d.client.graphics.Surface;
+
+import java.util.Map;
+import java.util.TreeMap;
+
 import com.google.gwt.user.client.ui.Panel;
 import com.mathplayer.player.geom.Area;
 import com.mathplayer.player.geom.Font;
 import com.mathplayer.player.geom.Size;
+import com.mathplayer.player.interaction.GapIdentifier;
 import com.mathplayer.player.interaction.InteractionManager;
 import com.mathplayer.player.model.Token;
 
@@ -16,16 +19,16 @@ public class MathPlayerManager {
 	private Font font;
 	private int gapWidth;
 	private int gapHeight;	
-	private Map<String, Integer> customFieldWidths;
-	private Map<String, Integer> customFieldHeights;
+	private Map<GapIdentifier, Integer> customFieldWidths;
+	private Map<GapIdentifier, Integer> customFieldHeights;
 	
 	public MathPlayerManager(){
 		font = new Font(16, "Verdana", false, false);
 		gapWidth = 26;
 		gapHeight = 14;
 		
-		customFieldWidths = new HashMap<String, Integer>();
-		customFieldHeights = new HashMap<String, Integer>();
+		customFieldWidths = new MatchableMap<GapIdentifier, Integer>();
+		customFieldHeights = new MatchableMap<GapIdentifier, Integer>();
 	}
 
 	public void setFont(Font font){
@@ -43,14 +46,14 @@ public class MathPlayerManager {
 			gapHeight = h;
 	}
 
-	public void setCustomFieldWidth(String type, int w){
+	public void setCustomFieldWidth(GapIdentifier gid, int w){
 		if (w >= 0)
-			customFieldWidths.put(type, w);
+			customFieldWidths.put(gid, w);
 	}
 
-	public void setCustomFieldHeight(String type, int h){
+	public void setCustomFieldHeight(GapIdentifier gid, int h){
 		if (h >= 0)
-			customFieldHeights.put(type,  h);
+			customFieldHeights.put(gid,  h);
 	}
 	
 	

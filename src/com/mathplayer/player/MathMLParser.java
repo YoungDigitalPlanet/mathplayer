@@ -7,6 +7,7 @@ import com.google.gwt.xml.client.Element;
 import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.NodeList;
 import com.google.gwt.xml.client.XMLParser;
+import com.mathplayer.player.interaction.GapIdentifier;
 import com.mathplayer.player.model.LayoutSchemata;
 import com.mathplayer.player.model.Token;
 import com.mathplayer.player.model.interaction.CustomField;
@@ -174,7 +175,10 @@ public abstract class MathMLParser {
 					} else {
 						type = "default";
 					}
-					return new CustomField(type);
+					String uid = null;
+					if (element.hasAttribute("uid"))
+						uid = element.getAttribute("uid");
+					return new CustomField(GapIdentifier.createCombinedIdentifier(type, uid));
 				}
 				return new Gap();
 			}

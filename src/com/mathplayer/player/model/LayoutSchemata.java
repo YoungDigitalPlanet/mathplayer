@@ -9,14 +9,6 @@ import com.mathplayer.player.model.layoutschematas.MSubSup;
 public abstract class LayoutSchemata extends Token {
 
 	protected Vector<Token> tokens;
-
-	@Override
-	public void setSubSup(boolean isSubSup) {
-		super.setSubSup(isSubSup);
-		for (Token t : tokens){
-			t.setSubSup(isSubSup);
-		}
-	}
 	
 	@Override
 	public void setFont(Font font) {

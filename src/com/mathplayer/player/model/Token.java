@@ -17,7 +17,6 @@ public abstract class Token {
 	protected Font font;
 	protected Size size;
 	protected Area exactArea;
-	protected boolean isSubSup = false;
 
 	protected static double TEXT_OFFSET = BrowserUtils.getUserAgent().toLowerCase().contains("msie") ? 0.91d : 0.72d;
 	static {
@@ -30,10 +29,6 @@ public abstract class Token {
 		
 		
 		this.font = font;
-	}
-	
-	public void setSubSup(boolean isSubSup) {
-		this.isSubSup = isSubSup;
 	}
 
 	public void render(Surface canvas, Area area, InteractionSocket socket) {

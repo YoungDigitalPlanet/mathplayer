@@ -27,8 +27,8 @@ public class InteractionManager implements InteractionSocket {
 	private int userGapWidth;
 	private int userGapHeight;
 
-	private Map<String, Integer> userCustomFieldWidth;
-	private Map<String, Integer> userCustomFieldHeight;
+	private Map<GapIdentifier, Integer> userCustomFieldWidth;
+	private Map<GapIdentifier, Integer> userCustomFieldHeight;
 	
 	private final static int DEFAULT_CUSTOM_FIELD_WIDTH = 48;
 	private final static int DEFAULT_CUSTOM_FIELD_HEIGHT = 20;
@@ -66,8 +66,8 @@ public class InteractionManager implements InteractionSocket {
 	}
 
 	@Override
-	public void addCustomField(int x, int y, boolean isSubSup) {
-		customFieldDescriptions.add(new CustomFieldDescription(new Point(x, y), isSubSup));		
+	public void addCustomField(int x, int y) {
+		customFieldDescriptions.add(new CustomFieldDescription(new Point(x, y)));		
 	}
 	
 	public void process(){
@@ -115,25 +115,25 @@ public class InteractionManager implements InteractionSocket {
 	}
 
 
-	public void setCustomFieldWidths(Map<String, Integer> customFieldWidths){
+	public void setCustomFieldWidths(Map<GapIdentifier, Integer> customFieldWidths){
 		userCustomFieldWidth = customFieldWidths;
 	}
 	
 	@Override
-	public int getCustomFieldWidth(String type) {
-		if (userCustomFieldWidth.containsKey(type))
-			return userCustomFieldWidth.get(type);
+	public int getCustomFieldWidth(GapIdentifier gid) {
+		if (userCustomFieldWidth.containsKey(gid))
+			return userCustomFieldWidth.get(gid);
 		return DEFAULT_CUSTOM_FIELD_WIDTH;
 	}
 
-	public void setCustomFieldHeights(Map<String, Integer> customFieldHeights){
+	public void setCustomFieldHeights(Map<GapIdentifier, Integer> customFieldHeights){
 		userCustomFieldHeight = customFieldHeights;
 	}
 
 	@Override
-	public int getCustomFieldHeight(String type) {
-		if (userCustomFieldHeight.containsKey(type))
-			return userCustomFieldHeight.get(type);
+	public int getCustomFieldHeight(GapIdentifier gid) {
+		if (userCustomFieldHeight.containsKey(gid))
+			return userCustomFieldHeight.get(gid);
 		return DEFAULT_CUSTOM_FIELD_HEIGHT;
 	}
 

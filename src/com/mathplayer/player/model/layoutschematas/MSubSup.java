@@ -26,12 +26,6 @@ public class MSubSup extends LayoutSchemata {
 		tokens.add(sub);
 		tokens.add(sup);
 		this.drawout = drawout;
-		
-		if (sub != null)
-			sub.setSubSup(true);
-		
-		if (sup != null)
-			sup.setSubSup(true);
 	}
 	
 	@Override
