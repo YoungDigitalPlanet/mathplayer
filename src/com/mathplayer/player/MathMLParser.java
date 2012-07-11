@@ -78,7 +78,7 @@ public abstract class MathMLParser {
 				Token t1 = parseElement(XmlUtils.getChildElementNodeAtIndex(0, element) , currContext);
 				Token t2 = parseElement(XmlUtils.getChildElementNodeAtIndex(1, element) , currContext);
 				return new MFraction(t1, t2);
-			} else if (nodeName.equals("mlsubsup")){
+			} else if (nodeName.equals("msubsup")){
 				Token t1 = parseElement(XmlUtils.getChildElementNodeAtIndex(0, element) , currContext);
 				Token t2 = parseElement(XmlUtils.getChildElementNodeAtIndex(1, element) , currContext);
 				Token t3 = parseElement(XmlUtils.getChildElementNodeAtIndex(2, element) , currContext);
@@ -94,7 +94,7 @@ public abstract class MathMLParser {
 				Token t2 = parseElement(XmlUtils.getChildElementNodeAtIndex(1, element) , currContext);
 				boolean drawOut = !(t1 instanceof LayoutSchemata  &&  ((LayoutSchemata)t1).containsToken(MSubSup.class, 0) ); 
 				return new MSubSup( t1, null ,t2, drawOut);
-			}  else if (nodeName.equals("munderover")){
+			} else if (nodeName.equals("munderover")){
 				Token t1 = parseElement(XmlUtils.getChildElementNodeAtIndex(0, element) , currContext);
 				Token t2 = parseElement(XmlUtils.getChildElementNodeAtIndex(1, element) , currContext);
 				Token t3 = parseElement(XmlUtils.getChildElementNodeAtIndex(2, element) , currContext);
