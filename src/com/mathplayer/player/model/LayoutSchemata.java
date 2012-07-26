@@ -4,7 +4,6 @@ import java.util.Vector;
 
 import com.mathplayer.player.geom.Font;
 import com.mathplayer.player.interaction.InteractionSocket;
-import com.mathplayer.player.model.layoutschematas.MSubSup;
 
 public abstract class LayoutSchemata extends Token {
 
@@ -42,6 +41,9 @@ public abstract class LayoutSchemata extends Token {
 	}
 
 	public boolean containsToken(Class<?> class1, int fromDepth) {
+		if (class1.getName().equals(this.getClass().getName()))
+			return true;
+		
 		for (Token t : tokens){
 			if (t == null)
 				continue;

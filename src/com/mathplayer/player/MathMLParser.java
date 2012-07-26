@@ -19,7 +19,7 @@ import com.mathplayer.player.model.layoutschematas.MFenced;
 import com.mathplayer.player.model.layoutschematas.MFraction;
 import com.mathplayer.player.model.layoutschematas.MRoot;
 import com.mathplayer.player.model.layoutschematas.MRow;
-import com.mathplayer.player.model.layoutschematas.MSubSup;
+import com.mathplayer.player.model.layoutschematas.MMultiScripts;
 import com.mathplayer.player.model.layoutschematas.MTable;
 import com.mathplayer.player.model.layoutschematas.MUnderOver;
 import com.mathplayer.player.model.tokens.MEmpty;
@@ -73,27 +73,47 @@ public abstract class MathMLParser {
 					}
 				}
 				return new MTable(tokens);
-
 			} else if (nodeName.equals("mfrac")){
 				Token t1 = parseElement(XmlUtils.getChildElementNodeAtIndex(0, element) , currContext);
 				Token t2 = parseElement(XmlUtils.getChildElementNodeAtIndex(1, element) , currContext);
 				return new MFraction(t1, t2);
+			} else if (nodeName.equals("mmultiscripts")){
+				Token t1 = parseElement(XmlUtils.getChildElementNodeAtIndex(0, element) , currContext); // base
+				Token t2 = parseElement(XmlUtils.getChildElementNodeAtIndex(1, element) , currContext); // sub
+				Token t3 = parseElement(XmlUtils.getChildElementNodeAtIndex(2, element) , currContext); // sup
+				int n = 3;
+				Element el;
+				while ( (el = XmlUtils.getChildElementNodeAtIndex(n, element)) != null ) {
+					if (el.getNodeName().equals("mprescripts"))
+						break;
+					n++;
+				}
+				Token t4 = parseElement(XmlUtils.getChildElementNodeAtIndex(++n, element) , currContext); // lsub
+				Token t5 = parseElement(XmlUtils.getChildElementNodeAtIndex(++n, element) , currContext); // lsup
+				boolean drawOut = !(t1 instanceof LayoutSchemata  &&  ((LayoutSchemata)t1).containsToken(MMultiScripts.class, 0));
+				return new MMultiScripts(t1, t2, t3, t4, t5, drawOut);
 			} else if (nodeName.equals("msubsup")){
 				Token t1 = parseElement(XmlUtils.getChildElementNodeAtIndex(0, element) , currContext);
 				Token t2 = parseElement(XmlUtils.getChildElementNodeAtIndex(1, element) , currContext);
 				Token t3 = parseElement(XmlUtils.getChildElementNodeAtIndex(2, element) , currContext);
-				boolean drawOut = !(t1 instanceof LayoutSchemata  &&  ((LayoutSchemata)t1).containsToken(MSubSup.class, 0) ); 
-				return new MSubSup(t1, t2, t3, drawOut);
+				boolean drawOut = !(t1 instanceof LayoutSchemata  &&  ((LayoutSchemata)t1).containsToken(MMultiScripts.class, 0) ); 
+				return new MMultiScripts(t1, t2, t3, null, null, drawOut);
+			} else if (nodeName.equals("mlsubsup")){
+				Token t1 = parseElement(XmlUtils.getChildElementNodeAtIndex(0, element) , currContext);
+				Token t2 = parseElement(XmlUtils.getChildElementNodeAtIndex(1, element) , currContext);
+				Token t3 = parseElement(XmlUtils.getChildElementNodeAtIndex(2, element) , currContext);
+				boolean drawOut = !(t1 instanceof LayoutSchemata  &&  ((LayoutSchemata)t1).containsToken(MMultiScripts.class, 0) ); 
+				return new MMultiScripts(t1, null, null, t2, t3, drawOut);
 			} else if (nodeName.equals("msub")){
 				Token t1 = parseElement(XmlUtils.getChildElementNodeAtIndex(0, element) , currContext);
 				Token t2 = parseElement(XmlUtils.getChildElementNodeAtIndex(1, element) , currContext);
-				boolean drawOut = !(t1 instanceof LayoutSchemata  &&  ((LayoutSchemata)t1).containsToken(MSubSup.class, 0) ); 
-				return new MSubSup( t1, t2, null, drawOut);
+				boolean drawOut = !(t1 instanceof LayoutSchemata  &&  ((LayoutSchemata)t1).containsToken(MMultiScripts.class, 0) ); 
+				return new MMultiScripts( t1, t2, null, null, null, drawOut);
 			} else if (nodeName.equals("msup")){
 				Token t1 = parseElement(XmlUtils.getChildElementNodeAtIndex(0, element) , currContext);
 				Token t2 = parseElement(XmlUtils.getChildElementNodeAtIndex(1, element) , currContext);
-				boolean drawOut = !(t1 instanceof LayoutSchemata  &&  ((LayoutSchemata)t1).containsToken(MSubSup.class, 0) ); 
-				return new MSubSup( t1, null ,t2, drawOut);
+				boolean drawOut = !(t1 instanceof LayoutSchemata  &&  ((LayoutSchemata)t1).containsToken(MMultiScripts.class, 0) ); 
+				return new MMultiScripts( t1, null ,t2, null, null, drawOut);
 			} else if (nodeName.equals("munderover")){
 				Token t1 = parseElement(XmlUtils.getChildElementNodeAtIndex(0, element) , currContext);
 				Token t2 = parseElement(XmlUtils.getChildElementNodeAtIndex(1, element) , currContext);
