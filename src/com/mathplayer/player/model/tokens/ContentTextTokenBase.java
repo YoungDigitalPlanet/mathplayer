@@ -1,5 +1,6 @@
 package com.mathplayer.player.model.tokens;
 
+import eu.ydp.gwtutil.client.util.UserAgentChecker;
 import gwt.g2d.client.graphics.Surface;
 
 import com.mathplayer.player.geom.Area;
@@ -14,49 +15,55 @@ public abstract class ContentTextTokenBase extends ContentToken {
 	protected String content;
 	protected Context styleContext;
 	protected double MARGIN;
-	
-	public ContentTextTokenBase(String content){
+
+	public ContentTextTokenBase(String content) {
 		this.content = content;
 		MARGIN = 0;
 	}
 
-	public void setStyleContext(Context styleContext){
+	public void setStyleContext(Context styleContext) {
 		this.styleContext = styleContext;
 	}
-	
+
 	@Override
 	public void setFont(Font font) {
 		this.font = font;
-		if (styleContext != null  &&  font != null)
+		if (styleContext != null && font != null) {
 			styleContext.applyFontStyles(font);
+		}
 	}
-	
+
 	@Override
 	public Size measure(InteractionSocket socket) {
-		
-		if (size != null)
+
+		if (size != null) {
 			return size;
-		
+		}
+
 		Surface canvas = createCanvas();
-		
+
 		canvas.setFont(font.toString());
-		
+
 		size = new Size();
-		
-		size.width = canvas.measureText(content) + font.size*MARGIN*2;
+
+		size.width = canvas.measureText(content) + font.size * MARGIN * 2;
+		//android zle mierzy italica na canvasie
+		if (UserAgentChecker.isStackAndroidBrowser() && font.italic) {
+			size.width += size.width * .1;
+		}
 		size.height = font.size;
 		size.middleLine = font.size / 2;
-		
+
 		removeCanvas(canvas);
 		return size.clone();
 	}
-	
+
 	@Override
 	public void render(Surface canvas, Area area, InteractionSocket socket) {
 		super.render(canvas, area, socket);
 		canvas.setFont(font.toString());
 		canvas.setFillStyle(font.color);
-		canvas.fillText(content, exactArea.x + font.size*MARGIN, exactArea.y + getTextOffset());
+		canvas.fillText(content, exactArea.x + font.size * MARGIN, exactArea.y + getTextOffset());
 	}
 
 	@Override
@@ -64,5 +71,6 @@ public abstract class ContentTextTokenBase extends ContentToken {
 		return content;
 	}
 
+	@Override
 	public abstract String toMathML();
 }

@@ -9,10 +9,10 @@ public class Font {
 	public boolean italic;
 	public boolean bold;
 	public Color color;
-	public static final int MIN_SIZE = 8; 
-	public static final int SHRINK_STEP = 4; 
-	public static final double SHRINK_COEFF = 0.7; 
-	
+	public static final int MIN_SIZE = 8;
+	public static final int SHRINK_STEP = 4;
+	public static final double SHRINK_COEFF = 0.7;
+
 	/**
 	 * @param size
 	 * @param name
@@ -27,7 +27,7 @@ public class Font {
 		this.bold = bold;
 		color = new Color(0, 0, 0);
 	}
-	
+
 	/**
 	 * @param size
 	 * @param name
@@ -43,7 +43,7 @@ public class Font {
 		this.bold = bold;
 		this.color = color;
 	}
-	
+
 	/**
 	 * @param size
 	 * @param name
@@ -63,28 +63,32 @@ public class Font {
 	public Font clone(){
 		return new Font(size, name, italic, bold, color);
 	}
-	
+
 	public Font clone(int size){
 		return new Font(size, name, italic, bold, color);
 	}
-	
+
 	public Font cloneShrunk(){
 		int newSize = (int)(size * SHRINK_COEFF);
-		if (newSize < MIN_SIZE)
+		if (newSize < MIN_SIZE) {
 			newSize = MIN_SIZE;
+		}
 		return new Font(newSize, name, italic, bold, color);
 	}
-	
+
+	@Override
 	public String toString(){
 		String s = "";
-		if (italic)
+		if (italic) {
 			s += "italic ";
-		if (bold)
+		}
+		if (bold) {
 			s += "bold ";
+		}
 		s += size.toString() + "px ";
 		s += name;
 		return s;
-		
+
 	}
-	
+
 }
