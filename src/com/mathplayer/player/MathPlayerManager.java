@@ -10,7 +10,7 @@ import com.mathplayer.player.interaction.GapIdentifier;
 import com.mathplayer.player.interaction.InteractionManager;
 import com.mathplayer.player.model.Token;
 
-import eu.ydp.gwtutil.client.util.MatchableMap;
+import eu.ydp.gwtutil.client.collections.MatchableMap;
 import gwt.g2d.client.graphics.Surface;
 
 public class MathPlayerManager {

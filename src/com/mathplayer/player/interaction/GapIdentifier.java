@@ -3,7 +3,7 @@ package com.mathplayer.player.interaction;
 import java.util.Arrays;
 import java.util.List;
 
-import eu.ydp.gwtutil.client.util.Matchable;
+import eu.ydp.gwtutil.client.collections.Matchable;
 
 public final class GapIdentifier extends Matchable {
 

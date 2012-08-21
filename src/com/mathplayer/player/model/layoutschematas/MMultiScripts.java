@@ -1,6 +1,6 @@
 package com.mathplayer.player.model.layoutschematas;
 
-import eu.ydp.gwtutil.client.debug.Debug;
+import eu.ydp.gwtutil.client.debug.logger.Debug;
 import gwt.g2d.client.graphics.Surface;
 
 import java.util.Vector;
