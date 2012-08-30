@@ -171,7 +171,7 @@ public class MMultiScripts extends LayoutSchemata {
 		tokens.get(0).toMathML();
 		mathML += ( (tokens.get(1) == null) ? "<none/>" : tokens.get(1).toMathML() ); 
 		mathML += ( (tokens.get(2) == null) ? "<none/>" : tokens.get(2).toMathML() );
-		mathML += "<mprescripts>";
+		mathML += "<mprescripts/>";
 		mathML += ( (tokens.get(3) == null) ? "<none/>" : tokens.get(3).toMathML() );
 		mathML += ( (tokens.get(4) == null) ? "<none/>" : tokens.get(4).toMathML() );
 		mathML += "</mmultiscripts>";
