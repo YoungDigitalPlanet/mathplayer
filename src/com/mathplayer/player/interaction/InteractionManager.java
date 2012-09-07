@@ -14,13 +14,13 @@ import com.mathplayer.player.model.interaction.CustomFieldDescription;
 
 public class InteractionManager implements InteractionSocket {
 
-	private Vector<Point> gapPositions;
-	private Vector<CustomFieldDescription> customFieldDescriptions;
-	private Vector<PanelGap> gaps;
-	private AbsolutePanel container;
-	private AbsolutePanel canvasLayer;
-	private AbsolutePanel uiLayer;
-	private PanelGap testGap;
+	private final Vector<Point> gapPositions;
+	private final Vector<CustomFieldDescription> customFieldDescriptions;
+	private final Vector<PanelGap> gaps;
+	private final AbsolutePanel container;
+	private final AbsolutePanel canvasLayer;
+	private final AbsolutePanel uiLayer;
+	private final PanelGap testGap;
 
 	private int actualGapWidth;
 	private int actualGapHeight;
@@ -29,10 +29,10 @@ public class InteractionManager implements InteractionSocket {
 
 	private Map<GapIdentifier, Integer> userCustomFieldWidth;
 	private Map<GapIdentifier, Integer> userCustomFieldHeight;
-	
+
 	private final static int DEFAULT_CUSTOM_FIELD_WIDTH = 48;
 	private final static int DEFAULT_CUSTOM_FIELD_HEIGHT = 20;
-	
+
 	public InteractionManager(Panel owner){
 		container = new AbsolutePanel();
 		container.setStyleName("math-player-container");
@@ -62,14 +62,14 @@ public class InteractionManager implements InteractionSocket {
 
 	@Override
 	public void addGap(int x, int y) {
-		gapPositions.add(new Point(x, y));		
+		gapPositions.add(new Point(x, y));
 	}
 
 	@Override
 	public void addCustomField(int x, int y) {
-		customFieldDescriptions.add(new CustomFieldDescription(new Point(x, y)));		
+		customFieldDescriptions.add(new CustomFieldDescription(new Point(x, y)));
 	}
-	
+
 	public void process(){
 		for (Point p : gapPositions){
 			PanelGap pg = new PanelGap();
@@ -86,6 +86,7 @@ public class InteractionManager implements InteractionSocket {
 		canvasLayer.setSize(String.valueOf(width)+"px", String.valueOf(height)+"px");
 		uiLayer.setSize(String.valueOf(width)+"px", String.valueOf(height)+"px");
 		canvasLayer.add(canvas, 0, 0);
+		canvas.getElement().setAttribute("tabindex", "-1");
 
 	}
 
@@ -118,11 +119,12 @@ public class InteractionManager implements InteractionSocket {
 	public void setCustomFieldWidths(Map<GapIdentifier, Integer> customFieldWidths){
 		userCustomFieldWidth = customFieldWidths;
 	}
-	
+
 	@Override
 	public int getCustomFieldWidth(GapIdentifier gid) {
-		if (userCustomFieldWidth.containsKey(gid))
+		if (userCustomFieldWidth.containsKey(gid)) {
 			return userCustomFieldWidth.get(gid);
+		}
 		return DEFAULT_CUSTOM_FIELD_WIDTH;
 	}
 
@@ -132,8 +134,9 @@ public class InteractionManager implements InteractionSocket {
 
 	@Override
 	public int getCustomFieldHeight(GapIdentifier gid) {
-		if (userCustomFieldHeight.containsKey(gid))
+		if (userCustomFieldHeight.containsKey(gid)) {
 			return userCustomFieldHeight.get(gid);
+		}
 		return DEFAULT_CUSTOM_FIELD_HEIGHT;
 	}
 
@@ -147,21 +150,24 @@ public class InteractionManager implements InteractionSocket {
 	}
 
 	public TextBox getGapAt(int i){
-		if (i < gaps.size())
+		if (i < gaps.size()) {
 			return gaps.get(i).getGap();
+		}
 		return null;
 	}
 
 	public void markGap(int index, boolean correct, boolean wrong){
-		if (index < gaps.size())
+		if (index < gaps.size()) {
 			gaps.get(index).mark(correct, wrong);
+		}
 	}
 
 	public void unmarkGap(int index){
-		if (index < gaps.size())
+		if (index < gaps.size()) {
 			gaps.get(index).unmark();
+		}
 	}
-	
+
 	public Vector<CustomFieldDescription> getCustomFieldDescriptions(){
 		return customFieldDescriptions;
 	}
