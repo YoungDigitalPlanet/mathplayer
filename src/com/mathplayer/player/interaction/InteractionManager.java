@@ -82,12 +82,9 @@ public class InteractionManager implements InteractionSocket {
 	@Override
 	public void setCanvas(Widget canvas, int width, int height) {
 		container.setSize(String.valueOf(width)+"px", String.valueOf(height)+"px");
-		container.getParent().setSize(String.valueOf(width)+"px", String.valueOf(height)+"px");
 		canvasLayer.setSize(String.valueOf(width)+"px", String.valueOf(height)+"px");
 		uiLayer.setSize(String.valueOf(width)+"px", String.valueOf(height)+"px");
 		canvasLayer.add(canvas, 0, 0);
-		canvas.getElement().setAttribute("tabindex", "-1");
-
 	}
 
 	public void removeTextBox() {
