@@ -84,13 +84,17 @@ public class MathPlayerManager {
 		Size size = t.measure(manager);
 		size.width = Math.ceil(size.width);
 		size.height = Math.ceil(size.height);
-		Surface canvas = new Surface((int) size.width, (int) size.height);
+		Surface canvas = new Surface((int) size.width, (int) size.height){
+			@Override
+			public void setTabIndex(int index) {
+				super.setTabIndex(-1);
+			}
+		};
 		owner.getElement().getStyle().setVerticalAlign(Math.floor(-(size.height - size.middleLine) + font.size * FONT_DECENT), Unit.PX);
 		manager.setCanvas(canvas, (int) size.width, (int) size.height);
 		t.render(canvas, new Area(0, 0, size), manager);
-		canvas.getElement().setAttribute("tabindex", "-1");
 		manager.process();
-
+		canvas.setTabIndex(-1);
 		return manager;
 	}
 }
