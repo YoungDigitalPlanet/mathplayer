@@ -1,5 +1,6 @@
 package com.mathplayer.player.model.signs;
 
+import gwt.g2d.client.graphics.Color;
 import gwt.g2d.client.graphics.Surface;
 import gwt.g2d.client.graphics.shapes.ShapeBuilder;
 
@@ -58,11 +59,14 @@ public class RootSign extends Sign {
 	
 	@Override
 	public void render(Surface canvas, Area area, InteractionSocket socket) {
-
-		int lineThickness = font.size/LINE_THICNKENSS_COEFF + 1;
+		int lineThickness = (font.bold) ? font.size/LINE_THICNKENSS_COEFF + 1 : font.size/LINE_THICNKENSS_COEFF;
+		int red = Integer.parseInt(font.color.getColorCode().substring(1, 3), 16);
+		int green = Integer.parseInt(font.color.getColorCode().substring(3, 5), 16);
+		int blue = Integer.parseInt(font.color.getColorCode().substring(5, 7), 16);
 		
 		ShapeBuilder builder = new ShapeBuilder();
 		canvas.setLineWidth(lineThickness);
+		canvas.setStrokeStyle(new Color(red, green, blue));
 		builder.drawLineSegment(area.x + area.width + getOverhangRightMargin(), area.y - getOverMargin() + lineThickness, area.x - getContentMargin(), area.y - getOverMargin() + lineThickness);
 		builder.drawLineSegment(area.x - getContentMargin(), area.y - getOverMargin() + lineThickness, area.x - getContentMargin() - getBetweenMargin(), area.y + area.height);
 		builder.drawLineSegment(area.x - getContentMargin() - getBetweenMargin(), area.y + area.height, area.x - getContentMargin() - getBetweenMargin() - getOverhangLeftWidth1(), area.y + area.height - getOverhangLeftHeight());
