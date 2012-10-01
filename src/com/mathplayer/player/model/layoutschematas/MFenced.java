@@ -41,11 +41,8 @@ public class MFenced extends LayoutSchemata {
 
 	@Override
 	public Size measure(InteractionSocket socket) {
-
 		if (size != null)
 			return size;
-
-		Surface canvas = createCanvas();
 
 		size = tokens.get(0).measure(socket);
 		
@@ -59,7 +56,6 @@ public class MFenced extends LayoutSchemata {
 		size.addLeft(closeBracketSize);
 		
 		return size.clone();
-
 	}
 
 	@Override

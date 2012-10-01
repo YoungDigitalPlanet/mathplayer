@@ -1,6 +1,10 @@
 package com.mathplayer.player.model;
 
-import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.Window.Navigator;
+import com.google.gwt.user.client.ui.AbsolutePanel;
+import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.InsertPanel.ForIsWidget;
+import com.google.gwt.user.client.ui.Panel;
 import com.mathplayer.player.geom.Area;
 import com.mathplayer.player.geom.Font;
 import com.mathplayer.player.geom.Size;
@@ -16,13 +20,6 @@ public abstract class Token {
 	protected Size size;
 	protected Area exactArea;
 
-	public static double TEXT_OFFSET = BrowserUtils.getUserAgent().toLowerCase().contains("msie") ? 0.91d : 0.725d;
-	static {
-		if (UserAgentChecker.isStackAndroidBrowser()) {
-			TEXT_OFFSET = 0.81d;
-		}
-	}
-
 	public void setFont(Font font) {
 		this.font = font;
 	}
@@ -37,15 +34,33 @@ public abstract class Token {
 	public abstract String toString();
 
 	public abstract String toMathML();
+	
+	public Surface getCanvas() {
+		return new Surface();
+	}
 
-	public Surface createCanvas() {
-		Surface canvas = new Surface();
-		RootPanel.get().add(canvas);
+	public Surface createCanvas(AbsolutePanel panel) {
+		Surface canvas = getCanvas();
+		panel.add(canvas);
 		return canvas;
 	}
 
-	public void removeCanvas(Surface canvas) {
-		RootPanel.get().remove(canvas);
+	public void removeCanvas(Surface canvas, AbsolutePanel panel) {
+		panel.remove(canvas);
+	}
+	
+	public double getTextWidth(String content, Font font, double margin, AbsolutePanel panel) {
+		Surface canvas = createCanvas(panel);
+		canvas.setFont(font.toString());
+		double textWidth = canvas.measureText(content) + font.size * margin * 2;
+		removeCanvas(canvas, panel);
+		
+		//android zle mierzy italica na canvasie
+		if (isStackAndroidBrowser() && font.italic) {
+			size.width += size.width * .1;
+		}
+		
+		return textWidth;
 	}
 
 	public Area getExactArea() {
@@ -60,16 +75,29 @@ public abstract class Token {
 		exactArea = new Area(area.x + (area.width - size.width) / 2, area.y + heightSurplus, size);
 	}
 
-	public double getTextOffset() {
-		return font.size * TEXT_OFFSET;
+	public double getFontTextOffset() {
+		return font.size * getTextOffset();
 	}
 
-	public double getTextOffset(int fontSize) {
-		return fontSize * TEXT_OFFSET;
+	public double getFontTextOffset(int fontSize) {
+		return fontSize * getTextOffset();
 	}
-
+	
+	protected double getTextOffset() {
+		double textOffset = BrowserUtils.getUserAgent().toLowerCase().contains("msie") ? 0.91d : 0.725d;
+		
+		if (isStackAndroidBrowser()) {
+			textOffset = 0.81d;
+		}
+		
+		return textOffset;
+	}
+	
+	public Boolean isStackAndroidBrowser() {
+		return UserAgentChecker.isStackAndroidBrowser();
+	}
+	
 	public void reset() {
 		size = null;
 	}
-
 }

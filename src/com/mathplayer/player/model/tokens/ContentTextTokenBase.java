@@ -3,6 +3,7 @@ package com.mathplayer.player.model.tokens;
 import eu.ydp.gwtutil.client.util.UserAgentChecker;
 import gwt.g2d.client.graphics.Surface;
 
+import com.google.gwt.user.client.ui.RootPanel;
 import com.mathplayer.player.geom.Area;
 import com.mathplayer.player.geom.Font;
 import com.mathplayer.player.geom.Size;
@@ -40,30 +41,21 @@ public abstract class ContentTextTokenBase extends ContentToken {
 			return size;
 		}
 
-		Surface canvas = createCanvas();
-
-		canvas.setFont(font.toString());
-
 		size = new Size();
 
-		size.width = canvas.measureText(content) + font.size * MARGIN * 2;
-		//android zle mierzy italica na canvasie
-		if (UserAgentChecker.isStackAndroidBrowser() && font.italic) {
-			size.width += size.width * .1;
-		}
+		size.width = getTextWidth(content, font, MARGIN, RootPanel.get());
 		size.height = font.size;
 		size.middleLine = font.size / 2;
 
-		removeCanvas(canvas);
 		return size.clone();
 	}
-
+	
 	@Override
 	public void render(Surface canvas, Area area, InteractionSocket socket) {
 		super.render(canvas, area, socket);
 		canvas.setFont(font.toString());
 		canvas.setFillStyle(font.color);
-		canvas.fillText(content, exactArea.x + font.size * MARGIN, exactArea.y + getTextOffset());
+		canvas.fillText(content, exactArea.x + font.size * MARGIN, exactArea.y + getFontTextOffset());
 	}
 
 	@Override
