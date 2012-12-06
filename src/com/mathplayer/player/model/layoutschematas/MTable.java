@@ -2,7 +2,6 @@ package com.mathplayer.player.model.layoutschematas;
 
 import gwt.g2d.client.graphics.Surface;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -19,7 +18,7 @@ public class MTable extends LayoutSchemata {
 	protected Vector<Double> cellHeights;
 	protected final double MARGIN_VERTICAL = 0.3d;
 	protected final double MARGIN_HORIZONTAL = 0.5d;
-	
+
 	public MTable(Vector<Vector<Token>> tokensArray){
 		this.tokensArray = tokensArray;
 		tokens = new Vector<Token>();
@@ -29,20 +28,21 @@ public class MTable extends LayoutSchemata {
 			}
 		}
 	}
-	
+
 	@Override
 	public Size measure(InteractionSocket socket) {
-		if (size != null)
+		if (size != null) {
 			return size.clone();
-		
+		}
+
 		cellWidths = new Vector<Double>();
 		cellHeights = new Vector<Double>();
-		
+
 		for (int row = 0 ; row < tokensArray.size() ; row ++){
 			for (int col = 0 ; col < tokensArray.get(row).size() ; col ++){
-				
+
 				Size tokenSize = tokensArray.get(row).get(col).measure(socket);
-				
+
 				if (col < cellWidths.size()){
 					if (tokenSize.width > cellWidths.get(col) ){
 						cellWidths.set(col,  tokenSize.width );
@@ -50,7 +50,7 @@ public class MTable extends LayoutSchemata {
 				} else {
 					cellWidths.add(  tokenSize.width );
 				}
-				
+
 				if (row < cellHeights.size()){
 					if (tokenSize.height > cellHeights.get(row)){
 						cellHeights.set(row,  tokenSize.height);
@@ -60,21 +60,21 @@ public class MTable extends LayoutSchemata {
 				}
 			}
 		}
-		
+
 		size = new Size();
 
 		for (int row = 0 ; row < cellHeights.size() ; row ++){
 			size.height += cellHeights.get(row);
 		}
 		size.height += font.size*MARGIN_VERTICAL*(cellHeights.size()-1);
-		
+
 		for (int col = 0 ; col < cellWidths.size() ; col ++){
 			size.width += cellWidths.get(col);
 		}
 		size.width += font.size*MARGIN_HORIZONTAL*(cellWidths.size()-1);
-		
+
 		size.middleLine = size.height / 2;
-				
+
 		return size.clone();
 	}
 
@@ -83,14 +83,13 @@ public class MTable extends LayoutSchemata {
 		super.render(canvas, area, socket);
 
 		Area next = exactArea.clone();
-		
-		int offsetTop = 0;
+
 		for (int row = 0 ; row < tokensArray.size() ; row ++){
 			Area nextRow = next.clone();
 			for (int col = 0 ; col < tokensArray.get(row).size() ; col ++){
 				Area nextCol = nextRow.clone();
 				Token currToken = tokensArray.get(row).get(col);
-				nextCol.x += (cellWidths.get(col) - currToken.measure(socket).width)/2;
+				nextCol.x += MARGIN_HORIZONTAL;
 				nextCol.y += (cellHeights.get(row) - currToken.measure(socket).height)/2;
 				nextCol.setSize(currToken.measure(socket).width, currToken.measure(socket).height, currToken.measure(socket).middleLine);
 				currToken.render(canvas, nextCol, socket);
@@ -99,7 +98,7 @@ public class MTable extends LayoutSchemata {
 			next.y += cellHeights.get(row) + font.size*MARGIN_VERTICAL;
 		}
 	}
-	
+
 
 	@Override
 	public String toString() {
