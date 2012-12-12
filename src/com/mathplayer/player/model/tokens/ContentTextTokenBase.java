@@ -3,9 +3,6 @@ package com.mathplayer.player.model.tokens;
 import java.util.Arrays;
 import java.util.List;
 
-import eu.ydp.gwtutil.client.UserAgentUtil;
-import gwt.g2d.client.graphics.Surface;
-
 import com.google.gwt.user.client.ui.RootPanel;
 import com.mathplayer.player.geom.Area;
 import com.mathplayer.player.geom.Font;
@@ -21,6 +18,9 @@ import com.mathplayer.player.model.shapes.RealNumbersSign;
 import com.mathplayer.player.model.shapes.UnionSign;
 import com.mathplayer.player.style.Context;
 
+import eu.ydp.gwtutil.client.UserAgentUtil;
+import gwt.g2d.client.graphics.Surface;
+
 public abstract class ContentTextTokenBase extends ContentToken {
 
 	private static final String UNICODE_CHAR_RATIONAL = "\u211A";
@@ -30,6 +30,9 @@ public abstract class ContentTextTokenBase extends ContentToken {
 	private static final String UNICODE_CHAR_NATURAL = "\u2115";
 	private static final String UNICODE_CHAR_INTEGER = "\u2124";
 	private static final String UNICODE_CHAR_REAL = "\u211D";
+	List<String> mathChars = Arrays.asList(UNICODE_CHAR_REAL, UNICODE_CHAR_INTEGER, UNICODE_CHAR_NATURAL, UNICODE_CHAR_UNION, UNICODE_CHAR_INTERSECTION,
+			UNICODE_CHAR_DIFF, UNICODE_CHAR_RATIONAL);
+	public static final int MATH_CHARS_MARGIN = 4;
 	protected String content;
 	protected Context styleContext;
 	protected double MARGIN;
@@ -51,6 +54,34 @@ public abstract class ContentTextTokenBase extends ContentToken {
 		}
 	}
 
+	public boolean isAlternativeMathRendering() {
+		UserAgentUtil agentUtil = new UserAgentUtil();
+		boolean alternativeMathRendering = false;
+		if (agentUtil.getUserAgentString().toLowerCase().contains("android")) {
+			for (String string : mathChars) {
+				if (content.contains(string)) {
+					alternativeMathRendering = true;
+					break;
+				}
+			}
+		}
+		return alternativeMathRendering;
+	}
+
+	public int countAlternativeMathRendering() {
+		int alternativeMathRendering = 0;
+		for (String string : mathChars) {
+			if (content.contains(string)) {
+				alternativeMathRendering++;
+			}
+		}
+		return alternativeMathRendering;
+	}
+
+	public double getTextWidth() {
+		return isAlternativeMathRendering() ? getFontTextOffset() * countAlternativeMathRendering() + MATH_CHARS_MARGIN : getTextWidth(content, font, MARGIN, RootPanel.get());
+	}
+
 	@Override
 	public Size measure(InteractionSocket socket) {
 
@@ -59,8 +90,8 @@ public abstract class ContentTextTokenBase extends ContentToken {
 		}
 
 		size = new Size();
-		
-		size.width = getTextWidth(content, font, MARGIN, RootPanel.get());
+
+		size.width = getTextWidth();
 		size.height = font.size;
 		size.middleLine = font.size / 2;
 
@@ -70,43 +101,31 @@ public abstract class ContentTextTokenBase extends ContentToken {
 	@Override
 	public void render(Surface canvas, Area area, InteractionSocket socket) {
 		super.render(canvas, area, socket);
-				
-		UserAgentUtil agentUtil = new UserAgentUtil();
-		boolean alternativeMathRendering = false;
-		if (agentUtil.getUserAgentString().toLowerCase().contains("android")) {
-			List<String> mathChars = Arrays.asList(UNICODE_CHAR_REAL, UNICODE_CHAR_INTEGER, UNICODE_CHAR_NATURAL, UNICODE_CHAR_UNION,
-					UNICODE_CHAR_INTERSECTION, UNICODE_CHAR_DIFF, UNICODE_CHAR_RATIONAL);
-			for (String string : mathChars) {
-				if (content.contains(string)) {
-					alternativeMathRendering = true;
-					break;
-				}
-			}		
-		}
-		
+		boolean alternativeMathRendering = isAlternativeMathRendering();
+
 		canvas.setFont(font.toString());
 		canvas.setFillStyle(font.color);
 		canvas.setStrokeStyle(font.color);
-		
-		if (alternativeMathRendering) {			
-			int currentPosition = 0;
+
+		if (alternativeMathRendering) {
+			int currentPosition = MATH_CHARS_MARGIN / 2;
 			Size currentCharMeasuredSize = null;
 			for (char c : content.toCharArray()) {
 				if (new Character(c).toString().equals(UNICODE_CHAR_REAL)) {
 					RealNumbersSign sign = new RealNumbersSign(exactArea.x + currentPosition, exactArea.y, getFontTextOffset());
 					sign.render(canvas, area, socket);
-					currentCharMeasuredSize = sign.measure(socket); 
+					currentCharMeasuredSize = sign.measure(socket);
 				} else if (new Character(c).toString().equals(UNICODE_CHAR_INTEGER)) {
 					IntegersSign sign = new IntegersSign(exactArea.x + currentPosition, exactArea.y, getFontTextOffset());
 					sign.render(canvas, area, socket);
 					currentCharMeasuredSize = sign.measure(socket);
-				} else if (new Character(c).toString().equals(UNICODE_CHAR_NATURAL)) {				
+				} else if (new Character(c).toString().equals(UNICODE_CHAR_NATURAL)) {
 					NaturalsSign sign = new NaturalsSign(exactArea.x + currentPosition, exactArea.y, getFontTextOffset());
 					sign.render(canvas, area, socket);
 					currentCharMeasuredSize = sign.measure(socket);
 				} else if (new Character(c).toString().equals(UNICODE_CHAR_UNION)) {
 					UnionSign sign = new UnionSign(exactArea.x + currentPosition, exactArea.y, getFontTextOffset());
-					sign.render(canvas, area, socket);				
+					sign.render(canvas, area, socket);
 					currentCharMeasuredSize = sign.measure(socket);
 				} else if (new Character(c).toString().equals(UNICODE_CHAR_INTERSECTION)) {
 					IntersectionSign sign = new IntersectionSign(exactArea.x + currentPosition, exactArea.y, getFontTextOffset());
@@ -123,7 +142,7 @@ public abstract class ContentTextTokenBase extends ContentToken {
 				} else {
 					canvas.fillText(new Character(c).toString(), exactArea.x + currentPosition, exactArea.y + getFontTextOffset());
 					currentCharMeasuredSize.width = canvas.measureText(new Character(c).toString());
-				}			
+				}
 				currentPosition += currentCharMeasuredSize.width;
 			}
 		} else {
