@@ -24,8 +24,6 @@ public class RealNumbersSign extends Sign {
 	public void render(Surface canvas, Area area, InteractionSocket socket) {
 		long height = Math.round(this.height);
 		
-		double widthBuffer = canvas.getLineWidth();
-		canvas.setLineWidth(Math.round(1.5*widthBuffer));
 		ShapeBuilder ctx = new ShapeBuilder();
 		ctx.drawRect(posX, posY, Math.round(0.18*height), height);
 		ctx.moveTo(Math.round(0.18*height) + posX, posY);
@@ -37,8 +35,6 @@ public class RealNumbersSign extends Sign {
 		ctx.drawLineTo(new Vector2(Math.round(0.65*height) + posX, height + posY));
 		ctx.drawLineTo(new Vector2(Math.round(0.18*height) + posX, Math.round(0.53*height) + posY));		
 		canvas.strokeShape(ctx.build());		
-
-		canvas.setLineWidth(widthBuffer);
 	}
 	
 	@Override

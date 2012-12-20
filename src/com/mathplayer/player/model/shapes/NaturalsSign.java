@@ -22,8 +22,6 @@ public class NaturalsSign extends Sign {
 	
 	@Override
 	public void render(Surface canvas, Area area, InteractionSocket socket) {
-		double widthBuffer = canvas.getLineWidth();
-		canvas.setLineWidth(Math.round(1.5*widthBuffer));
 		long height = Math.round(this.height);
 		long width = Math.round(this.width);
 		
@@ -36,7 +34,6 @@ public class NaturalsSign extends Sign {
 		ctx.moveTo(Math.round(0.76*width) + posX, posY);
 		ctx.drawLineTo(new Vector2(Math.round(0.76*width) + posX, height + posY));
 		canvas.strokeShape(ctx.build());		
-		canvas.setLineWidth(widthBuffer);
 	}
 	
 	@Override

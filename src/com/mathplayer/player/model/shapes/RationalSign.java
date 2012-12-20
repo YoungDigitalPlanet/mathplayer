@@ -22,8 +22,6 @@ public class RationalSign extends Sign {
 	
 	@Override
 	public void render(Surface canvas, Area area, InteractionSocket socket) {
-		double widthBuffer = canvas.getLineWidth();				
-		canvas.setLineWidth(Math.round(1.5*widthBuffer));
 		long height = Math.round(0.94*this.height);
 		long width = Math.round(0.94*this.width);
 		
@@ -44,7 +42,6 @@ public class RationalSign extends Sign {
 		ctx.drawLineTo(new Vector2(Math.round(0.30*height) + centerX, Math.round(0.32*height) + centerY  + height / 2));
 				
 		canvas.strokeShape(ctx.build());
-		canvas.setLineWidth(widthBuffer);
 	}
 	
 	@Override

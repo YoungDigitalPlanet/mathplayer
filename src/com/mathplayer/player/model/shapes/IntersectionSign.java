@@ -24,8 +24,6 @@ public class IntersectionSign extends Sign {
 	public void render(Surface canvas, Area area, InteractionSocket socket) {
 
 		ShapeBuilder ctx = new ShapeBuilder();
-		double widthBuffer = canvas.getLineWidth();
-		canvas.setLineWidth(Math.round(1.5*widthBuffer));
 		long height = Math.round(this.height);
 		long width = Math.round(this.width);
 		
@@ -40,8 +38,6 @@ public class IntersectionSign extends Sign {
 		ctx.drawBezierCurveTo(centerX - width / 4, centerY - height / 2, centerX + width / 4, centerY - height / 2, centerX + height / 3, centerY);
 		ctx.moveTo(centerX, centerY);		
 		canvas.strokeShape(ctx.build());
-		
-		canvas.setLineWidth(widthBuffer);		
 	}
 	
 	@Override

@@ -25,8 +25,6 @@ public class ConjunctionSign extends Sign {
 		canvas.getContext().beginPath();
 		
 		ShapeBuilder ctx = new ShapeBuilder();
-		double widthBuffer = canvas.getLineWidth();
-		canvas.setLineWidth(Math.round(1.5*widthBuffer));
 		long height = Math.round(this.height);
 		long width = Math.round(this.width);
 		
@@ -40,8 +38,6 @@ public class ConjunctionSign extends Sign {
 		
 		canvas.strokeShape(ctx.build());
 		canvas.getContext().beginPath();
-		
-		canvas.setLineWidth(widthBuffer);
 	}
 	
 	@Override

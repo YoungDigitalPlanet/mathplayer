@@ -22,15 +22,12 @@ public class DiffSign extends Sign {
 	
 	@Override
 	public void render(Surface canvas, Area area, InteractionSocket socket) {
-		double widthBuffer = canvas.getLineWidth();
-		canvas.setLineWidth(Math.round(1.5*widthBuffer));
 		long height = Math.round(this.height);
 		
 		ShapeBuilder ctx = new ShapeBuilder();
 		ctx.moveTo(Math.round(0.12*width) + posX, Math.round(0.28*height) + posY);		
 		ctx.drawLineTo(new Vector2(Math.round(0.82*width) + posX, Math.round(0.96*height) + posY));		
 		canvas.strokeShape(ctx.build());
-		canvas.setLineWidth(widthBuffer);		
 	}
 	
 	@Override

@@ -24,9 +24,6 @@ public class IntegersSign extends Sign {
 	public void render(Surface canvas, Area area, InteractionSocket socket) {
 		long height = Math.round(this.height);
 		
-		double widthBuffer = canvas.getLineWidth();
-		canvas.setLineWidth(Math.round(1.5*widthBuffer));
-		
 		ShapeBuilder ctx = new ShapeBuilder();
 		ctx.moveTo(Math.round(0.06*height) + posX, Math.round(0.06*height) + posY);
 		ctx.drawLineTo(new Vector2(Math.round(0.76*height) + posX, Math.round(0.06*height) + posY));
@@ -36,8 +33,6 @@ public class IntegersSign extends Sign {
 		ctx.moveTo(Math.round(0.06*height) + posX, Math.round(0.94*height) + posY);
 		ctx.drawLineTo(new Vector2(Math.round(0.76*height) + posX, Math.round(0.94*height) + posY));
 		canvas.strokeShape(ctx.build());		
-		
-		canvas.setLineWidth(widthBuffer);
 	}
 	
 	@Override
