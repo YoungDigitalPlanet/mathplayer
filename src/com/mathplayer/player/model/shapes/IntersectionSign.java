@@ -25,7 +25,7 @@ public class IntersectionSign extends Sign {
 
 		ShapeBuilder ctx = new ShapeBuilder();
 		double widthBuffer = canvas.getLineWidth();
-		canvas.setLineWidth(Math.round(0.07*height));
+		canvas.setLineWidth(Math.round(1.5*widthBuffer));
 		long height = Math.round(this.height);
 		long width = Math.round(this.width);
 		

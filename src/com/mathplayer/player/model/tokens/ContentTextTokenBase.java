@@ -9,7 +9,9 @@ import com.mathplayer.player.geom.Font;
 import com.mathplayer.player.geom.Size;
 import com.mathplayer.player.interaction.InteractionSocket;
 import com.mathplayer.player.model.ContentToken;
+import com.mathplayer.player.model.shapes.ConjunctionSign;
 import com.mathplayer.player.model.shapes.DiffSign;
+import com.mathplayer.player.model.shapes.DisjunctionSign;
 import com.mathplayer.player.model.shapes.IntegersSign;
 import com.mathplayer.player.model.shapes.IntersectionSign;
 import com.mathplayer.player.model.shapes.NaturalsSign;
@@ -30,16 +32,23 @@ public abstract class ContentTextTokenBase extends ContentToken {
 	private static final String UNICODE_CHAR_NATURAL = "\u2115";
 	private static final String UNICODE_CHAR_INTEGER = "\u2124";
 	private static final String UNICODE_CHAR_REAL = "\u211D";
-	List<String> mathChars = Arrays.asList(UNICODE_CHAR_REAL, UNICODE_CHAR_INTEGER, UNICODE_CHAR_NATURAL, UNICODE_CHAR_UNION, UNICODE_CHAR_INTERSECTION,
-			UNICODE_CHAR_DIFF, UNICODE_CHAR_RATIONAL);
-	public static final int MATH_CHARS_MARGIN = 4;
+	private static final String UNICODE_CHAR_CONJUNCTION = "\u2227";
+	private static final String UNICODE_CHAR_CONJUNCTION_ALT = "\u02C4";
+	private static final String UNICODE_CHAR_DISJUNCTION = "\u2228";
+	private static final String UNICODE_CHAR_DISJUNCTION_ALT = "\u02C5";
+
+	List<String> mathChars = Arrays.asList(UNICODE_CHAR_REAL, UNICODE_CHAR_INTEGER, UNICODE_CHAR_NATURAL, UNICODE_CHAR_UNION,
+			UNICODE_CHAR_INTERSECTION, UNICODE_CHAR_DIFF, UNICODE_CHAR_RATIONAL, UNICODE_CHAR_CONJUNCTION,
+			UNICODE_CHAR_DISJUNCTION, UNICODE_CHAR_CONJUNCTION_ALT, UNICODE_CHAR_DISJUNCTION_ALT);
+	
+	private static final int MATH_CHARS_MARGIN = 4;
 	protected String content;
 	protected Context styleContext;
-	protected double MARGIN;
+	protected double margin;
 
 	public ContentTextTokenBase(String content) {
 		this.content = content;
-		MARGIN = 0;
+		margin = 0;
 	}
 
 	public void setStyleContext(Context styleContext) {
@@ -79,7 +88,7 @@ public abstract class ContentTextTokenBase extends ContentToken {
 	}
 
 	public double getTextWidth() {
-		return isAlternativeMathRendering() ? getFontTextOffset() * countAlternativeMathRendering() + MATH_CHARS_MARGIN : getTextWidth(content, font, MARGIN, RootPanel.get());
+		return isAlternativeMathRendering() ? getFontTextOffset() * countAlternativeMathRendering() + MATH_CHARS_MARGIN : getTextWidth(content, font, margin, RootPanel.get());
 	}
 
 	@Override
@@ -139,6 +148,14 @@ public abstract class ContentTextTokenBase extends ContentToken {
 					RationalSign sign = new RationalSign(exactArea.x + currentPosition, exactArea.y, getFontTextOffset());
 					sign.render(canvas, area, socket);
 					currentCharMeasuredSize = sign.measure(socket);
+				} else if (new Character(c).toString().equals(UNICODE_CHAR_CONJUNCTION) || new Character(c).toString().equals(UNICODE_CHAR_CONJUNCTION_ALT)) {
+					ConjunctionSign sign = new ConjunctionSign(exactArea.x + currentPosition, exactArea.y, getFontTextOffset());
+					sign.render(canvas, area, socket);
+					currentCharMeasuredSize = sign.measure(socket);
+				} else if (new Character(c).toString().equals(UNICODE_CHAR_DISJUNCTION) || new Character(c).toString().equals(UNICODE_CHAR_DISJUNCTION_ALT)) {
+					DisjunctionSign sign = new DisjunctionSign(exactArea.x + currentPosition, exactArea.y, getFontTextOffset());
+					sign.render(canvas, area, socket);
+					currentCharMeasuredSize = sign.measure(socket);					
 				} else {
 					canvas.fillText(new Character(c).toString(), exactArea.x + currentPosition, exactArea.y + getFontTextOffset());
 					currentCharMeasuredSize.width = canvas.measureText(new Character(c).toString());
@@ -146,7 +163,7 @@ public abstract class ContentTextTokenBase extends ContentToken {
 				currentPosition += currentCharMeasuredSize.width;
 			}
 		} else {
-			canvas.fillText(content, exactArea.x + font.size * MARGIN, exactArea.y + getFontTextOffset());
+			canvas.fillText(content, exactArea.x + font.size * margin, exactArea.y + getFontTextOffset());
 		}
 	}
 

@@ -4,7 +4,7 @@ public class MOperator extends SimpleTextTokenBase {
 
 	public MOperator(String content) {
 		super(content, "mo");
-		MARGIN = 0.15d;
+		margin = 0.15d;
 	}
 
 

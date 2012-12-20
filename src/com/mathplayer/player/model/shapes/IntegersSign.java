@@ -25,7 +25,7 @@ public class IntegersSign extends Sign {
 		long height = Math.round(this.height);
 		
 		double widthBuffer = canvas.getLineWidth();
-		canvas.setLineWidth(Math.round(0.07*height));		
+		canvas.setLineWidth(Math.round(1.5*widthBuffer));
 		
 		ShapeBuilder ctx = new ShapeBuilder();
 		ctx.moveTo(Math.round(0.06*height) + posX, Math.round(0.06*height) + posY);

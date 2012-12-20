@@ -4,7 +4,7 @@ public class MNumber extends SimpleTextTokenBase {
 	
 	public MNumber(String content){
 		super(content, "mn");
-		MARGIN = 0.05d;
+		margin = 0.05d;
 	}
 
 }
