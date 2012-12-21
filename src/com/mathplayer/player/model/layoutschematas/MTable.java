@@ -1,5 +1,6 @@
 package com.mathplayer.player.model.layoutschematas;
 
+import eu.ydp.gwtutil.client.StringUtils;
 import gwt.g2d.client.graphics.Surface;
 
 import java.util.List;
@@ -13,11 +14,15 @@ import com.mathplayer.player.model.Token;
 
 public class MTable extends LayoutSchemata {
 
+	private String COLUMN_ALIGN_LEFT = "left";
+	private String COLUMN_ALIGN_CENTER = "center";
+	
 	protected Vector<Vector<Token>> tokensArray;
 	protected Vector<Double> cellWidths;
 	protected Vector<Double> cellHeights;
 	protected final double MARGIN_VERTICAL = 0.3d;
 	protected final double MARGIN_HORIZONTAL = 0.5d;
+	protected String columnAlign = COLUMN_ALIGN_LEFT;
 
 	public MTable(Vector<Vector<Token>> tokensArray){
 		this.tokensArray = tokensArray;
@@ -89,7 +94,7 @@ public class MTable extends LayoutSchemata {
 			for (int col = 0 ; col < tokensArray.get(row).size() ; col ++){
 				Area nextCol = nextRow.clone();
 				Token currToken = tokensArray.get(row).get(col);
-				nextCol.x += MARGIN_HORIZONTAL;
+				nextCol.x += getMargin(cellWidths.get(col), currToken.measure(socket).width);
 				nextCol.y += (cellHeights.get(row) - currToken.measure(socket).height)/2;
 				nextCol.setSize(currToken.measure(socket).width, currToken.measure(socket).height, currToken.measure(socket).middleLine);
 				currToken.render(canvas, nextCol, socket);
@@ -98,7 +103,21 @@ public class MTable extends LayoutSchemata {
 			next.y += cellHeights.get(row) + font.size*MARGIN_VERTICAL;
 		}
 	}
-
+	
+	
+	protected double getMargin(double cellWidth, double tokenWidth) {
+		if (columnAlign.equals(COLUMN_ALIGN_CENTER)) {
+			return (cellWidth - tokenWidth) / 2;
+		} else {
+			return MARGIN_HORIZONTAL;
+		}
+	}
+	
+	public void setColumnAlign(String columnAlign) {
+		if ( !columnAlign.equals(StringUtils.EMPTY_STRING) ) {
+			this.columnAlign = columnAlign;
+		}
+	}
 
 	@Override
 	public String toString() {

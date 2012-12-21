@@ -72,7 +72,9 @@ public abstract class MathMLParser {
 						}
 					}
 				}
-				return new MTable(tokens);
+				MTable mTable = new MTable(tokens);
+				mTable.setColumnAlign(XmlUtils.getAttribute(element, "columnalign"));
+				return mTable;
 			} else if (nodeName.equals("mfrac")){
 				Token t1 = parseElement(XmlUtils.getChildElementNodeAtIndex(0, element) , currContext);
 				Token t2 = parseElement(XmlUtils.getChildElementNodeAtIndex(1, element) , currContext);
