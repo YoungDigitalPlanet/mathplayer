@@ -20,7 +20,7 @@ import com.mathplayer.player.model.shapes.RealNumbersSign;
 import com.mathplayer.player.model.shapes.UnionSign;
 import com.mathplayer.player.style.Context;
 
-import eu.ydp.gwtutil.client.UserAgentUtil;
+import eu.ydp.gwtutil.client.util.UserAgentChecker;
 import gwt.g2d.client.graphics.Surface;
 
 public abstract class ContentTextTokenBase extends ContentToken {
@@ -64,16 +64,15 @@ public abstract class ContentTextTokenBase extends ContentToken {
 	}
 
 	public boolean isAlternativeMathRendering() {
-		UserAgentUtil agentUtil = new UserAgentUtil();
-		boolean alternativeMathRendering = false;
-		if (agentUtil.getUserAgentString().toLowerCase().contains("android")) {
-			for (String string : mathChars) {
+		boolean alternativeMathRendering = false;		
+		if (UserAgentChecker.isMobileUserAgent(UserAgentChecker.ANDROID_USER_AGENTS)) {
+			for (String string : mathChars) {			
 				if (content.contains(string)) {
 					alternativeMathRendering = true;
 					break;
 				}
-			}
-		}
+			}						
+		}		
 		return alternativeMathRendering;
 	}
 
@@ -103,15 +102,23 @@ public abstract class ContentTextTokenBase extends ContentToken {
 		size.width = getTextWidth();
 		size.height = font.size;
 		size.middleLine = font.size / 2;
-
+		
+		// fix for android when measuring italic on canvas
+		if (isStackAndroidBrowser()) {
+			if (font.italic) {
+				size.width += size.width * .17;
+			}
+			size.height += size.height* .1;
+		}		
+		
 		return size.clone();
 	}
 
 	@Override
 	public void render(Surface canvas, Area area, InteractionSocket socket) {
 		super.render(canvas, area, socket);
-		boolean alternativeMathRendering = isAlternativeMathRendering();
 
+		boolean alternativeMathRendering = isAlternativeMathRendering();
 		canvas.setFont(font.toString());
 		canvas.setFillStyle(font.color);
 		canvas.setStrokeStyle(font.color);
@@ -120,45 +127,48 @@ public abstract class ContentTextTokenBase extends ContentToken {
 			int currentPosition = MATH_CHARS_MARGIN / 2;
 			Size currentCharMeasuredSize = null;
 			for (char c : content.toCharArray()) {
-				if (new Character(c).toString().equals(UNICODE_CHAR_REAL)) {
+				
+				String currentChar = new Character(c).toString();
+				
+				if (currentChar.equals(UNICODE_CHAR_REAL)) {
 					RealNumbersSign sign = new RealNumbersSign(exactArea.x + currentPosition, exactArea.y, getFontTextOffset());
 					sign.render(canvas, area, socket);
 					currentCharMeasuredSize = sign.measure(socket);
-				} else if (new Character(c).toString().equals(UNICODE_CHAR_INTEGER)) {
+				} else if (currentChar.equals(UNICODE_CHAR_INTEGER)) {
 					IntegersSign sign = new IntegersSign(exactArea.x + currentPosition, exactArea.y, getFontTextOffset());
 					sign.render(canvas, area, socket);
 					currentCharMeasuredSize = sign.measure(socket);
-				} else if (new Character(c).toString().equals(UNICODE_CHAR_NATURAL)) {
+				} else if (currentChar.equals(UNICODE_CHAR_NATURAL)) {
 					NaturalsSign sign = new NaturalsSign(exactArea.x + currentPosition, exactArea.y, getFontTextOffset());
 					sign.render(canvas, area, socket);
 					currentCharMeasuredSize = sign.measure(socket);
-				} else if (new Character(c).toString().equals(UNICODE_CHAR_UNION)) {
+				} else if (currentChar.equals(UNICODE_CHAR_UNION)) {
 					UnionSign sign = new UnionSign(exactArea.x + currentPosition, exactArea.y, getFontTextOffset());
 					sign.render(canvas, area, socket);
 					currentCharMeasuredSize = sign.measure(socket);
-				} else if (new Character(c).toString().equals(UNICODE_CHAR_INTERSECTION)) {
+				} else if (currentChar.equals(UNICODE_CHAR_INTERSECTION)) {
 					IntersectionSign sign = new IntersectionSign(exactArea.x + currentPosition, exactArea.y, getFontTextOffset());
 					sign.render(canvas, area, socket);
 					currentCharMeasuredSize = sign.measure(socket);
-				} else if (new Character(c).toString().equals(UNICODE_CHAR_DIFF)) {
+				} else if (currentChar.equals(UNICODE_CHAR_DIFF)) {
 					DiffSign sign = new DiffSign(exactArea.x + currentPosition, exactArea.y, getFontTextOffset());
 					sign.render(canvas, area, socket);
 					currentCharMeasuredSize = sign.measure(socket);
-				} else if (new Character(c).toString().equals(UNICODE_CHAR_RATIONAL)) {
+				} else if (currentChar.equals(UNICODE_CHAR_RATIONAL)) {
 					RationalSign sign = new RationalSign(exactArea.x + currentPosition, exactArea.y, getFontTextOffset());
 					sign.render(canvas, area, socket);
 					currentCharMeasuredSize = sign.measure(socket);
-				} else if (new Character(c).toString().equals(UNICODE_CHAR_CONJUNCTION) || new Character(c).toString().equals(UNICODE_CHAR_CONJUNCTION_ALT)) {
+				} else if (currentChar.equals(UNICODE_CHAR_CONJUNCTION) || currentChar.equals(UNICODE_CHAR_CONJUNCTION_ALT)) {
 					ConjunctionSign sign = new ConjunctionSign(exactArea.x + currentPosition, exactArea.y, getFontTextOffset());
 					sign.render(canvas, area, socket);
 					currentCharMeasuredSize = sign.measure(socket);
-				} else if (new Character(c).toString().equals(UNICODE_CHAR_DISJUNCTION) || new Character(c).toString().equals(UNICODE_CHAR_DISJUNCTION_ALT)) {
+				} else if (currentChar.equals(UNICODE_CHAR_DISJUNCTION) || currentChar.equals(UNICODE_CHAR_DISJUNCTION_ALT)) {
 					DisjunctionSign sign = new DisjunctionSign(exactArea.x + currentPosition, exactArea.y, getFontTextOffset());
 					sign.render(canvas, area, socket);
-					currentCharMeasuredSize = sign.measure(socket);					
+					currentCharMeasuredSize = sign.measure(socket);	
 				} else {
-					canvas.fillText(new Character(c).toString(), exactArea.x + currentPosition, exactArea.y + getFontTextOffset());
-					currentCharMeasuredSize.width = canvas.measureText(new Character(c).toString());
+					canvas.fillText(currentChar, exactArea.x + currentPosition, exactArea.y + getFontTextOffset());
+					currentCharMeasuredSize.width = canvas.measureText(currentChar);
 				}
 				currentPosition += currentCharMeasuredSize.width;
 			}

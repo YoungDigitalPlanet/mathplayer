@@ -1,18 +1,14 @@
 package com.mathplayer.player.model;
 
-import com.google.gwt.user.client.Window.Navigator;
+import eu.ydp.gwtutil.client.util.UserAgentChecker;
+import gwt.g2d.client.graphics.Surface;
+
 import com.google.gwt.user.client.ui.AbsolutePanel;
-import com.google.gwt.user.client.ui.IsWidget;
-import com.google.gwt.user.client.ui.InsertPanel.ForIsWidget;
-import com.google.gwt.user.client.ui.Panel;
 import com.mathplayer.player.geom.Area;
 import com.mathplayer.player.geom.Font;
 import com.mathplayer.player.geom.Size;
 import com.mathplayer.player.interaction.InteractionSocket;
 import com.mathplayer.player.utils.BrowserUtils;
-
-import eu.ydp.gwtutil.client.util.UserAgentChecker;
-import gwt.g2d.client.graphics.Surface;
 
 public abstract class Token {
 
@@ -54,12 +50,6 @@ public abstract class Token {
 		canvas.setFont(font.toString());
 		double textWidth = canvas.measureText(content) + font.size * margin * 2;
 		removeCanvas(canvas, panel);
-		
-		//android zle mierzy italica na canvasie
-		if (isStackAndroidBrowser() && font.italic) {
-			size.width += size.width * .1;
-		}
-		
 		return textWidth;
 	}
 
