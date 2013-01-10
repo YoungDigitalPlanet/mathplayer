@@ -17,7 +17,7 @@ public class RootSign extends Sign {
 	public static final double OVERHANG_LEFT_WIDTH_2 = 0.25d;
 	public static final double OVERHANG_LEFT_HEIGHT = 1.0d;
 	public static final double OVERHANG_RIGHT_MARGIN = 0.2d;
-	public static final int LINE_THICNKENSS_COEFF = 20;
+	public static final double LINE_THICNKENSS_COEFF = 20;
 	public static final double CONTENT_MARGIN = 0.25d;
 
 	public double getOverMargin(){
@@ -47,19 +47,19 @@ public class RootSign extends Sign {
 	public double getOverhangRightMargin(){
 		return font.size*OVERHANG_RIGHT_MARGIN;
 	}
-	
+
 	public double getContentMargin(){
 		return font.size*CONTENT_MARGIN;
 	}
-	
+
 	@Override
 	public Size measure(InteractionSocket socket) {
 		return null;
 	}
-	
+
 	@Override
 	public void render(Surface canvas, Area area, InteractionSocket socket) {
-		int lineThickness = (font.bold) ? font.size/LINE_THICNKENSS_COEFF + 1 : font.size/LINE_THICNKENSS_COEFF;
+		double lineThickness = (font.bold) ? font.size/LINE_THICNKENSS_COEFF + 1 : font.size/LINE_THICNKENSS_COEFF;
 		int red = Integer.parseInt(font.color.getColorCode().substring(1, 3), 16);
 		int green = Integer.parseInt(font.color.getColorCode().substring(3, 5), 16);
 		int blue = Integer.parseInt(font.color.getColorCode().substring(5, 7), 16);
@@ -72,7 +72,7 @@ public class RootSign extends Sign {
 		builder.drawLineSegment(area.x - getContentMargin() - getBetweenMargin(), area.y + area.height, area.x - getContentMargin() - getBetweenMargin() - getOverhangLeftWidth1(), area.y + area.height - getOverhangLeftHeight());
 		builder.drawLineSegment(area.x - getContentMargin() - getBetweenMargin() - getOverhangLeftWidth1(), area.y + area.height - getOverhangLeftHeight(), area.x - getContentMargin() - getBetweenMargin() - getOverhangLeftWidth1() - getOverhangLeftWidth2(), area.y + area.height - getOverhangLeftHeight());
 		canvas.strokeShape(builder.build());
-		
+
 	}
 
 }
