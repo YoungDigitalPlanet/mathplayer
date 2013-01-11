@@ -24,11 +24,14 @@ public class MathPlayerManager {
 	private final Map<GapIdentifier, Integer> customFieldWidths;
 	private final Map<GapIdentifier, Integer> customFieldHeights;
 	private static float FONT_DECENT = BrowserUtils.getUserAgent().toLowerCase().contains("msie") ? 0.37f : 0.275f;
+	private double baseline;
+	
 	static{
 		if(UserAgentChecker.isStackAndroidBrowser()){
 			FONT_DECENT = 0.32f;
 		}
 	}
+	
 	public MathPlayerManager() {
 		font = new Font(16, "Verdana", false, false);
 		gapWidth = 26;
@@ -91,10 +94,19 @@ public class MathPlayerManager {
 			}
 		};
 		owner.getElement().getStyle().setVerticalAlign(Math.floor(-(size.height - size.middleLine) + font.size * FONT_DECENT), Unit.PX);
+		setBaseline(size.middleLine);
 		manager.setCanvas(canvas, (int) size.width, (int) size.height);
 		t.render(canvas, new Area(0, 0, size), manager);
 		manager.process();
 		canvas.setTabIndex(-1);
 		return manager;
+	}
+
+	public double getBaseline() {
+		return baseline;
+	}
+
+	public void setBaseline(double baseline) {
+		this.baseline = baseline;
 	}
 }
