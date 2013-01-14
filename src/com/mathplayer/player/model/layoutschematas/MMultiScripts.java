@@ -1,6 +1,5 @@
 package com.mathplayer.player.model.layoutschematas;
 
-import eu.ydp.gwtutil.client.debug.logger.Debug;
 import gwt.g2d.client.graphics.Surface;
 
 import java.util.Vector;
@@ -101,13 +100,14 @@ public class MMultiScripts extends LayoutSchemata {
 	public void render(Surface canvas, Area area, InteractionSocket socket) {
 		super.render(canvas, area, socket);
 		
-		double supOffset = exactArea.middleLine - tokens.get(0).measure(socket).middleLine;
+		Size baseTokenSize = tokens.get(0).measure(socket);
+		double supOffset = exactArea.middleLine - baseTokenSize.middleLine;
 		
 		Size lSubSize = new Size();
 		Size lSupSize = new Size();
 		
 		if (tokens.get(3) != null) { // lsub
-			Area lSubArea = new Area(exactArea.x, exactArea.y + supOffset + tokens.get(0).measure(socket).height - tokens.get(3).measure(socket).height*((drawout)?(2.0d/3.0d):1), tokens.get(3).measure(socket));
+			Area lSubArea = new Area(exactArea.x, exactArea.y + supOffset + baseTokenSize.height - tokens.get(3).measure(socket).height*((drawout)?(2.0d/3.0d):1), tokens.get(3).measure(socket));
 			tokens.get(3).render(canvas, lSubArea, socket);
 			lSubSize = tokens.get(3).measure(socket);
 		}
@@ -118,18 +118,22 @@ public class MMultiScripts extends LayoutSchemata {
 			lSupSize = tokens.get(4).measure(socket);
 		}
 		
-		Area baseArea = new Area(exactArea.x + Math.max(lSubSize.width, lSupSize.width), exactArea.y + ((drawout)?supOffset:0), tokens.get(0).measure(socket));
+		double maxLeftTokenWidth = Math.max(lSubSize.width, lSupSize.width);
+		Area baseArea = new Area(exactArea.x + maxLeftTokenWidth, exactArea.y + ((drawout)?supOffset:0), baseTokenSize);
 		//Area baseArea = new Area(exactArea.x, exactArea.y, tokens.get(0).measure(socket));
 		tokens.get(0).render(canvas, baseArea, socket);
 		
 		if (tokens.get(1) != null) { // sub
-			Area subArea = new Area(exactArea.x + tokens.get(0).measure(socket).width + Math.max(lSubSize.width, lSupSize.width), exactArea.y + supOffset + tokens.get(0).measure(socket).height - tokens.get(1).measure(socket).height*((drawout)?(2.0d/3.0d):1), tokens.get(1).measure(socket));
+			Area subArea = new Area(exactArea.x + baseTokenSize.width + maxLeftTokenWidth, exactArea.y + supOffset + baseTokenSize.height - tokens.get(1).measure(socket).height*((drawout)?(2.0d/3.0d):1), tokens.get(1).measure(socket));
 			tokens.get(1).render(canvas, subArea, socket);
 		}
 		
-		if (tokens.get(2) != null) { // sup
-			Area supArea = new Area(exactArea.x + tokens.get(0).measure(socket).width + Math.max(lSubSize.width, lSupSize.width), exactArea.y, tokens.get(2).measure(socket));
-			tokens.get(2).render(canvas, supArea, socket);
+		Token supToken = tokens.get(2);
+		if (supToken != null) { // sup
+			double x = exactArea.x + baseTokenSize.width + maxLeftTokenWidth;
+			Size measure = supToken.measure(socket);
+			Area supArea = new Area(x, exactArea.y, measure);
+			supToken.render(canvas, supArea, socket);
 		}
 	}
 
