@@ -50,9 +50,9 @@ public abstract class LayoutSchemata extends Token {
 			if (fromDepth == 0  &&  class1.getName().equals(t.getClass().getName()))
 				return true;
 			if (t instanceof LayoutSchemata){
-				if (fromDepth > 0)
-					fromDepth--;
-				return ((LayoutSchemata)t).containsToken(class1, fromDepth);
+				if (fromDepth > 0){
+					return ((LayoutSchemata)t).containsToken(class1, --fromDepth);
+				}
 			}
 		}
 		return false;
