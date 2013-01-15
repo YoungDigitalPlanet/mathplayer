@@ -1,7 +1,6 @@
 package com.mathplayer.player.model.layoutschematas;
 
 import gwt.g2d.client.graphics.Surface;
-import gwt.g2d.client.graphics.shapes.ShapeBuilder;
 
 import java.util.Vector;
 
@@ -17,6 +16,7 @@ public class MFenced extends LayoutSchemata {
 
 	protected Size openBracketSize;
 	protected Size closeBracketSize;
+	protected double heightDifference;
 	protected FenceType openFenceType;
 	protected FenceType closeFenceType;
 	protected FenceSign openFenceSign;
@@ -45,6 +45,8 @@ public class MFenced extends LayoutSchemata {
 			return size;
 
 		size = tokens.get(0).measure(socket);
+		heightDifference = Math.abs(size.height - 2 * size.middleLine);
+		size.height = (size.middleLine + heightDifference) * 2;
 		
 		openFenceSign.setHeight(size.height);
 		closeFenceSign.setHeight(size.height);
@@ -68,7 +70,7 @@ public class MFenced extends LayoutSchemata {
 		Area openFenceArea = new Area(exactArea.x, exactArea.y, openBracketSize);		
 		openFenceSign.render(canvas, openFenceArea, socket);
 		
-		Area contentsArea = new Area(exactArea.x + openBracketSize.width, exactArea.y, tokens.get(0).measure(socket));
+		Area contentsArea = new Area(exactArea.x + openBracketSize.width, exactArea.y + heightDifference, tokens.get(0).measure(socket));
 		tokens.get(0).render(canvas, contentsArea, socket);
 
 		Area closeFenceArea = new Area(exactArea.x + openBracketSize.width + contentsArea.width, exactArea.y, closeBracketSize);		
