@@ -30,7 +30,7 @@
 		<ivy:retrieve pattern="${ivylib.dir}/[artifact].[ext]" sync="true" />
 	</target>
 
-	  <target name="javac" description="Compile java source">
+	  <target name="javac" depends="resolve" description="Compile java source">
 	    <mkdir dir="${bin.dir}"/>
 	    <javac srcdir="src" includes="**" encoding="utf-8"
 	        destdir="${bin.dir}"
@@ -47,7 +47,7 @@
 		<mkdir dir="${dist.dir}" />
 
 		<jar destfile="${dist.dir}/mathplayer.jar">
-			<fileset dir="${classes.dir}" />
+			<fileset dir="${bin.dir}" />
 			<fileset dir="${src.dir}" />
 		</jar>
 	</target>
