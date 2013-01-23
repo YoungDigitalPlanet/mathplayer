@@ -11,7 +11,7 @@ public class MMultiscriptsAreaCalculator {
 		Area leftSupArea = calculateLeftSupArea(startArea, dimensions);
 		
 		double rightIndexesXCoordinate = calculateXCoordinateOfRightIndexes(startArea.x, dimensions);
-		double bottomIndexesYCoordinate = calculateYCooridnateOfBottomIndexes(baseArea, dimensions);
+		double bottomIndexesYCoordinate = calculateYCooridnateOfBottomIndexes(baseArea);
 		
 		Area leftSubArea = calculateLeftSubArea(startArea, bottomIndexesYCoordinate, dimensions);
 		Area supArea = calculateSupArea(startArea.y, rightIndexesXCoordinate, dimensions);
@@ -56,7 +56,7 @@ public class MMultiscriptsAreaCalculator {
 		return xCoordinate;
 	}
 
-	private double calculateYCooridnateOfBottomIndexes(Area baseArea, DtoMMultiscriptsDimensions dimensions) {
+	private double calculateYCooridnateOfBottomIndexes(Area baseArea) {
 		double baseElementHeight = baseArea.height;
 		double distanceBeetwenIndexesRate = MMultiscriptsProportionRates.DISTANCE_BEETWEN_TOP_AND_BOTTOM_INDEX_RATE.getRate();
 		
