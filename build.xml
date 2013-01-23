@@ -20,6 +20,7 @@
 	<property name="cobertura.report.dir" value="${base.dir}/cobertura-report" />
 	<property name="cobertura.report.type" value="xml" />
 	<property name="cobertura.datafile" value="${cobertura.report.dir}/cobertura.ser" />
+	<property name="test.reports.dev.dir" value="${base.dir}/reports/junit" />
 	
 	<path id="lib.path">
 		<fileset dir="${ivylib.dir}" includes="**/*.jar" />
