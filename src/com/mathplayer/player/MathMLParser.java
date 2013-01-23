@@ -8,7 +8,6 @@ import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.NodeList;
 import com.google.gwt.xml.client.XMLParser;
 import com.mathplayer.player.interaction.GapIdentifier;
-import com.mathplayer.player.model.LayoutSchemata;
 import com.mathplayer.player.model.Token;
 import com.mathplayer.player.model.interaction.CustomField;
 import com.mathplayer.player.model.interaction.Gap;
@@ -17,11 +16,11 @@ import com.mathplayer.player.model.layoutschematas.FenceType;
 import com.mathplayer.player.model.layoutschematas.MBar;
 import com.mathplayer.player.model.layoutschematas.MFenced;
 import com.mathplayer.player.model.layoutschematas.MFraction;
-import com.mathplayer.player.model.layoutschematas.MMultiScripts;
 import com.mathplayer.player.model.layoutschematas.MRoot;
 import com.mathplayer.player.model.layoutschematas.MRow;
 import com.mathplayer.player.model.layoutschematas.MTable;
 import com.mathplayer.player.model.layoutschematas.MUnderOver;
+import com.mathplayer.player.model.layoutschematas.mmultiscripts.MMultiScripts;
 import com.mathplayer.player.model.tokens.MEmpty;
 import com.mathplayer.player.model.tokens.MIdentifier;
 import com.mathplayer.player.model.tokens.MNumber;
@@ -85,24 +84,20 @@ public abstract class MathMLParser {
 				Token t1 = parseElement(XmlUtils.getChildElementNodeAtIndex(0, element) , currContext);
 				Token t2 = parseElement(XmlUtils.getChildElementNodeAtIndex(1, element) , currContext);
 				Token t3 = parseElement(XmlUtils.getChildElementNodeAtIndex(2, element) , currContext);
-				boolean drawOut = checkMultiScriptDrawOutArgument(t1); 
-				return new MMultiScripts(t1, t2, t3, null, null, drawOut);
+				return new MMultiScripts(t1, t2, t3, null, null);
 			} else if (nodeName.equals("mlsubsup")){
 				Token t1 = parseElement(XmlUtils.getChildElementNodeAtIndex(0, element) , currContext);
 				Token t2 = parseElement(XmlUtils.getChildElementNodeAtIndex(1, element) , currContext);
 				Token t3 = parseElement(XmlUtils.getChildElementNodeAtIndex(2, element) , currContext);
-				boolean drawOut = checkMultiScriptDrawOutArgument(t1); 
-				return new MMultiScripts(t1, null, null, t2, t3, drawOut);
+				return new MMultiScripts(t1, null, null, t2, t3);
 			} else if (nodeName.equals("msub")){
 				Token t1 = parseElement(XmlUtils.getChildElementNodeAtIndex(0, element) , currContext);
 				Token t2 = parseElement(XmlUtils.getChildElementNodeAtIndex(1, element) , currContext);
-				boolean drawOut = checkMultiScriptDrawOutArgument(t1); 
-				return new MMultiScripts( t1, t2, null, null, null, drawOut);
+				return new MMultiScripts( t1, t2, null, null, null);
 			} else if (nodeName.equals("msup")){
 				Token t1 = parseElement(XmlUtils.getChildElementNodeAtIndex(0, element) , currContext);
 				Token t2 = parseElement(XmlUtils.getChildElementNodeAtIndex(1, element) , currContext);
-				boolean drawOut = checkMultiScriptDrawOutArgument(t1); 
-				return new MMultiScripts( t1, null ,t2, null, null, drawOut);
+				return new MMultiScripts( t1, null ,t2, null, null);
 			} else if (nodeName.equals("munderover")){
 				Token t1 = parseElement(XmlUtils.getChildElementNodeAtIndex(0, element) , currContext);
 				Token t2 = parseElement(XmlUtils.getChildElementNodeAtIndex(1, element) , currContext);
@@ -212,19 +207,7 @@ public abstract class MathMLParser {
 		Token leftSubToken = parseElement(XmlUtils.getChildElementNodeAtIndex(++n, element) , currContext);
 		Token leftSupToken = parseElement(XmlUtils.getChildElementNodeAtIndex(++n, element) , currContext);
 		
-		boolean drawOut = checkMultiScriptDrawOutArgument(baseToken);
-		
-		return new MMultiScripts(baseToken, subToken, supToken, leftSubToken, leftSupToken, drawOut);
+		return new MMultiScripts(baseToken, subToken, supToken, leftSubToken, leftSupToken);
 	}
 
-	private static boolean checkMultiScriptDrawOutArgument(Token baseToken) {
-		boolean drawOut = true;
-		if(baseToken instanceof LayoutSchemata){
-			LayoutSchemata baseTokenLayoutSchemata = (LayoutSchemata) baseToken;
-			drawOut = !baseTokenLayoutSchemata.containsToken(MMultiScripts.class, 0);
-		}
-		
-		return drawOut;
-	}
-	
 }

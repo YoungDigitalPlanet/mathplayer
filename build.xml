@@ -1,59 +1,149 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<project name="math.player" default="dist" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant"  >
+<project name="math.player" default="dist" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
 
-	<tstamp><format property="tstamp" pattern="yyyyMMddHHmm" timezone="GMT"/></tstamp>
+	<tstamp>
+		<format property="tstamp" pattern="yyyyMMddHHmm" timezone="GMT" />
+	</tstamp>
 	<property file="default.properties" />
-	
+
 	<dirname property="base.dir" file="${ant.file.math.player}" />
-	<property name="ivylib.dir" value="${base.dir}/ivy-lib" />	
-	<property name="src.dir" value="${base.dir}/src" />	
+	<property name="bin.dir" value="${base.dir}/bin"/>
+	<property name="bin.test.dir" value="${base.dir}/bin.test"/>
+	<property name="ivylib.dir" value="${base.dir}/ivy-lib" />
+	<property name="src.dir" value="${base.dir}/src" />
 	<property name="build.dir" location="${base.dir}/build" />
 	<property name="classes.dir" location="${build.dir}/classes" />
 	<property name="dist.dir" location="${base.dir}/dist" />
-
-	<path id="lib.path">
-		<fileset dir="${ivylib.dir}" includes="**/*.jar"/>
-	</path>
+	<property name="lib.coverage.dir" value="${base.dir}/ivy-lib-coverage" />
+	<property name="cobertura.dir" value="${lib.coverage.dir}" />
+	<property name="instrumented.dir" value="${base.dir}/bin.cobertura" />
+	<property name="cobertura.report.dir" value="${base.dir}/cobertura-report" />
+	<property name="cobertura.report.type" value="xml" />
+	<property name="cobertura.datafile" value="${cobertura.report.dir}/cobertura.ser" />
 	
+	<path id="lib.path">
+		<fileset dir="${ivylib.dir}" includes="**/*.jar" />
+	</path>
+
 	<target name="resolve">
 		<mkdir dir="${ivylib.dir}" />
-		<ivy:retrieve pattern="${ivylib.dir}/[artifact].[ext]" sync="true"/>		
+		<ivy:retrieve pattern="${ivylib.dir}/[artifact].[ext]" sync="true" />
 	</target>
+
+	  <target name="javac" description="Compile java source">
+	    <mkdir dir="${bin.dir}"/>
+	    <javac srcdir="src" includes="**" encoding="utf-8"
+	        destdir="${bin.dir}"
+	        source="1.5" target="1.5" nowarn="true"
+	        debug="true" debuglevel="lines,vars,source">
+	      <classpath refid="project.class.path"/>
+	    </javac>
+	    <copy todir="${bin.dir}">
+	      <fileset dir="src" excludes="**/*.java"/>
+	    </copy>
+	  </target>
 	
-	<target name="compile" depends="resolve">
-		<mkdir dir="${classes.dir}" />
-		<javac srcdir="${src.dir}"
-        	destdir="${classes.dir}"
-         	debug="on"
-         	source="1.5"
-			encoding="utf8" >
-			<classpath refid="lib.path"/>
-		</javac>
-	</target>
-	
-	<target name="dist" depends="compile">
+	<target name="dist" depends="javac">
 		<mkdir dir="${dist.dir}" />
 
 		<jar destfile="${dist.dir}/mathplayer.jar">
-			<fileset dir="${classes.dir}"/>
-    		<fileset dir="${src.dir}"/>
-    	</jar>
+			<fileset dir="${classes.dir}" />
+			<fileset dir="${src.dir}" />
+		</jar>
 	</target>
-	
-	<target name="publish" depends="dist" description="Publish artifacts into Ivy repository">  	
+
+	<target name="publish" depends="dist" description="Publish artifacts into Ivy repository">
 		<ivy:resolve />
-		<ivy:publish
-			pubrevision="${revision}"
-			resolver="${ivy.publish.ydp.resolver}"
-			status="${ivy.publish.status}"
-			forcedeliver="true"
-			artifactspattern="dist/[artifact].[ext]"
-			overwrite="true"/>		
+		<ivy:publish pubrevision="${revision}" resolver="${ivy.publish.ydp.resolver}" status="${ivy.publish.status}" forcedeliver="true" artifactspattern="dist/[artifact].[ext]" overwrite="true" />
 	</target>
-		
+
 	<target name="clean">
 		<delete dir="${dist.dir}" />
 		<delete dir="${build.dir}" />
 		<delete dir="${ivylib.dir}" />
+		<delete dir="${bin.dir}" failonerror="false" />
+		<delete dir="${bin.test.dir}" failonerror="false" />
+		<delete file="${base.dir}/metadata.xml" />
+		<delete dir="${test.reports.dev.dir}" />
+
+		<delete dir="${lib.coverage.dir}" />
+		<delete dir="${instrumented.dir}" />
+		<delete dir="${cobertura.report.dir}" />
+		<delete file="${cobertura.datafile}" />
 	</target>
+
+
+	<path id="cobertura.classpath">
+		<fileset dir="${lib.coverage.dir}">
+			<include name="*.jar" />
+			<exclude name="ant*.jar" />
+		</fileset>
+	</path>
+
+	
+	<target name="resolve-coverage" depends="resolve" description="--> retrieve dependencies with ivy">
+		<ivy:retrieve pattern="${lib.coverage.dir}/[artifact].[ext]" conf="coverage" />
+	</target>
+	
+	<path id="project.class.path">
+	    <pathelement location="${bin.dir}"/>
+	    <fileset dir="${ivylib.dir}" includes="**/*.jar"/>
+	 </path>
+	
+	<target name="cobertura-instrument" depends="javac.tests, resolve-coverage">
+		<taskdef classpathref="cobertura.classpath" resource="tasks.properties" />
+
+		<delete file="${cobertura.datafile}" />
+
+		<cobertura-instrument todir="${instrumented.dir}" datafile="${cobertura.datafile}">
+			<fileset dir="${bin.dir}">
+				<include name="**/*.class" />
+				<exclude name="**/*Test.class" />
+				<exclude name="**/com/google/**" />
+			</fileset>
+		</cobertura-instrument>
+	</target>
+
+
+	<target name="javac.tests" depends="javac" description="Compiles test code">
+		<mkdir dir="${bin.test.dir}" />
+
+		<javac srcdir="test" includes="**" encoding="utf-8" source="1.5" target="1.5" nowarn="true" destdir="${bin.test.dir}" debug="true" debuglevel="lines,vars,source">
+			<classpath refid="project.class.path" />
+		</javac>
+	</target>
+
+	<target name="test.dev" depends="javac.tests, cobertura-instrument" description="Run development mode tests">
+	  	<delete dir="${test.reports.dev.dir}" />
+	    <mkdir dir="${test.reports.dev.dir}" />
+	    <junit fork="yes" printsummary="yes" haltonfailure="yes">
+	      <jvmarg line="-Xmx256m" />
+	      <sysproperty key="gwt.args" value="-logLevel WARN" />
+	      <sysproperty key="java.awt.headless" value="true" />
+	        <sysproperty key="net.sourceforge.cobertura.datafile"
+	      		file="${cobertura.datafile}" />
+	      <classpath>
+	      	<pathelement location="src" />
+	      	<pathelement location="test" />
+
+	      	<pathelement location="${bin.test.dir}" />
+	        <path refid="cobertura.classpath" />
+	      	<pathelement location="${instrumented.dir}" />
+	        <path refid="project.class.path" />
+	      </classpath>
+	      <batchtest todir="${test.reports.dev.dir}" >
+	        <fileset dir="test" >
+	          <include name="**/*Test.java" />
+	        </fileset>
+	      </batchtest>
+	      <formatter type="plain" />
+	      <formatter type="xml" />
+	    </junit>
+
+	  	<cobertura-report
+	  		format="${cobertura.report.type}"
+	  		destdir="${cobertura.report.dir}"
+			srcdir="${src.dir}"
+	  		datafile="${cobertura.datafile}"/>
+	  </target>
 </project>
