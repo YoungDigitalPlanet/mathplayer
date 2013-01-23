@@ -43,7 +43,7 @@
 	    </copy>
 	  </target>
 	
-	<target name="dist" depends="javac">
+	<target name="dist" depends="javac, test.dev">
 		<mkdir dir="${dist.dir}" />
 
 		<jar destfile="${dist.dir}/mathplayer.jar">
