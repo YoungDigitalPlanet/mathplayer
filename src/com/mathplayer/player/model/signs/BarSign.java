@@ -3,7 +3,6 @@ package com.mathplayer.player.model.signs;
 import gwt.g2d.client.graphics.Surface;
 import gwt.g2d.client.graphics.shapes.ShapeBuilder;
 
-import com.google.gwt.canvas.dom.client.Context2d.LineCap;
 import com.mathplayer.player.geom.Area;
 import com.mathplayer.player.geom.Size;
 import com.mathplayer.player.interaction.InteractionSocket;

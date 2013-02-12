@@ -20,7 +20,9 @@ import com.mathplayer.player.model.layoutschematas.MRoot;
 import com.mathplayer.player.model.layoutschematas.MRow;
 import com.mathplayer.player.model.layoutschematas.MTable;
 import com.mathplayer.player.model.layoutschematas.MUnderOver;
+import com.mathplayer.player.model.layoutschematas.expansible.MUnderOverExpansible;
 import com.mathplayer.player.model.layoutschematas.mmultiscripts.MMultiScripts;
+import com.mathplayer.player.model.signs.expansible.ExpansibleSign;
 import com.mathplayer.player.model.tokens.MEmpty;
 import com.mathplayer.player.model.tokens.MIdentifier;
 import com.mathplayer.player.model.tokens.MNumber;
@@ -28,11 +30,14 @@ import com.mathplayer.player.model.tokens.MOperator;
 import com.mathplayer.player.model.tokens.MSpace;
 import com.mathplayer.player.model.tokens.MStringLiteral;
 import com.mathplayer.player.model.tokens.MText;
+import com.mathplayer.player.parsers.ExpansibleOperatorParser;
 import com.mathplayer.player.style.Context;
 import com.mathplayer.player.utils.XmlUtils;
 
 public abstract class MathMLParser {
 
+	private static final ExpansibleOperatorParser EXPANSIBLE_OPERATOR_PARSER = new ExpansibleOperatorParser();
+	
 	public static Token parse(String source){
 		source = source.replaceAll("&semi;", ";");
 		Document dom = XMLParser.parse(source);
@@ -53,7 +58,9 @@ public abstract class MathMLParser {
 				int nodesCount = XmlUtils.getChildElementNodesCount(element);
 				Vector<Token> tokens = new Vector<Token>();
 				for (int n = 0 ; n < nodesCount ;  n ++){
-					tokens.add( parseElement( XmlUtils.getChildElementNodeAtIndex(n, element) , currContext ));
+					Element childElement = XmlUtils.getChildElementNodeAtIndex(n, element);
+					Token parsedToken = parseElement( childElement , currContext );
+					tokens.add( parsedToken);
 				}
 				return new MRow(tokens);
 			} else if (nodeName.equals("mtable")){
@@ -99,18 +106,11 @@ public abstract class MathMLParser {
 				Token t2 = parseElement(XmlUtils.getChildElementNodeAtIndex(1, element) , currContext);
 				return new MMultiScripts( t1, null ,t2, null, null);
 			} else if (nodeName.equals("munderover")){
-				Token t1 = parseElement(XmlUtils.getChildElementNodeAtIndex(0, element) , currContext);
-				Token t2 = parseElement(XmlUtils.getChildElementNodeAtIndex(1, element) , currContext);
-				Token t3 = parseElement(XmlUtils.getChildElementNodeAtIndex(2, element) , currContext);
-				return new MUnderOver( t1, t2, t3 );
+				return parseMUnderOver(element, currContext);
 			} else if (nodeName.equals("munder")){
-				Token t1 = parseElement(XmlUtils.getChildElementNodeAtIndex(0, element) , currContext);
-				Token t2 = parseElement(XmlUtils.getChildElementNodeAtIndex(1, element) , currContext);
-				return new MUnderOver( t1, t2, null);
+				return parseMUnderToken(element, currContext);
 			} else if (nodeName.equals("mover")){
-				Token t1 = parseElement(XmlUtils.getChildElementNodeAtIndex(0, element) , currContext);
-				Token t2 = parseElement(XmlUtils.getChildElementNodeAtIndex(1, element) , currContext);
-				return new MUnderOver( t1, null, t2);
+				return parseMOverToken(element, currContext);
 			} else if (nodeName.equals("mroot")){
 				Token t1 = parseElement(XmlUtils.getChildElementNodeAtIndex(0, element) , currContext);
 				Token t2 = parseElement(XmlUtils.getChildElementNodeAtIndex(1, element) , currContext);
@@ -142,20 +142,7 @@ public abstract class MathMLParser {
 				mn.setStyleContext(currContext);
 				return mn;
 			} else if (nodeName.equals("mo")){
-				String content = XmlUtils.getFirstTextNode(element).toString();
-				if (content != null  &&  "OverBar".equals(content.trim()))
-					return new MBar(BarType.SINGLE);
-				else if (content != null  &&  "DoubleOverBar".equals(content.trim()))
-					return new MBar(BarType.DOUBLE);
-				else if (content != null  &&  "RightArrow".equals(content.trim()))
-					return new MBar(BarType.ARROW);
-				else if (content != null  &&  "&gt;".equals(content.trim()))
-					return new MOperator(">");
-				else if (content != null  &&  "&lt;".equals(content.trim()))
-					return new MOperator("<");
-				MOperator mo = new MOperator( content );
-				mo.setStyleContext(currContext);
-				return mo;
+				return parseMOperator(element, currContext);
 			} else if (nodeName.equals("ms")){
 				Node node = XmlUtils.getFirstTextNode(element);
 				String value = "";
@@ -191,6 +178,69 @@ public abstract class MathMLParser {
 			e.printStackTrace();
 		}
 		return new MEmpty();
+	}
+
+	private static Token parseMOverToken(Element element, Context currContext) {
+		Element baseElement = XmlUtils.getChildElementNodeAtIndex(0, element);
+		Token overToken = parseElement(XmlUtils.getChildElementNodeAtIndex(1, element) , currContext);
+		
+		Token underOverToken = createCorrecrUnderOverToken(baseElement, null, overToken, currContext);
+		return underOverToken;
+	}
+
+	private static Token parseMUnderToken(Element element, Context currContext) {
+		Element baseElement = XmlUtils.getChildElementNodeAtIndex(0, element);
+		Token underToken = parseElement(XmlUtils.getChildElementNodeAtIndex(1, element) , currContext);
+		
+		Token underOverToken = createCorrecrUnderOverToken(baseElement, underToken, null, currContext);
+		return underOverToken;
+	}
+
+	private static Token parseMUnderOver(Element element, Context currContext) {
+		Token underContent = parseElement(XmlUtils.getChildElementNodeAtIndex(1, element) , currContext);
+		Token overContent = parseElement(XmlUtils.getChildElementNodeAtIndex(2, element) , currContext);
+		Element baseElement = XmlUtils.getChildElementNodeAtIndex(0, element);
+		
+		Token underOverToken = createCorrecrUnderOverToken(baseElement, underContent, overContent, currContext);
+		return underOverToken;
+	}
+	
+	private static Token createCorrecrUnderOverToken(Element baseElement, Token underContent, Token overContent, Context currContext) {
+		Token underOverToken = null;
+		
+		boolean isExpansibleOperator = EXPANSIBLE_OPERATOR_PARSER.isExpansibleOperator(baseElement);
+		if(isExpansibleOperator){
+			ExpansibleSign expansibleSign = EXPANSIBLE_OPERATOR_PARSER.parseExpansibleSign(baseElement);
+			underOverToken = new MUnderOverExpansible(expansibleSign, underContent, overContent);
+		}else{
+			Token base = parseElement(baseElement , currContext);
+			underOverToken = new MUnderOver( base, underContent, overContent);
+		}
+		return underOverToken;
+	}
+
+	private static Token parseMOperator(Element element, Context currContext) {
+		String content = XmlUtils.getFirstTextNode(element).toString();
+		
+		MOperator mo = null;
+		if(content != null){
+			String trimedContent = content.trim();
+			if ("OverBar".equals(trimedContent))
+				mo = new MBar(BarType.SINGLE);
+			else if ("DoubleOverBar".equals(trimedContent))
+				mo = new MBar(BarType.DOUBLE);
+			else if ("RightArrow".equals(trimedContent))
+				mo = new MBar(BarType.ARROW);
+			else if ("&gt;".equals(trimedContent))
+				mo = new MOperator(">");
+			else if ("&lt;".equals(trimedContent))
+				mo = new MOperator("<");
+		}
+		if(mo == null){
+			mo = new MOperator(content);
+			mo.setStyleContext(currContext);
+		}
+		return mo;
 	}
 
 	private static Token parseMultiscriptsElement(Element element, Context currContext) {

@@ -11,6 +11,7 @@ import com.mathplayer.player.geom.Size;
 import com.mathplayer.player.interaction.InteractionSocket;
 import com.mathplayer.player.model.Token;
 
+@SuppressWarnings("PMD")
 public class MMultiscriptsMeasurerTest {
 
 	private MMultiscriptsMeasurer multiscriptsMeasurer = new MMultiscriptsMeasurer();

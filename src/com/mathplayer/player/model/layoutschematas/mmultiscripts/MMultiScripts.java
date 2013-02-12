@@ -2,8 +2,6 @@ package com.mathplayer.player.model.layoutschematas.mmultiscripts;
 
 import gwt.g2d.client.graphics.Surface;
 
-import java.util.Vector;
-
 import com.mathplayer.player.geom.Area;
 import com.mathplayer.player.geom.Font;
 import com.mathplayer.player.geom.Size;
@@ -32,7 +30,7 @@ public class MMultiScripts extends LayoutSchemata {
 		this.lsup = lsup;
 
 		changeMEmptyTokensToNulls();
-		fillTokensVector();
+		initTokens(base, sub, sup, lsub, lsup);
 	}
 	
 	private void changeMEmptyTokensToNulls(){
@@ -46,15 +44,6 @@ public class MMultiScripts extends LayoutSchemata {
 			lsup = null;
 	}
 	
-	private void fillTokensVector(){
-		tokens = new Vector<Token>();
-		tokens.add(base);
-		tokens.add(sub);
-		tokens.add(sup);
-		tokens.add(lsub);
-		tokens.add(lsup);
-	}
-
 	@Override
 	public void setFont(Font font) {
 		this.font = font;

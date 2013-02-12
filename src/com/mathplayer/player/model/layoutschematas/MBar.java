@@ -12,9 +12,11 @@ import com.mathplayer.player.model.tokens.MOperator;
 public class MBar extends MOperator {
 
 	protected BarSign vectorSign;
+	private final BarType barType;
 	
 	public MBar(BarType barType) {
 		super("_");
+		this.barType = barType;
 		vectorSign = new BarSign(barType);
 	}
 	
@@ -39,5 +41,9 @@ public class MBar extends MOperator {
 		
 		Area vectorSignArea = new Area(area.x, area.y, area.width, area.height);
 		vectorSign.render(canvas, vectorSignArea, socket);
+	}
+
+	public BarType getBarType() {
+		return barType;
 	}
 }

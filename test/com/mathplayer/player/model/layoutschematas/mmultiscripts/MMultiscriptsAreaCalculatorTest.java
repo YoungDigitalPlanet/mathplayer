@@ -7,6 +7,7 @@ import org.junit.Test;
 import com.mathplayer.player.geom.Area;
 import com.mathplayer.player.geom.Size;
 
+@SuppressWarnings("PMD")
 public class MMultiscriptsAreaCalculatorTest {
 
 	private MMultiscriptsAreaCalculator multiscriptsAreaCalculator = new MMultiscriptsAreaCalculator();

@@ -1,13 +1,14 @@
 package com.mathplayer.player.model;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.mathplayer.player.geom.Font;
 import com.mathplayer.player.interaction.InteractionSocket;
 
 public abstract class LayoutSchemata extends Token {
 
-	protected Vector<Token> tokens;
+	protected List<Token> tokens;
 	
 	@Override
 	public void setFont(Font font) {
@@ -15,6 +16,13 @@ public abstract class LayoutSchemata extends Token {
 		for (Token t : tokens){
 			t.setFont(font.clone());
 		}		
+	}
+	
+	public void initTokens(Token ...tokens){
+		this.tokens = new ArrayList<Token>();
+		for (Token token : tokens) {
+			this.tokens.add(token);
+		}
 	}
 
 	public int getChildTokensCount(){
