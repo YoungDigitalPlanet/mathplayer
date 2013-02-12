@@ -66,31 +66,33 @@ public class MUnderOverExpansible extends LayoutSchemata {
 	public void setFont(Font font){
 		this.font = font;
 		base.setFont(font.clone());
-		if (under != null)
+		if (under != null){
 			under.setFont(font.cloneShrunk());
-		if (over != null)
+		}
+		if (over != null){
 			over.setFont(font.cloneShrunk());
+		}
 	}
 
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append(base.toString());
-		appendTokenStringIfNotNull("__", under, sb);
-		appendTokenStringIfNotNull("^^", over, sb);
-		return sb.toString();
+		StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder.append(base.toString());
+		appendTokenStringIfNotNull("__", under, stringBuilder);
+		appendTokenStringIfNotNull("^^", over, stringBuilder);
+		return stringBuilder.toString();
 	}
 	
-	private void appendTokenStringIfNotNull(String prefix, Token token, StringBuilder sb){
+	private void appendTokenStringIfNotNull(String prefix, Token token, StringBuilder stringBuilder){
 		if(token != null){
 			boolean isContentToken = token instanceof ContentToken;
-			sb.append(prefix);
+			stringBuilder.append(prefix);
 			if(isContentToken){
-				sb.append("(");
+				stringBuilder.append("(");
 			}
-			sb.append(token.toString());
+			stringBuilder.append(token.toString());
 			if(isContentToken){
-				sb.append(")");
+				stringBuilder.append(")");
 			}
 		}
 	}
@@ -108,16 +110,16 @@ public class MUnderOverExpansible extends LayoutSchemata {
 	}
 
 	private String buildMathML(String tagName, String ... childs){
-		StringBuilder sb = new StringBuilder();
-		sb.append("<");
-		sb.append(tagName);
-		sb.append(">");
+		StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder.append("<");
+		stringBuilder.append(tagName);
+		stringBuilder.append(">");
 		for (String childMathML : childs) {
-			sb.append(childMathML);
+			stringBuilder.append(childMathML);
 		}
-		sb.append("</");
-		sb.append(tagName);
-		sb.append(">");
-		return sb.toString();
+		stringBuilder.append("</");
+		stringBuilder.append(tagName);
+		stringBuilder.append(">");
+		return stringBuilder.toString();
 	}
 }

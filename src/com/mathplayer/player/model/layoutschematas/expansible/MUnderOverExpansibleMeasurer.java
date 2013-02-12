@@ -69,10 +69,10 @@ public class MUnderOverExpansibleMeasurer {
 	
 	private Size measureSizeOfToken(Token token, InteractionSocket socket){
 		Size size = null;
-		if(token != null){
-			size = token.measure(socket);
-		}else{
+		if(token == null){
 			size = new Size(0, 0, 0);
+		}else{
+			size = token.measure(socket);
 		}
 		return size;
 	}

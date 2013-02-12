@@ -14,7 +14,7 @@ public class MUnderOverExpansibleAreaCalculator {
 		Area middlePanelArea = calculateMiddlePanelArea(baseArea, middleLineOfExpression, dimensions);
 		Area rightPanelArea = calculateRightPanelArea(baseArea, middlePanelArea, dimensions, middleLineOfExpression);
 
-		Area overContentArea = calculateOverContentArea(baseArea, middlePanelArea, dimensions);
+		Area overContentArea = calculateOverContentArea(middlePanelArea, dimensions);
 		Area underContentArea = calculateUnderContentArea(middlePanelArea, dimensions);
 
 		DtoExpansibleUnderOverArea dtoExpansibleUnderOverArea = createAreasDto(leftPanelArea, middlePanelArea, rightPanelArea, overContentArea, underContentArea);
@@ -73,7 +73,7 @@ public class MUnderOverExpansibleAreaCalculator {
 		return middlePanelArea;
 	}
 
-	private Area calculateOverContentArea(Area baseArea, Area middlePanelArea, DtoExpansibleUnderOverDimensions dimensions) {
+	private Area calculateOverContentArea(Area middlePanelArea, DtoExpansibleUnderOverDimensions dimensions) {
 		Size overSize = dimensions.getOverSize();
 
 		double widthOfMiddlePanel = dimensions.getMiddlePanelSize().width;
