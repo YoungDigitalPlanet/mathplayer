@@ -21,6 +21,7 @@ import com.mathplayer.player.model.shapes.UnionSign;
 import com.mathplayer.player.style.Context;
 
 import eu.ydp.gwtutil.client.util.UserAgentChecker;
+import eu.ydp.gwtutil.client.util.UserAgentChecker.RuntimeMobileUserAgent;
 import gwt.g2d.client.graphics.Surface;
 
 public abstract class ContentTextTokenBase extends ContentToken {
@@ -40,7 +41,7 @@ public abstract class ContentTextTokenBase extends ContentToken {
 	List<String> mathChars = Arrays.asList(UNICODE_CHAR_REAL, UNICODE_CHAR_INTEGER, UNICODE_CHAR_NATURAL, UNICODE_CHAR_UNION,
 			UNICODE_CHAR_INTERSECTION, UNICODE_CHAR_DIFF, UNICODE_CHAR_RATIONAL, UNICODE_CHAR_CONJUNCTION,
 			UNICODE_CHAR_DISJUNCTION, UNICODE_CHAR_CONJUNCTION_ALT, UNICODE_CHAR_DISJUNCTION_ALT);
-	
+
 	private static final int MATH_CHARS_MARGIN = 4;
 	protected String content;
 	protected Context styleContext;
@@ -64,15 +65,15 @@ public abstract class ContentTextTokenBase extends ContentToken {
 	}
 
 	public boolean isAlternativeMathRendering() {
-		boolean alternativeMathRendering = false;		
-		if (UserAgentChecker.isMobileUserAgent(UserAgentChecker.ANDROID_USER_AGENTS)) {
-			for (String string : mathChars) {			
+		boolean alternativeMathRendering = false;
+		if (UserAgentChecker.isUserAgent(RuntimeMobileUserAgent.ANDROID)) {
+			for (String string : mathChars) {
 				if (content.contains(string)) {
 					alternativeMathRendering = true;
 					break;
 				}
-			}						
-		}		
+			}
+		}
 		return alternativeMathRendering;
 	}
 
@@ -102,15 +103,15 @@ public abstract class ContentTextTokenBase extends ContentToken {
 		size.width = getTextWidth();
 		size.height = font.size;
 		size.middleLine = font.size / 2;
-		
+
 		// fix for android when measuring italic on canvas
 		if (isStackAndroidBrowser()) {
 			if (font.italic) {
 				size.width += size.width * .17;
 			}
 			size.height += size.height* .1;
-		}		
-		
+		}
+
 		return size.clone();
 	}
 
@@ -127,9 +128,9 @@ public abstract class ContentTextTokenBase extends ContentToken {
 			int currentPosition = MATH_CHARS_MARGIN / 2;
 			Size currentCharMeasuredSize = null;
 			for (char c : content.toCharArray()) {
-				
+
 				String currentChar = new Character(c).toString();
-				
+
 				if (currentChar.equals(UNICODE_CHAR_REAL)) {
 					RealNumbersSign sign = new RealNumbersSign(exactArea.x + currentPosition, exactArea.y, getFontTextOffset());
 					sign.render(canvas, area, socket);
@@ -165,7 +166,7 @@ public abstract class ContentTextTokenBase extends ContentToken {
 				} else if (currentChar.equals(UNICODE_CHAR_DISJUNCTION) || currentChar.equals(UNICODE_CHAR_DISJUNCTION_ALT)) {
 					DisjunctionSign sign = new DisjunctionSign(exactArea.x + currentPosition, exactArea.y, getFontTextOffset());
 					sign.render(canvas, area, socket);
-					currentCharMeasuredSize = sign.measure(socket);	
+					currentCharMeasuredSize = sign.measure(socket);
 				} else {
 					canvas.fillText(currentChar, exactArea.x + currentPosition, exactArea.y + getFontTextOffset());
 					currentCharMeasuredSize.width = canvas.measureText(currentChar);
