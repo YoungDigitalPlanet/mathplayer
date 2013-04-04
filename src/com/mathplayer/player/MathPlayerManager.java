@@ -2,7 +2,6 @@ package com.mathplayer.player;
 
 import java.util.Map;
 
-import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.Panel;
 import com.mathplayer.player.geom.Area;
 import com.mathplayer.player.geom.Font;
@@ -10,10 +9,9 @@ import com.mathplayer.player.geom.Size;
 import com.mathplayer.player.interaction.GapIdentifier;
 import com.mathplayer.player.interaction.InteractionManager;
 import com.mathplayer.player.model.Token;
-import com.mathplayer.player.utils.BrowserUtils;
+import com.mathplayer.player.utils.FontAnatomy;
 
 import eu.ydp.gwtutil.client.collections.MatchableMap;
-import eu.ydp.gwtutil.client.util.UserAgentChecker;
 import gwt.g2d.client.graphics.Surface;
 
 public class MathPlayerManager {
@@ -23,14 +21,7 @@ public class MathPlayerManager {
 	private int gapHeight;
 	private final Map<GapIdentifier, Integer> customFieldWidths;
 	private final Map<GapIdentifier, Integer> customFieldHeights;
-	private static float FONT_DECENT = BrowserUtils.getUserAgent().toLowerCase().contains("msie") ? 0.37f : 0.275f;
-	private double baseline;
-	
-	static{
-		if(UserAgentChecker.isStackAndroidBrowser()){
-			FONT_DECENT = 0.32f;
-		}
-	}
+	private int baseline;
 	
 	public MathPlayerManager() {
 		font = new Font(16, "Verdana", false, false);
@@ -42,7 +33,7 @@ public class MathPlayerManager {
 	}
 
 	public void setFont(Font font) {
-		if (font != null) {
+		if (font != null){
 			this.font = font;
 		}
 	}
@@ -71,42 +62,60 @@ public class MathPlayerManager {
 		}
 	}
 
+	public int getBaseline() {
+		return baseline;
+	}
+
 	public InteractionManager createMath(String source, Panel owner) {
+		Token token = createToken(source);
+		InteractionManager manager = createInteractionManager(owner);
+		Size size = findSize(token, manager);
+		updateBaseline(size, font.size);
+		render(token, manager, size);
+		manager.process();
+		return manager;
+	}
 
+	private Token createToken(String source) {
+		Token token = MathMLParser.parse(source);
+		token.setFont(font);
+		return token;
+	}
+	
+	private InteractionManager createInteractionManager(Panel owner) {
 		InteractionManager manager = new InteractionManager(owner);
-
-		Token t = MathMLParser.parse(source);
-		t.setFont(font);
-
 		manager.setTextBoxWidth(gapWidth);
 		manager.setTextBoxHeight(gapHeight);
 		manager.setCustomFieldWidths(customFieldWidths);
 		manager.setCustomFieldHeights(customFieldHeights);
 		manager.removeTextBox();
-
-		Size size = t.measure(manager);
-		size.width = Math.ceil(size.width);
-		size.height = Math.ceil(size.height);
-		Surface canvas = new Surface((int) size.width, (int) size.height){
-			@Override
-			public void setTabIndex(int index) {
-				super.setTabIndex(-1);
-			}
-		};
-		owner.getElement().getStyle().setVerticalAlign(Math.floor(-(size.height - size.middleLine) + font.size * FONT_DECENT), Unit.PX);
-		setBaseline(size.middleLine);
-		manager.setCanvas(canvas, (int) size.width, (int) size.height);
-		t.render(canvas, new Area(0, 0, size), manager);
-		manager.process();
-		canvas.setTabIndex(-1);
 		return manager;
 	}
 
-	public double getBaseline() {
-		return baseline;
+	private Size findSize(Token token, InteractionManager manager) {
+		Size size = token.measure(manager);
+		Size sizeCeiled = new Size(Math.ceil(size.width), Math.ceil(size.height));
+		return sizeCeiled;
 	}
 
-	public void setBaseline(double baseline) {
-		this.baseline = baseline;
+	private Surface createCanvas(Size size) {
+		Surface canvas = new Surface((int) size.width, (int) size.height);
+		canvas.setTabIndex(-1);
+		return canvas;
+	}
+
+	private void render(Token token, InteractionManager manager, Size size) {
+		Surface canvas = createCanvas(size);
+		manager.setCanvas(canvas, (int) size.width, (int) size.height);
+		token.render(canvas, new Area(0, 0, size), manager);
+	}
+
+	private void updateBaseline(Size size, int fontSize) {
+		baseline = findBaseline(size, fontSize);
+	}
+
+	private int findBaseline(Size size, int fontSize) {
+		int baselineFromBottomInt = (int) Math.ceil(size.height - size.middleLine - font.size * FontAnatomy.BASELINE_FACTOR);
+		return baselineFromBottomInt;
 	}
 }

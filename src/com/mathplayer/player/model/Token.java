@@ -8,7 +8,7 @@ import com.mathplayer.player.geom.Area;
 import com.mathplayer.player.geom.Font;
 import com.mathplayer.player.geom.Size;
 import com.mathplayer.player.interaction.InteractionSocket;
-import com.mathplayer.player.utils.BrowserUtils;
+import com.mathplayer.player.utils.FontAnatomy;
 
 public abstract class Token {
 
@@ -58,11 +58,7 @@ public abstract class Token {
 	}
 
 	protected void findExactArea(Area area) {
-		double heightSurplus = area.middleLine - size.middleLine;
-		if (area.y + heightSurplus < 0) {
-			heightSurplus = -area.y;
-		}
-		exactArea = new Area(area.x + (area.width - size.width) / 2, area.y + heightSurplus, size);
+		exactArea = new TokenExactAreaCalculator().calculate(area, size);
 	}
 
 	public double getFontTextOffset() {
@@ -74,13 +70,7 @@ public abstract class Token {
 	}
 	
 	protected double getTextOffset() {
-		double textOffset = BrowserUtils.getUserAgent().toLowerCase().contains("msie") ? 0.91d : 0.725d;
-		
-		if (isStackAndroidBrowser()) {
-			textOffset = 0.81d;
-		}
-		
-		return textOffset;
+		return FontAnatomy.TEXT_OFFSET;
 	}
 	
 	public Boolean isStackAndroidBrowser() {
