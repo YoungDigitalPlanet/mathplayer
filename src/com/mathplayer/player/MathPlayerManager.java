@@ -115,7 +115,10 @@ public class MathPlayerManager {
 	}
 
 	private int findBaseline(Size size, int fontSize) {
-		int baselineFromBottomInt = (int) Math.ceil(size.height - size.middleLine - font.size * FontAnatomy.BASELINE_FACTOR);
+		double middlelineFromBottom = size.height - size.middleLine;
+		double middlelineToBaseline = font.size * FontAnatomy.BASELINE_FACTOR;
+		double baselineFromBottom = middlelineFromBottom - middlelineToBaseline;
+		int baselineFromBottomInt = (int) Math.ceil(baselineFromBottom);
 		return baselineFromBottomInt;
 	}
 }
