@@ -94,7 +94,7 @@ public class MathPlayerManager {
 
 	private Size findSize(Token token, InteractionManager manager) {
 		Size size = token.measure(manager);
-		Size sizeCeiled = new Size(Math.ceil(size.width), Math.ceil(size.height));
+		Size sizeCeiled = new Size(Math.ceil(size.width), Math.ceil(size.height), Math.ceil(size.middleLine));
 		return sizeCeiled;
 	}
 
