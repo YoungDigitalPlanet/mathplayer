@@ -29,7 +29,7 @@ public class MFenced extends LayoutSchemata {
 		openFenceSign = new FenceSign(openFenceType, true);
 		closeFenceSign = new FenceSign(closeFenceType, false);
 	}
-	
+
 
 	@Override
 	public void setFont(Font font) {
@@ -40,21 +40,21 @@ public class MFenced extends LayoutSchemata {
 
 	@Override
 	public Size measure(InteractionSocket socket) {
-		if (size != null)
+		if (size != null) {
 			return size;
+		}
 
 		size = tokens.get(0).measure(socket);
-		size.height = size.middleLine * 2;
-		
+
 		openFenceSign.setHeight(size.height);
 		closeFenceSign.setHeight(size.height);
-		
+
 		openBracketSize = openFenceSign.measure(socket);
 		closeBracketSize = closeFenceSign.measure(socket);
 
 		size.addLeft(openBracketSize);
 		size.addLeft(closeBracketSize);
-		
+
 		return size.clone();
 	}
 
@@ -65,13 +65,13 @@ public class MFenced extends LayoutSchemata {
 		canvas.setStrokeStyle(font.color);
 		canvas.setFillStyle(font.color);
 
-		Area openFenceArea = new Area(exactArea.x, exactArea.y, openBracketSize);		
+		Area openFenceArea = new Area(exactArea.x, exactArea.y, openBracketSize);
 		openFenceSign.render(canvas, openFenceArea, socket);
-		
+
 		Area contentsArea = new Area(exactArea.x + openBracketSize.width, exactArea.y, tokens.get(0).measure(socket));
 		tokens.get(0).render(canvas, contentsArea, socket);
 
-		Area closeFenceArea = new Area(exactArea.x + openBracketSize.width + contentsArea.width, exactArea.y, closeBracketSize);		
+		Area closeFenceArea = new Area(exactArea.x + openBracketSize.width + contentsArea.width, exactArea.y, closeBracketSize);
 		closeFenceSign.render(canvas, closeFenceArea, socket);
 
 	}
