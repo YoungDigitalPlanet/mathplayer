@@ -1,5 +1,5 @@
 <ivy-module version="2.0">
-  <info organisation="eu.ydp" module="mathPlayer"/>
+  <info organisation="eu.ydp" module="mathPlayer" status="integration"/>
 	<configurations>
 		<conf name="default"  description="math-player executables"/>
 		<conf name="test" visibility="private" description="test conf"/>
