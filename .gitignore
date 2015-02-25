@@ -1,0 +1,23 @@
+# /
+/build
+/gwt-unitCache
+/ivy-lib
+/dist
+/${test.reports.dev.dir}
+/bin
+/bin.cobertura
+/bin.test
+/cobertura-report
+/ivy-lib-coverage
+/reports
+/.pmd
+/.classpath
+/.project
+/.settings
+
+# /war/
+/war/math_player
+
+# /war/WEB-INF/
+/war/WEB-INF/classes
+/war/WEB-INF/lib
