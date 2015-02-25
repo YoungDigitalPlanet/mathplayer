@@ -1,14 +1,11 @@
 package com.mathplayer.player.model;
 
-import eu.ydp.gwtutil.client.util.UserAgentChecker;
-import gwt.g2d.client.graphics.Surface;
-
+import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.user.client.ui.AbsolutePanel;
-import com.mathplayer.player.geom.Area;
-import com.mathplayer.player.geom.Font;
-import com.mathplayer.player.geom.Size;
+import com.mathplayer.player.geom.*;
 import com.mathplayer.player.interaction.InteractionSocket;
 import com.mathplayer.player.utils.FontAnatomy;
+import eu.ydp.gwtutil.client.util.UserAgentChecker;
 
 public abstract class Token {
 
@@ -20,7 +17,7 @@ public abstract class Token {
 		this.font = font;
 	}
 
-	public void render(Surface canvas, Area area, InteractionSocket socket) {
+	public void render(Canvas canvas, Area area, InteractionSocket socket) {
 		findExactArea(area);
 	}
 
@@ -30,25 +27,25 @@ public abstract class Token {
 	public abstract String toString();
 
 	public abstract String toMathML();
-	
-	public Surface getCanvas() {
-		return new Surface();
+
+	public Canvas getCanvas() {
+		return Canvas.createIfSupported();
 	}
 
-	public Surface createCanvas(AbsolutePanel panel) {
-		Surface canvas = getCanvas();
+	public Canvas createCanvas(AbsolutePanel panel) {
+		Canvas canvas = getCanvas();
 		panel.add(canvas);
 		return canvas;
 	}
 
-	public void removeCanvas(Surface canvas, AbsolutePanel panel) {
+	public void removeCanvas(Canvas canvas, AbsolutePanel panel) {
 		panel.remove(canvas);
 	}
-	
+
 	public double getTextWidth(String content, Font font, double margin, AbsolutePanel panel) {
-		Surface canvas = createCanvas(panel);
-		canvas.setFont(font.toString());
-		double textWidth = canvas.measureText(content) + font.size * margin * 2;
+		Canvas canvas = createCanvas(panel);
+		canvas.getContext2d().setFont(font.toString());
+		double textWidth = canvas.getContext2d().measureText(content).getWidth() + font.size * margin * 2;
 		removeCanvas(canvas, panel);
 		return textWidth;
 	}
@@ -68,15 +65,15 @@ public abstract class Token {
 	public double getFontTextOffset(int fontSize) {
 		return fontSize * getTextOffset();
 	}
-	
+
 	protected double getTextOffset() {
 		return FontAnatomy.TEXT_OFFSET;
 	}
-	
+
 	public Boolean isStackAndroidBrowser() {
 		return UserAgentChecker.isStackAndroidBrowser();
 	}
-	
+
 	public void reset() {
 		size = null;
 	}

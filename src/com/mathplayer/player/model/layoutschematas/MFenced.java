@@ -1,16 +1,12 @@
 package com.mathplayer.player.model.layoutschematas;
 
-import gwt.g2d.client.graphics.Surface;
-
-import java.util.Vector;
-
-import com.mathplayer.player.geom.Area;
-import com.mathplayer.player.geom.Font;
-import com.mathplayer.player.geom.Size;
+import com.google.gwt.canvas.client.Canvas;
+import com.google.gwt.canvas.dom.client.Context2d;
+import com.mathplayer.player.geom.*;
 import com.mathplayer.player.interaction.InteractionSocket;
-import com.mathplayer.player.model.LayoutSchemata;
-import com.mathplayer.player.model.Token;
+import com.mathplayer.player.model.*;
 import com.mathplayer.player.model.signs.FenceSign;
+import java.util.Vector;
 
 public class MFenced extends LayoutSchemata {
 
@@ -21,15 +17,14 @@ public class MFenced extends LayoutSchemata {
 	protected FenceSign openFenceSign;
 	protected FenceSign closeFenceSign;
 
-	public MFenced(Token content, FenceType openFenceType, FenceType closeFenceType){
-		tokens = new Vector<Token>();
+	public MFenced(Token content, FenceType openFenceType, FenceType closeFenceType) {
+		tokens = new Vector<>();
 		tokens.add(content);
 		this.openFenceType = openFenceType;
 		this.closeFenceType = closeFenceType;
 		openFenceSign = new FenceSign(openFenceType, true);
 		closeFenceSign = new FenceSign(closeFenceType, false);
 	}
-
 
 	@Override
 	public void setFont(Font font) {
@@ -59,11 +54,10 @@ public class MFenced extends LayoutSchemata {
 	}
 
 	@Override
-	public void render(Surface canvas, Area area, InteractionSocket socket) {
+	public void render(Canvas canvas, Area area, InteractionSocket socket) {
 		super.render(canvas, area, socket);
-		canvas.setFont(font.clone((int) size.height).toString());
-		canvas.setStrokeStyle(font.color);
-		canvas.setFillStyle(font.color);
+		Context2d canvasElement = canvas.getContext2d();
+		canvasElement.setFont(font.clone((int) size.height).toString());
 
 		Area openFenceArea = new Area(exactArea.x, exactArea.y, openBracketSize);
 		openFenceSign.render(canvas, openFenceArea, socket);
