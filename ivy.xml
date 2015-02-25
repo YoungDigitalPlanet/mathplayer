@@ -22,5 +22,10 @@
 	<dependency name="junit" transitive="false" rev="4.10" org="junit" conf="test->default" />
 	<dependency org="org.mockito" name="mockito-all" rev="1.9.0" conf="test->default"/>
 	<dependency org="org.javassist" name="javassist" rev="3.16.1-GA"  conf="default, test->default"/>
+	
+	<!-- Hack for some IVY issues -->
+   <dependency org="org.ow2.asm" name="asm" rev="5.0.3" conf="default, test->default"/>
+   <dependency org="org.ow2.asm" name="asm-util" rev="5.0.3" conf="default, test->default"/>
+   <dependency org="org.ow2.asm" name="asm-commons" rev="5.0.3" conf="default, test->default"/>
   </dependencies>
 </ivy-module>
