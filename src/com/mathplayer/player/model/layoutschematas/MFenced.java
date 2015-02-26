@@ -56,8 +56,8 @@ public class MFenced extends LayoutSchemata {
 	@Override
 	public void render(Canvas canvas, Area area, InteractionSocket socket) {
 		super.render(canvas, area, socket);
-		Context2d canvasElement = canvas.getContext2d();
-		canvasElement.setFont(font.clone((int) size.height).toString());
+		Context2d context2d = canvas.getContext2d();
+		context2d.setFont(font.clone((int) size.height).toString());
 
 		Area openFenceArea = new Area(exactArea.x, exactArea.y, openBracketSize);
 		openFenceSign.render(canvas, openFenceArea, socket);

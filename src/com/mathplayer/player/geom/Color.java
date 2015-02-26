@@ -1,12 +1,14 @@
 package com.mathplayer.player.geom;
 
+import com.google.gwt.canvas.dom.client.CssColor;
+
 public class Color {
 
 	private int red;
 	private int blue;
 	private int green;
 	private double alpha;
-	private String colorCode;
+	private CssColor cssColor;
 
 	public Color(int red, int green, int blue) {
 		this(red, green, blue, 1.0D);
@@ -17,18 +19,18 @@ public class Color {
 		this.blue = blue;
 		this.green = green;
 		this.alpha = alpha;
-		colorCode = genrateStringCode();
+		cssColor = CssColor.make(red, green, blue);
 	}
 
-	public final int getR() {
+	public final int getRed() {
 		return this.red;
 	}
 
-	public final int getG() {
+	public final int getGreen() {
 		return this.green;
 	}
 
-	public final int getB() {
+	public final int getBlue() {
 		return this.blue;
 	}
 
@@ -38,16 +40,6 @@ public class Color {
 
 	@Override
 	public String toString() {
-		return colorCode;
-	}
-
-	private String genrateStringCode() {
-		StringBuilder stringBuilder = new StringBuilder("#000000");
-		String hexString = Integer.toHexString(getHexValue(red, green, blue));
-		return stringBuilder.replace(stringBuilder.length() - hexString.length(), stringBuilder.length(), hexString).toString();
-	}
-
-	private final int getHexValue(int r, int g, int b) {
-		return r << 16 & 16711680 | g << 8 & '\uff00' | b & 255;
+		return cssColor.value();
 	}
 }

@@ -43,9 +43,7 @@ public class MRoot extends LayoutSchemata {
 			size.width += tokens.get(1).measure(socket).width;
 		}
 
-		if (tokens.get(1) == null || tokens.get(0).measure(socket).height + rootSign.getOverMargin() - rootSign.getOverhangLeftHeight() > tokens.get(1)
-																																				.measure(
-																																						socket).height) {
+		if (tokens.get(1) == null || isBaseHigher(socket)) {
 			size.height += rootSign.getOverMargin();
 			size.middleLine += rootSign.getOverMargin();
 		} else {
@@ -66,9 +64,7 @@ public class MRoot extends LayoutSchemata {
 
 		Area baseArea = null;
 
-		if (tokens.get(1) == null || tokens.get(0).measure(socket).height + rootSign.getOverMargin() - rootSign.getOverhangLeftHeight() > tokens.get(1)
-																																				.measure(
-																																						socket).height) {
+		if (tokens.get(1) == null || isBaseHigher(socket)) {
 			baseArea = new Area(exactArea.x + indexWidth + rootSign.getBetweenMargin() + rootSign.getContentMargin(),
 								exactArea.y + rootSign.getOverMargin(),
 								tokens.get(0).measure(socket));
@@ -89,10 +85,8 @@ public class MRoot extends LayoutSchemata {
 				indexArea.x += 0;
 			}
 
-			if (tokens.get(0).measure(socket).height + rootSign.getOverMargin() - rootSign.getOverhangLeftHeight() > tokens.get(1).measure(socket).height) {
-				indexArea.y += tokens.get(0).measure(socket).height + rootSign.getOverMargin() - rootSign.getOverhangLeftHeight() - tokens.get(1)
-																																		  .measure(
-																																				  socket).height;
+			if (isBaseHigher(socket)) {
+				indexArea.y += tokens.get(0).measure(socket).height + rootSign.getOverMargin() - rootSign.getOverhangLeftHeight() - tokens.get(1).measure(socket).height;
 			} else {
 				indexArea.y += 0;
 			}
@@ -130,4 +124,7 @@ public class MRoot extends LayoutSchemata {
 		return "<msqrt>" + tokens.get(0).toMathML() + "</msqrt>";
 	}
 
+	private boolean isBaseHigher(InteractionSocket socket) {
+		return tokens.get(0).measure(socket).height + rootSign.getOverMargin() - rootSign.getOverhangLeftHeight() > tokens.get(1).measure(socket).height;
+	}
 }

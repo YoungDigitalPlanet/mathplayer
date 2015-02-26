@@ -59,6 +59,8 @@ public class FenceSign extends Sign {
 	@Override
 	public void render(Canvas canvas, Area area, InteractionSocket socket) {
 		super.render(canvas, area, socket);
+		Context2d context2d = canvas.getContext2d();
+		context2d.setStrokeStyle(font.color.toString());
 
 		switch (fenceType) {
 		case ROUND:
@@ -85,7 +87,6 @@ public class FenceSign extends Sign {
 
 	private void drawRoundBracket(Context2d context2d) {
 		double vDivisor = getRoundBracketVerticalDivisor();
-
 		double sx = exactArea.x;
 		double sy = exactArea.y;
 
@@ -316,18 +317,18 @@ public class FenceSign extends Sign {
 
 	private void drawHorizontalLine(ImageData imageData, int fromX, int toX, int y, Color color) {
 		for (int x = fromX; x <= toX; x++) {
-			imageData.setRedAt(color.getR(), x, y);
-			imageData.setGreenAt(color.getG(), x, y);
-			imageData.setBlueAt(color.getB(), x, y);
+			imageData.setRedAt(color.getRed(), x, y);
+			imageData.setGreenAt(color.getGreen(), x, y);
+			imageData.setBlueAt(color.getBlue(), x, y);
 			imageData.setAlphaAt(255 * (int) color.getAlpha(), x, y);
 		}
 	}
 
 	private void drawVerticalLine(ImageData imageData, int fromY, int toY, int x, Color color) {
 		for (int y = fromY; y <= toY; y++) {
-			imageData.setRedAt(color.getR(), x, y);
-			imageData.setGreenAt(color.getG(), x, y);
-			imageData.setBlueAt(color.getB(), x, y);
+			imageData.setRedAt(color.getRed(), x, y);
+			imageData.setGreenAt(color.getGreen(), x, y);
+			imageData.setBlueAt(color.getBlue(), x, y);
 			imageData.setAlphaAt(255 * (int) color.getAlpha(), x, y);
 		}
 	}
