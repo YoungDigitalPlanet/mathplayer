@@ -1,20 +1,18 @@
 package com.mathplayer.player.geom;
 
-import com.google.gwt.junit.client.GWTTestCase;
+import static org.junit.Assert.*;
 
-public class ColorTest extends GWTTestCase {
+import org.junit.Test;
 
-	@Override
-	public String getModuleName() {
-		return "com.mathplayer.Math_player";
-	}
+public class ColorTest {
 
+	@Test
 	public void testColorHashValue() {
 		// given
 		int red = 255;
 		int green = 0;
 		int blue = 255;
-		Color testObj = new Color(red,green,blue);
+		Color testObj = new Color(red, green, blue);
 		String expectedHash = "rgb(255,0,255)";
 
 		// when
