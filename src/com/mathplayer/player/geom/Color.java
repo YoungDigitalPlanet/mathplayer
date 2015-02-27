@@ -1,14 +1,11 @@
 package com.mathplayer.player.geom;
 
-import com.google.gwt.canvas.dom.client.CssColor;
-
 public class Color {
 
 	private int red;
 	private int blue;
 	private int green;
 	private double alpha;
-	private CssColor cssColor;
 
 	public Color(int red, int green, int blue) {
 		this(red, green, blue, 1.0D);
@@ -19,7 +16,6 @@ public class Color {
 		this.blue = blue;
 		this.green = green;
 		this.alpha = alpha;
-		cssColor = CssColor.make(red, green, blue);
 	}
 
 	public final int getRed() {
@@ -40,6 +36,6 @@ public class Color {
 
 	@Override
 	public String toString() {
-		return cssColor.value();
+		return "rgb(" + red + "," + green + "," + blue + ")";
 	}
 }
