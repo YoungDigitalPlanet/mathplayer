@@ -1,12 +1,8 @@
 package com.mathplayer.player.model.interaction;
 
-import gwt.g2d.client.graphics.Color;
-import gwt.g2d.client.graphics.Surface;
-import gwt.g2d.client.graphics.shapes.ShapeBuilder;
-
-import com.google.gwt.canvas.dom.client.Context2d.LineCap;
-import com.mathplayer.player.geom.Area;
-import com.mathplayer.player.geom.Size;
+import com.google.gwt.canvas.client.Canvas;
+import com.google.gwt.canvas.dom.client.Context2d;
+import com.mathplayer.player.geom.*;
 import com.mathplayer.player.interaction.InteractionSocket;
 import com.mathplayer.player.model.InteractionToken;
 
@@ -16,24 +12,22 @@ public class EmptySpace extends InteractionToken {
 	public Size measure(InteractionSocket socket) {
 		if (size != null)
 			return size;
-		
-		size = new Size(font.size, font.size, font.size/2);
-		
+
+		size = new Size(font.size, font.size, font.size / 2);
 		return size.clone();
 	}
 
 	@Override
-	public void render(Surface canvas, Area area, InteractionSocket socket) {
+	public void render(Canvas canvas, Area area, InteractionSocket socket) {
 		super.render(canvas, area, socket);
-		//canvas.setFillStyle(new Color(200, 200, 255, 0.4d));
-		//canvas.fillRectangle(exactArea.x, exactArea.y, exactArea.width, exactArea.height);
 
-		canvas.setLineWidth(0.5);
-		canvas.setStrokeStyle(new Color(0,0,0,1));
-		canvas.setLineCap(gwt.g2d.client.graphics.LineCap.BUTT);
-		ShapeBuilder sb = new ShapeBuilder();
-		sb.drawRect(exactArea.x+1, exactArea.y+1, exactArea.width-2, exactArea.height-2);
-		canvas.strokeShape(sb.build());
+		Context2d context2d = canvas.getContext2d();
+
+		context2d.setLineWidth(0.5);
+		Color color = new Color(0, 0, 0, 1);
+		context2d.setStrokeStyle(color.toString());
+		context2d.setLineCap(Context2d.LineCap.BUTT);
+		context2d.strokeRect(exactArea.x + 1, exactArea.y + 1, exactArea.width - 2, exactArea.height - 2);
 	}
 
 	@Override

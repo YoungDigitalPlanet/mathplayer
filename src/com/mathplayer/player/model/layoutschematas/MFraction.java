@@ -1,32 +1,26 @@
 package com.mathplayer.player.model.layoutschematas;
 
-import gwt.g2d.client.graphics.Surface;
-
-import java.util.Vector;
-
-import com.mathplayer.player.geom.Area;
-import com.mathplayer.player.geom.Font;
-import com.mathplayer.player.geom.Size;
+import com.google.gwt.canvas.client.Canvas;
+import com.mathplayer.player.geom.*;
 import com.mathplayer.player.interaction.InteractionSocket;
-import com.mathplayer.player.model.ContentToken;
-import com.mathplayer.player.model.LayoutSchemata;
-import com.mathplayer.player.model.Token;
+import com.mathplayer.player.model.*;
 import com.mathplayer.player.model.signs.FractionSign;
+import java.util.Vector;
 
 public class MFraction extends LayoutSchemata {
 
 	protected FractionSign fractionSign;
 	protected final double MARGIN = 0.0d;
 
-	public MFraction(Token numerator, Token denominator){
-		tokens = new Vector<Token>();
+	public MFraction(Token numerator, Token denominator) {
+		tokens = new Vector<>();
 		tokens.add(numerator);
 		tokens.add(denominator);
 		fractionSign = new FractionSign();
 	}
 
 	@Override
-	public void setFont(Font font){
+	public void setFont(Font font) {
 		super.setFont(font);
 		this.font = font;
 		fractionSign.setFont(font);
@@ -41,14 +35,14 @@ public class MFraction extends LayoutSchemata {
 		size = tokens.get(0).measure(socket).clone();
 		size.addBottom(fractionSign.measure(socket));
 		size.addBottom(tokens.get(1).measure(socket));
-		size.width += 2*font.size*MARGIN;
-		size.middleLine = tokens.get(0).measure(socket).height + fractionSign.measure(socket).height/2;
+		size.width += 2 * font.size * MARGIN;
+		size.middleLine = tokens.get(0).measure(socket).height + fractionSign.measure(socket).height / 2;
 
 		return size.clone();
 	}
 
 	@Override
-	public void render(Surface canvas, Area area, InteractionSocket socket) {
+	public void render(Canvas canvas, Area area, InteractionSocket socket) {
 		super.render(canvas, area, socket);
 
 		Area next = exactArea.clone();
