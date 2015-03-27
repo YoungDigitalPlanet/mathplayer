@@ -14,12 +14,6 @@
 	<property name="build.dir" location="${base.dir}/build" />
 	<property name="classes.dir" location="${build.dir}/classes" />
 	<property name="dist.dir" location="${base.dir}/dist" />
-	<property name="lib.coverage.dir" value="${base.dir}/ivy-lib-coverage" />
-	<property name="cobertura.dir" value="${lib.coverage.dir}" />
-	<property name="instrumented.dir" value="${base.dir}/bin.cobertura" />
-	<property name="cobertura.report.dir" value="${base.dir}/cobertura-report" />
-	<property name="cobertura.report.type" value="xml" />
-	<property name="cobertura.datafile" value="${cobertura.report.dir}/cobertura.ser" />
 	<property name="test.reports.dev.dir" value="${base.dir}/reports/junit" />
 	
 	<path id="lib.path">
@@ -35,7 +29,7 @@
 	    <mkdir dir="${bin.dir}"/>
 	    <javac srcdir="src" includes="**" encoding="utf-8"
 	        destdir="${bin.dir}"
-	        source="1.5" target="1.5" nowarn="true"
+	        source="1.7" target="1.7" nowarn="true"
 	        debug="true" debuglevel="lines,vars,source">
 	      <classpath refid="project.class.path"/>
 	    </javac>
@@ -66,69 +60,33 @@
 		<delete dir="${bin.test.dir}" failonerror="false" />
 		<delete file="${base.dir}/metadata.xml" />
 		<delete dir="${test.reports.dev.dir}" />
-
-		<delete dir="${lib.coverage.dir}" />
-		<delete dir="${instrumented.dir}" />
-		<delete dir="${cobertura.report.dir}" />
-		<delete file="${cobertura.datafile}" />
-	</target>
-
-
-	<path id="cobertura.classpath">
-		<fileset dir="${lib.coverage.dir}">
-			<include name="*.jar" />
-			<exclude name="ant*.jar" />
-		</fileset>
-	</path>
-
-	
-	<target name="resolve-coverage" depends="resolve" description="--> retrieve dependencies with ivy">
-		<ivy:retrieve pattern="${lib.coverage.dir}/[artifact].[ext]" conf="coverage" />
 	</target>
 	
 	<path id="project.class.path">
 	    <pathelement location="${bin.dir}"/>
 	    <fileset dir="${ivylib.dir}" includes="**/*.jar"/>
 	 </path>
-	
-	<target name="cobertura-instrument" depends="javac.tests, resolve-coverage">
-		<taskdef classpathref="cobertura.classpath" resource="tasks.properties" />
-
-		<delete file="${cobertura.datafile}" />
-
-		<cobertura-instrument todir="${instrumented.dir}" datafile="${cobertura.datafile}">
-			<fileset dir="${bin.dir}">
-				<include name="**/*.class" />
-				<exclude name="**/*Test.class" />
-				<exclude name="**/com/google/**" />
-			</fileset>
-		</cobertura-instrument>
-	</target>
-
 
 	<target name="javac.tests" depends="javac" description="Compiles test code">
 		<mkdir dir="${bin.test.dir}" />
 
-		<javac srcdir="test" includes="**" encoding="utf-8" source="1.5" target="1.5" nowarn="true" destdir="${bin.test.dir}" debug="true" debuglevel="lines,vars,source">
+		<javac srcdir="test" includes="**" encoding="utf-8" source="1.7" target="1.7" nowarn="true" destdir="${bin.test.dir}" debug="true" debuglevel="lines,vars,source">
 			<classpath refid="project.class.path" />
 		</javac>
 	</target>
 
-	<target name="test.dev" depends="javac.tests, cobertura-instrument" description="Run development mode tests">
+	<target name="test.dev" depends="javac.tests" description="Run development mode tests">
 	  	<delete dir="${test.reports.dev.dir}" />
 	    <mkdir dir="${test.reports.dev.dir}" />
 	    <junit fork="yes" printsummary="yes" haltonfailure="yes">
 	      <jvmarg line="-Xmx256m" />
 	      <sysproperty key="gwt.args" value="-logLevel WARN" />
 	      <sysproperty key="java.awt.headless" value="true" />
-	        <sysproperty key="net.sourceforge.cobertura.datafile"
-	      		file="${cobertura.datafile}" />
 	      <classpath>
 	      	<pathelement location="src" />
 	      	<pathelement location="test" />
 
 	      	<pathelement location="${bin.test.dir}" />
-	        <path refid="cobertura.classpath" />
 	      	<pathelement location="${instrumented.dir}" />
 	        <path refid="project.class.path" />
 	      </classpath>
@@ -140,11 +98,5 @@
 	      <formatter type="plain" />
 	      <formatter type="xml" />
 	    </junit>
-
-	  	<cobertura-report
-	  		format="${cobertura.report.type}"
-	  		destdir="${cobertura.report.dir}"
-			srcdir="${src.dir}"
-	  		datafile="${cobertura.datafile}"/>
 	  </target>
 </project>

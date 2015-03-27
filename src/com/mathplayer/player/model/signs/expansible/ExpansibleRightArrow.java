@@ -1,23 +1,20 @@
 package com.mathplayer.player.model.signs.expansible;
 
-import gwt.g2d.client.graphics.Surface;
-import gwt.g2d.client.graphics.shapes.Shape;
-import gwt.g2d.client.graphics.shapes.ShapeBuilder;
-import gwt.g2d.client.math.Vector2;
-
-import com.mathplayer.player.geom.Area;
-import com.mathplayer.player.geom.Font;
-import com.mathplayer.player.geom.Size;
+import com.google.gwt.canvas.client.Canvas;
+import com.google.gwt.canvas.dom.client.Context2d;
+import com.mathplayer.player.geom.*;
 import com.mathplayer.player.interaction.InteractionSocket;
+import com.mathplayer.player.utils.LineDrawer;
 
-public class ExpansibleRightArrow implements ExpansibleSign{
+public class ExpansibleRightArrow implements ExpansibleSign {
 
 	private static final double ARROWHEAD_WIDTH_RATE = 0.20d;
 	private static final double ARROWHEAD_HEIGHT_RATE = 0.45d;
 	private static final double ARROW_MIDDLE_LINE_THICKNESS = 0.06;
 	private static final double MIDDLE_PANEL_PADDING = 0.1d;
+	private LineDrawer lineDrawer = LineDrawer.getInstance();
 	private Font font;
-	
+
 	@Override
 	public Size measureLeftPanel(InteractionSocket socket) {
 		return new Size(0, 0, 0); //no left panel in right arrow is needed
@@ -28,7 +25,7 @@ public class ExpansibleRightArrow implements ExpansibleSign{
 		double arrowHeadWidth = ARROWHEAD_WIDTH_RATE * font.size;
 		double arrowHeadHeight = ARROWHEAD_HEIGHT_RATE * font.size;
 		double middleLine = arrowHeadHeight / 2;
-		
+
 		return new Size(arrowHeadWidth, arrowHeadHeight, middleLine);
 	}
 
@@ -38,41 +35,37 @@ public class ExpansibleRightArrow implements ExpansibleSign{
 		double middlePanelPadding = MIDDLE_PANEL_PADDING * font.size;
 		double middlePanelHeight = middlePanelPadding + arrowMiddleLineHeight + middlePanelPadding;
 		double middleLine = middlePanelHeight / 2;
-		
+
 		return new Size(0, middlePanelHeight, middleLine);
 	}
-	
+
 	@Override
-	public void renderMiddlePanel(Surface canvas, Area area, InteractionSocket socket) {
+	public void renderMiddlePanel(Canvas canvas, Area area, InteractionSocket socket) {
 		double middlePanelPadding = MIDDLE_PANEL_PADDING * font.size;
-		
-		ShapeBuilder shapeBuilder = new ShapeBuilder();
-		shapeBuilder.drawRect(area.x, area.y + middlePanelPadding, area.width, area.height - (2*middlePanelPadding));
-		Shape shape = shapeBuilder.build();
-		canvas.fillShape(shape);
+		Context2d context2d = canvas.getContext2d();
+		context2d.fillRect(area.x, area.y + middlePanelPadding, area.width, area.height - (2 * middlePanelPadding));
 	}
-	
+
 	@Override
-	public void renderLeftPanel(Surface canvas, Area area, InteractionSocket socket) {
+	public void renderLeftPanel(Canvas canvas, Area area, InteractionSocket socket) {
 		//nothing on left panel
 	}
-	
+
 	@Override
-	public void renderRightPanel(Surface canvas, Area area, InteractionSocket socket) {
-		Vector2 topVertex = new Vector2(area.x, area.y);
-		Vector2 leftMiddleVertex = new Vector2(area.x, area.y+ (area.height / 2));
-		Vector2 rightMiddleVertex = new Vector2(area.x  + area.width, area.y+ (area.height / 2));
-		Vector2 bottomVertex = new Vector2(area.x, area.y + area.height);
-		
-		ShapeBuilder shapeBuilder = new ShapeBuilder();
-		shapeBuilder.drawLineSegment(topVertex, rightMiddleVertex);
-		shapeBuilder.drawLineSegment(rightMiddleVertex, bottomVertex);
-		shapeBuilder.drawLineSegment(leftMiddleVertex, rightMiddleVertex);
-		Shape shape = shapeBuilder.build();
-		
+	public void renderRightPanel(Canvas canvas, Area area, InteractionSocket socket) {
+		Position topVertex = new Position(area.x, area.y);
+		Position leftMiddleVertex = new Position(area.x, area.y + (area.height / 2));
+		Position rightMiddleVertex = new Position(area.x + area.width, area.y + (area.height / 2));
+		Position bottomVertex = new Position(area.x, area.y + area.height);
+
+		Context2d context2d = canvas.getContext2d();
+
 		double lineWidth = font.size * ARROW_MIDDLE_LINE_THICKNESS;
-		canvas.setLineWidth(lineWidth);
-		canvas.strokeShape(shape);
+		context2d.setLineWidth(lineWidth);
+
+		lineDrawer.drawLine(context2d, topVertex, rightMiddleVertex);
+		lineDrawer.drawLine(context2d, rightMiddleVertex, bottomVertex);
+		lineDrawer.drawLine(context2d, leftMiddleVertex, rightMiddleVertex);
 	}
 
 	@Override

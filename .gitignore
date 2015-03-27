@@ -12,6 +12,6 @@
 /.classpath
 /.project
 /.settings
-/war/math_player
-/war/WEB-INF/classes
-/war/WEB-INF/lib
+.idea/
+*.iml
+war/

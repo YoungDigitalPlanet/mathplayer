@@ -1,28 +1,16 @@
 package com.mathplayer.player.model.tokens;
 
-import java.util.Arrays;
-import java.util.List;
-
+import com.google.gwt.canvas.client.Canvas;
+import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.mathplayer.player.geom.Area;
-import com.mathplayer.player.geom.Font;
-import com.mathplayer.player.geom.Size;
+import com.mathplayer.player.geom.*;
 import com.mathplayer.player.interaction.InteractionSocket;
 import com.mathplayer.player.model.ContentToken;
-import com.mathplayer.player.model.shapes.ConjunctionSign;
-import com.mathplayer.player.model.shapes.DiffSign;
-import com.mathplayer.player.model.shapes.DisjunctionSign;
-import com.mathplayer.player.model.shapes.IntegersSign;
-import com.mathplayer.player.model.shapes.IntersectionSign;
-import com.mathplayer.player.model.shapes.NaturalsSign;
-import com.mathplayer.player.model.shapes.RationalSign;
-import com.mathplayer.player.model.shapes.RealNumbersSign;
-import com.mathplayer.player.model.shapes.UnionSign;
+import com.mathplayer.player.model.shapes.*;
 import com.mathplayer.player.style.Context;
-
 import eu.ydp.gwtutil.client.util.UserAgentChecker;
 import eu.ydp.gwtutil.client.util.UserAgentChecker.RuntimeMobileUserAgent;
-import gwt.g2d.client.graphics.Surface;
+import java.util.*;
 
 public abstract class ContentTextTokenBase extends ContentToken {
 
@@ -39,8 +27,8 @@ public abstract class ContentTextTokenBase extends ContentToken {
 	private static final String UNICODE_CHAR_DISJUNCTION_ALT = "\u02C5";
 
 	List<String> mathChars = Arrays.asList(UNICODE_CHAR_REAL, UNICODE_CHAR_INTEGER, UNICODE_CHAR_NATURAL, UNICODE_CHAR_UNION,
-			UNICODE_CHAR_INTERSECTION, UNICODE_CHAR_DIFF, UNICODE_CHAR_RATIONAL, UNICODE_CHAR_CONJUNCTION,
-			UNICODE_CHAR_DISJUNCTION, UNICODE_CHAR_CONJUNCTION_ALT, UNICODE_CHAR_DISJUNCTION_ALT);
+										   UNICODE_CHAR_INTERSECTION, UNICODE_CHAR_DIFF, UNICODE_CHAR_RATIONAL, UNICODE_CHAR_CONJUNCTION,
+										   UNICODE_CHAR_DISJUNCTION, UNICODE_CHAR_CONJUNCTION_ALT, UNICODE_CHAR_DISJUNCTION_ALT);
 
 	private static final int MATH_CHARS_MARGIN = 4;
 	protected String content;
@@ -88,7 +76,9 @@ public abstract class ContentTextTokenBase extends ContentToken {
 	}
 
 	public double getTextWidth() {
-		return isAlternativeMathRendering() ? getFontTextOffset() * countAlternativeMathRendering() + MATH_CHARS_MARGIN : getTextWidth(content, font, margin, RootPanel.get());
+		return isAlternativeMathRendering() ?
+				getFontTextOffset() * countAlternativeMathRendering() + MATH_CHARS_MARGIN :
+				getTextWidth(content, font, margin, RootPanel.get());
 	}
 
 	@Override
@@ -109,20 +99,21 @@ public abstract class ContentTextTokenBase extends ContentToken {
 			if (font.italic) {
 				size.width += size.width * .17;
 			}
-			size.height += size.height* .1;
+			size.height += size.height * .1;
 		}
 
 		return size.clone();
 	}
 
 	@Override
-	public void render(Surface canvas, Area area, InteractionSocket socket) {
+	public void render(Canvas canvas, Area area, InteractionSocket socket) {
 		super.render(canvas, area, socket);
 
 		boolean alternativeMathRendering = isAlternativeMathRendering();
-		canvas.setFont(font.toString());
-		canvas.setFillStyle(font.color);
-		canvas.setStrokeStyle(font.color);
+		Context2d context2d = canvas.getContext2d();
+		context2d.setFont(font.toString());
+		context2d.setFillStyle(font.color.toString());
+		context2d.setStrokeStyle(font.color.toString());
 
 		if (alternativeMathRendering) {
 			int currentPosition = MATH_CHARS_MARGIN / 2;
@@ -168,13 +159,13 @@ public abstract class ContentTextTokenBase extends ContentToken {
 					sign.render(canvas, area, socket);
 					currentCharMeasuredSize = sign.measure(socket);
 				} else {
-					canvas.fillText(currentChar, exactArea.x + currentPosition, exactArea.y + getFontTextOffset());
-					currentCharMeasuredSize.width = canvas.measureText(currentChar);
+					context2d.fillText(currentChar, exactArea.x + currentPosition, exactArea.y + getFontTextOffset());
+					currentCharMeasuredSize.width = context2d.measureText(currentChar).getWidth();
 				}
 				currentPosition += currentCharMeasuredSize.width;
 			}
 		} else {
-			canvas.fillText(content, exactArea.x + font.size * margin, exactArea.y + getFontTextOffset());
+			context2d.fillText(content, exactArea.x + font.size * margin, exactArea.y + getFontTextOffset());
 		}
 	}
 
