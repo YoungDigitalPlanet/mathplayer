@@ -1,14 +1,9 @@
 package com.mathplayer.player.model.layoutschematas.mmultiscripts;
 
-import gwt.g2d.client.graphics.Surface;
-
-import com.mathplayer.player.geom.Area;
-import com.mathplayer.player.geom.Font;
-import com.mathplayer.player.geom.Size;
+import com.google.gwt.canvas.client.Canvas;
+import com.mathplayer.player.geom.*;
 import com.mathplayer.player.interaction.InteractionSocket;
-import com.mathplayer.player.model.ContentToken;
-import com.mathplayer.player.model.LayoutSchemata;
-import com.mathplayer.player.model.Token;
+import com.mathplayer.player.model.*;
 import com.mathplayer.player.model.tokens.MEmpty;
 
 public class MMultiScripts extends LayoutSchemata {
@@ -32,8 +27,8 @@ public class MMultiScripts extends LayoutSchemata {
 		changeMEmptyTokensToNulls();
 		initTokens(base, sub, sup, lsub, lsup);
 	}
-	
-	private void changeMEmptyTokensToNulls(){
+
+	private void changeMEmptyTokensToNulls() {
 		if (sub instanceof MEmpty)
 			sub = null;
 		if (sup instanceof MEmpty)
@@ -43,7 +38,7 @@ public class MMultiScripts extends LayoutSchemata {
 		if (lsup instanceof MEmpty)
 			lsup = null;
 	}
-	
+
 	@Override
 	public void setFont(Font font) {
 		this.font = font;
@@ -70,7 +65,7 @@ public class MMultiScripts extends LayoutSchemata {
 	}
 
 	@Override
-	public void render(Surface canvas, Area area, InteractionSocket socket) {
+	public void render(Canvas canvas, Area area, InteractionSocket socket) {
 		super.render(canvas, area, socket);
 
 		DtoMMultiscriptsDimensions multiscriptDimensions = getMultiscriptDimensions(socket);
@@ -82,17 +77,17 @@ public class MMultiScripts extends LayoutSchemata {
 		renderTokenIfNotNull(canvas, dtoMultiscriptsArea.getSup(), socket, sup);
 		renderTokenIfNotNull(canvas, dtoMultiscriptsArea.getSub(), socket, sub);
 	}
-	
+
 	private DtoMMultiscriptsDimensions getMultiscriptDimensions(InteractionSocket socket) {
 		if (dtoMMultiscriptsDimensions == null) {
 			DtoMultiscriptsTokens tokensDto = new DtoMultiscriptsTokens(base, sup, sub, lsub, lsup);
 			dtoMMultiscriptsDimensions = multiscriptsMeasurer.measure(socket, tokensDto);
 		}
-		
+
 		return dtoMMultiscriptsDimensions;
 	}
 
-	private void renderTokenIfNotNull(Surface canvas, Area area, InteractionSocket socket, Token token) {
+	private void renderTokenIfNotNull(Canvas canvas, Area area, InteractionSocket socket, Token token) {
 		if (token != null) {
 			token.render(canvas, area, socket);
 		}
@@ -131,22 +126,22 @@ public class MMultiScripts extends LayoutSchemata {
 		StringBuilder sb = new StringBuilder();
 		sb.append("<mmultiscripts>");
 		sb.append(base.toMathML());
-		
+
 		appendTokenMathMLOrNoneString(sub, sb);
 		appendTokenMathMLOrNoneString(sup, sb);
 		sb.append("<mprescripts/>");
-		
+
 		appendTokenMathMLOrNoneString(lsub, sb);
 		appendTokenMathMLOrNoneString(lsup, sb);
 		sb.append("</mmultiscripts>");
-		
+
 		return sb.toString();
 	}
 
 	private void appendTokenMathMLOrNoneString(Token token, StringBuilder sb) {
-		if(token == null){
+		if (token == null) {
 			sb.append("<none/>");
-		}else{
+		} else {
 			String tokenMathML = token.toMathML();
 			sb.append(tokenMathML);
 		}

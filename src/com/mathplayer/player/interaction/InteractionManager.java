@@ -76,7 +76,7 @@ public class InteractionManager implements InteractionSocket {
 			pg.getGap().setWidth(String.valueOf(userGapWidth) + "px");
 			pg.getGap().setHeight(String.valueOf(userGapHeight) + "px");
 			gaps.add(pg);
-			uiLayer.add(pg, p.x, p.y);
+			uiLayer.add(pg, p.getX(), p.getY());
 		}
 	}
 	@Override
